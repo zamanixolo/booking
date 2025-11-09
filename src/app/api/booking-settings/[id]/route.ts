@@ -16,7 +16,6 @@ type RouteContext = {
  * @returns A NextResponse containing the updated settings or an error message.
  */
 export async function PUT(
-<<<<<<< HEAD
   req: Request,
   { params }: { params: Promise<{ id: string }> } // ✅ params is now a Promise
 ) {
@@ -30,7 +29,6 @@ export async function PUT(
       { error: 'Failed to update settings' },
       { status: 500 }
     );
-=======
   request: NextRequest, // Using NextRequest is often preferred over generic Request
   context: RouteContext // Using the defined type ensures consistency
 ) {
@@ -52,7 +50,6 @@ export async function PUT(
     console.error('Error updating booking settings:', error);
     // Return a 500 Internal Server Error
     return NextResponse.json({ error: 'Failed to update settings' }, { status: 500 });
->>>>>>> 892ad36 (Your commit message)
   }
 }
 
@@ -63,7 +60,6 @@ export async function PUT(
  * @returns A NextResponse with a success message or an error message.
  */
 export async function DELETE(
-<<<<<<< HEAD
   req: Request,
   { params }: { params: Promise<{ id: string }> } // ✅ same here
 ) {
@@ -76,7 +72,6 @@ export async function DELETE(
       { error: 'Failed to delete settings' },
       { status: 500 }
     );
-=======
   request: NextRequest, 
   context: RouteContext 
 ) {
@@ -93,6 +88,5 @@ export async function DELETE(
     console.error('Error deleting booking settings:', error);
     // Return a 500 Internal Server Error
     return NextResponse.json({ error: 'Failed to delete settings' }, { status: 500 });
->>>>>>> 892ad36 (Your commit message)
   }
 }

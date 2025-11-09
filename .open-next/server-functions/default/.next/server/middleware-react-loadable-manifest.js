@@ -1,1 +1,0 @@
-self.__REACT_LOADABLE_MANIFEST='{"../node_modules/@clerk/nextjs/dist/esm/app-router/client/ClerkProvider.js -> ./keyless-creator-reader.js":{"id":4401,"files":["static/chunks/401.ab50713f05caee1a.js"]},"app/admin/booking/[id]/page.tsx -> @/app/components/admin/ManageBooking/BookingDetails/BookingDetails":{"id":3710,"files":["static/chunks/710.dd9d37bcb659999f.js"]}}';

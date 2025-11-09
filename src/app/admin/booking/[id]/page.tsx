@@ -1,10 +1,7 @@
-<<<<<<< HEAD
 'use client'  // <- this makes the entire page a client component
 
-=======
 
 import React from 'react'
->>>>>>> 892ad36 (Your commit message)
 import dynamic from 'next/dynamic'
 
 const BookingDetails = dynamic(
