@@ -1,0 +1,233 @@
+.section {
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+
+  background-color: var(--_theme---background);
+
+  color: var(--_theme---font);
+
+  ---mode--collection-b99edaee-4521-f7f6-92ce-771fda4861df: base;
+}
+
+@media screen and (max-width: 767px) {
+  .section {
+    margin-right: 15px;
+    margin-left: 15px;
+  }
+}
+
+.section.cc-cta {
+  margin-top: 100px;
+  margin-bottom: 100px;
+  padding-right: 80px;
+  padding-left: 80px;
+
+  background-color: hsla(0, 0.00%, 100.00%, 0.00);
+
+  ---mode--collection-b99edaee-4521-f7f6-92ce-771fda4861df: base;
+}
+
+@media screen and (max-width: 991px) {
+  .section.cc-cta {
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .section.cc-cta {
+    padding: 15px;
+  }
+}
+
+.section.cc-home-wrap {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+@media screen and (max-width: 767px) {
+  .section.cc-home-wrap {
+    margin-right: 15px;
+    margin-left: 15px;
+  }
+}
+
+.section.cc-store-home-wrap {
+  padding-top: 0px;
+  font-family: var(--main-font-family);
+  color: var(--_theme---font);
+  ---mode--collection-b99edaee-4521-f7f6-92ce-771fda4861df: base;
+}
+
+@media screen and (max-width: 767px) {
+  .section.cc-store-home-wrap {
+    margin-right: 15px;
+    margin-left: 15px;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1140px;
+  margin-right: auto;
+  margin-left: auto;
+
+  background-color: hsla(0, 0.00%, 100.00%, 0.00);
+
+  ---mode--collection-b99edaee-4521-f7f6-92ce-771fda4861df: base;
+}
+
+@media screen and (max-width: 767px) {
+  .container {
+    text-align: center;
+  }
+}
+
+.cta-wrap {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+@media screen and (max-width: 991px) {
+  .cta-wrap {
+    width: auto;
+    padding: 80px 50px 90px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .cta-wrap {
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .cta-wrap {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+}
+
+.cta-text {
+  width: 70%;
+  margin-right: auto;
+  margin-bottom: 35px;
+  margin-left: auto;
+}
+
+@media screen and (max-width: 991px) {
+  .cta-text {
+    width: auto;
+  }
+}
+
+.heading-jumbo-small {
+  margin-top: 10px;
+  margin-bottom: 15px;
+
+  font-size: 36px;
+  line-height: 50px;
+  font-weight: 400;
+  text-transform: none;
+}
+
+@media screen and (max-width: 767px) {
+  .heading-jumbo-small {
+    font-size: 30px;
+    line-height: 52px;
+  }
+}
+
+.paragraph-bigger {
+  margin-bottom: 10px;
+  opacity: 1;
+  font-size: 20px;
+  line-height: 34px;
+  font-weight: 400;
+}
+
+@media screen and (max-width: 767px) {
+  .paragraph-bigger {
+    font-size: 16px;
+    line-height: 28px;
+  }
+}
+
+.paragraph-bigger.cc-bigger-light {
+  opacity: 0.6;
+}
+
+.paragraph-bigger.cc-bigger-white-light {
+  opacity: 0.6;
+}
+
+.primary-button {
+  padding: 12px 25px;
+
+  border-radius: 0px;
+
+  background-color: var(--primary);
+
+  transition: background-color 400ms ease,opacity 400ms ease,color 400ms ease;
+
+  color: white;
+  font-size: 12px;
+  line-height: 20px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.primary-button:hover {
+  background-color: #32343a;
+  color: white;
+}
+
+.primary-button:active {
+  background-color: #43464d;
+}
+
+@media screen and (max-width: 991px) {
+  .primary-button {
+    justify-content: center;
+  }
+}
+
+.primary-button.cc-jumbo-button {
+  padding: 16px 35px;
+  font-size: 14px;
+  line-height: 26px;
+}
+
+.primary-button.cc-contact-us {
+  position: relative;
+  z-index: 5;
+  background-color: var(--primary);
+}
+
+@media screen and (max-width: 991px) {
+  .primary-button.cc-contact-us {
+    display: none;
+  }
+}
+
+.primary-button.cc-white-button {
+  padding: 16px 35px;
+  background-color: white;
+  color: hsla(0, 0.00%, 12.55%, 1.00);
+  font-size: 14px;
+  line-height: 26px;
+}
+
+.primary-button.cc-white-button:hover {
+  background-color: hsla(0, 0.00%, 100.00%, 0.80);
+}
+
+.primary-button.cc-white-button:active {
+  background-color: hsla(0, 0.00%, 100.00%, 0.90);
+}
