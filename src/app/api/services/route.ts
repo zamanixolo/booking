@@ -27,7 +27,7 @@ export async function GET(req: Request) {
 // ✅ POST (Create)
 export async function POST(req: Request) {
   try {
-    const body = await req.json()
+    const body = await req.json() as any
     const { name, description, duration, price, providers } = body
 
     if (!name ) {
@@ -51,7 +51,7 @@ export async function PUT(
   req: Request
 ) {
   try {
-    const body = await req.json()
+    const body = await req.json() as any
     const { name, description, duration, price, providers ,id} = body
 
     const updatedService = await updateService(id, {
@@ -69,7 +69,7 @@ export async function PUT(
 // ✅ DELETE (Soft delete)
 export async function DELETE(req: Request) {
   try {
-    const body = await req.json()
+    const body = await req.json() as any
     const { id } = body
 
     if (!id) {

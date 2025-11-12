@@ -37,7 +37,7 @@ function CreateService({ openCreateModule }: CreateServiceProps) {
   useEffect(()=>{
    const getproviders=async()=>{
     const res=await fetch('/api/team/getActiveProvider')
-    const providers=await res.json()
+    const providers=await res.json() as any
  
     setAvailableProviders(providers)
    }
@@ -96,7 +96,7 @@ function CreateService({ openCreateModule }: CreateServiceProps) {
     {method:'POST',
     headers:{'Content-Type': 'application/json' },
     body:JSON.stringify({...service})})
-    const res=await sub.json()
+    const res=await sub.json() as any
     console.log(res)
     if(res.status== 201){
       openCreateModule()

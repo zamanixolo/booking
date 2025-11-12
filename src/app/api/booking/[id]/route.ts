@@ -49,7 +49,7 @@ export async function GET(req: Request) {
 /* ---------------------- POST (CREATE BOOKING) ---------------------- */
 export async function POST(req: Request) {
   try {
-    const data = await req.json();
+    const data = await req.json() as any;
 
     let clientId = data.clientId;
 
@@ -96,7 +96,7 @@ export async function POST(req: Request) {
 /* ---------------------- PATCH (UPDATE BOOKING) ---------------------- */
 export async function PATCH(req: Request) {
   try {
-    const data = await req.json();
+    const data = await req.json() as any;
     const { id, ...updateData } = data;
 
     if (!id) {

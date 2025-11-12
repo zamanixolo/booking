@@ -53,7 +53,7 @@ export default function UpdateMember({ member, closeModal }: UpdateMemberProps) 
         console.log('Updated provider:', result)
         closeModal()
       } else {
-        const error = await response.json()
+        const error = await response.json() as any;
         console.error('Failed to update provider:', error)
         alert(error.msg || 'Failed to update provider')
       }

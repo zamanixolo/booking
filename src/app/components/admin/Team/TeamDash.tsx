@@ -67,7 +67,7 @@ function TeamDash() {
         body: JSON.stringify(member),
       })
 
-      const data = await response.json()
+      const data = await response.json() as any;
       alert(`${data.firstName} ${data.lastName} was deleted`)
       getTeam()
     } catch (error) {

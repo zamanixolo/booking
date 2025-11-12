@@ -47,7 +47,7 @@ export default function BulkOperatingHoursEditor({ providers }: BulkOperatingHou
     try {
       const res = await fetch(`/api/operating-hours?providerId=${providerId}`)
       if (res.ok) {
-        const data = await res.json()
+        const data = await res.json() as any
         setOperatingHours(data)
         setEditableHours(data)
       } else {

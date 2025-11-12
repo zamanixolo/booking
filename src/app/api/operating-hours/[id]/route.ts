@@ -31,7 +31,7 @@ export async function PUT(
 ) {
   try {
     const { id } = await context.params
-    const body = await req.json()
+    const body = await req.json() as any;
     const updatedRecord = await updateOperatingHour(id, body)
     return NextResponse.json(updatedRecord)
   } catch (error) {

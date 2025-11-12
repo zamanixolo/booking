@@ -59,7 +59,7 @@ export default function OperatingHoursForm({ providers, onSuccess }: OperatingHo
         })
         if (onSuccess) onSuccess()
       } else {
-        const data = await res.json()
+        const data = await res.json() as any
         setError(data.error || 'Failed to create operating hours')
       }
     } catch (err) {

@@ -51,7 +51,7 @@ function UpdateService({ openUpdateModule, serviceToEdit, onServiceUpdated }: Up
     console.log(serviceToEdit)
     const getProviders = async () => {
       const res = await fetch('/api/team/getActiveProvider')
-      const providers = await res.json()
+      const providers = await res.json() as any
       setAvailableProviders(providers)
     }
     // getProviders()
@@ -122,7 +122,7 @@ function UpdateService({ openUpdateModule, serviceToEdit, onServiceUpdated }: Up
         })
       });
       
-      const result = await response.json();
+      const result = await response.json() as any;
       console.log('🟢 Update result:', result);
       
       if (response.ok) {

@@ -23,7 +23,7 @@ export default function OperatingHoursDashboard() {
     try {
       const res = await fetch('/api/team/getActiveProvider')
       if (res.ok) {
-        const data = await res.json()
+        const data = await res.json() as any
         setProviders(data)
       }
     } catch (error) {

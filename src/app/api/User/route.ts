@@ -4,7 +4,7 @@ import { getUserByClerkId, createUser, updateUserByClerkId } from '@/app/libs/us
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await request.json() as any;
     const { clerkId } = body;
 
     if (!clerkId) {
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await request.json() as any;
     const { clerkId, email, firstName, lastName, phone, imageurl } = body;
 
     if (!clerkId || !email || !firstName || !lastName) {

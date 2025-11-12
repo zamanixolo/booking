@@ -16,7 +16,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json()
+    const body = await req.json() as any;
     const record = await createOrUpdateOperatingHour(body)
     return NextResponse.json(record, { status: 201 })
   } catch (error) {

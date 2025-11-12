@@ -72,7 +72,7 @@ export default function OperatingHoursList({ providers }: OperatingHoursListProp
     try {
       const res = await fetch(`/api/operating-hours`)
       if (res.ok) {
-        const data = await res.json()
+        const data = await res.json() as any
         console.log(data)
         setOperatingHours(data)
       } else {

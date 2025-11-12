@@ -17,7 +17,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const body = await req.json() as any;
     const { id, providerIds, serviceId, defaultSessionDuration, defaultPrice } = body;
 
     if (!providerIds?.length || !serviceId) {

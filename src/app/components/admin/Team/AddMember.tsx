@@ -54,7 +54,7 @@ function AddMember({ openAddTeamMember }: AddMemberProps) {
       } else if (response.status === 409) {
         alert('Provider with this email already exists')
       } else {
-        const error = await response.json()
+        const error = await response.json() as any
         console.error('Failed to create provider:', error)
         alert(error.msg || 'Failed to create provider')
       }

@@ -36,7 +36,7 @@ function Profile({ id }: Props) {
         }) 
      
       if (res.ok) {
-        const data = await res.json()
+        const data = await res.json() as any
         setUserData({
           email: data.email || '',
           firstName: data.firstName || '',

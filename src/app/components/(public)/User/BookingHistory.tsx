@@ -39,7 +39,7 @@ function BookingHistory({ userId }: Props) {
       setIsLoading(true)
       try {
         const response = await fetch(`/api/booking?clientId=${userId}`)
-        const data = await response.json()
+        const data = await response.json() as any
         setBookings(data)
         console.log(data)
       } catch (error) {
@@ -55,7 +55,7 @@ function BookingHistory({ userId }: Props) {
   useEffect(()=>{
     const getProviders=async()=>{
       const res=await fetch('/api/team/getActiveProvider')
-      const providerdata=await res.json()
+      const providerdata=await res.json() as any
       setAvailableProviders(providerdata)
     }
     getProviders()

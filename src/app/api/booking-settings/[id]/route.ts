@@ -7,7 +7,7 @@ export async function PUT(
 ) {
   const { id } = await params; // ✅ await the params
   try {
-    const body = await req.json();
+    const body = await req.json() as any;
     const settings = await updateBookingSettings(id, body);
     return NextResponse.json(settings);
   } catch (error) {

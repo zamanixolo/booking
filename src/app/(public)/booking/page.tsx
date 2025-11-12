@@ -18,8 +18,8 @@ function Page() {
     lastName:"",
     price:""
   })
-  const [daysactive,setDaysActive]=useState([])
-  const [bookingsetting,setBookingsetting]=useState([])
+  const [daysactive,setDaysActive]=useState([]as any)
+  const [bookingsetting,setBookingsetting]=useState([] as any)
   const [isLoading,setIsLoading]=useState(true)
   const getdateopening =async () => {
     const res = await fetch('/api/operating-hours')
