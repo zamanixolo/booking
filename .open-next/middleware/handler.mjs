@@ -795,7 +795,129 @@ var require_middleware = __commonJS({
         let [b2, c2] = a2.digest.split(";");
         return b2 === e && d.has(Number(c2));
       }
-    }, 72: (a, b, c) => {
+    }, 107: (a, b, c) => {
+      "use strict";
+      c.d(b, { I3: () => k, Ui: () => i, xI: () => g, Pk: () => h });
+      var d = c(814), e = c(159);
+      c(979), c(128), c(379), c(770), c(340), c(809);
+      let f = "function" == typeof d.unstable_postpone;
+      function g(a2, b2, c2) {
+        let d2 = Object.defineProperty(new e.F(`Route ${b2.route} couldn't be rendered statically because it used \`${a2}\`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error`), "__NEXT_ERROR_CODE", { value: "E558", enumerable: false, configurable: true });
+        throw c2.revalidate = 0, b2.dynamicUsageDescription = a2, b2.dynamicUsageStack = d2.stack, d2;
+      }
+      function h(a2) {
+        switch (a2.type) {
+          case "cache":
+          case "unstable-cache":
+          case "private-cache":
+            return;
+        }
+      }
+      function i(a2, b2, c2) {
+        (function() {
+          if (!f) throw Object.defineProperty(Error("Invariant: React.unstable_postpone is not defined. This suggests the wrong version of React was loaded. This is a bug in Next.js"), "__NEXT_ERROR_CODE", { value: "E224", enumerable: false, configurable: true });
+        })(), c2 && c2.dynamicAccesses.push({ stack: c2.isDebugDynamicAccesses ? Error().stack : void 0, expression: b2 }), d.unstable_postpone(j(a2, b2));
+      }
+      function j(a2, b2) {
+        return `Route ${a2} needs to bail out of prerendering at this point because it used ${b2}. React throws this special object to indicate where. It should not be caught by your own try/catch. Learn more: https://nextjs.org/docs/messages/ppr-caught-error`;
+      }
+      function k(a2) {
+        return "object" == typeof a2 && null !== a2 && "string" == typeof a2.message && l(a2.message);
+      }
+      function l(a2) {
+        return a2.includes("needs to bail out of prerendering at this point because it used") && a2.includes("Learn more: https://nextjs.org/docs/messages/ppr-caught-error");
+      }
+      if (false === l(j("%%%", "^^^"))) throw Object.defineProperty(Error("Invariant: isDynamicPostpone misidentified a postpone reason. This is a bug in Next.js"), "__NEXT_ERROR_CODE", { value: "E296", enumerable: false, configurable: true });
+      RegExp(`\\n\\s+at Suspense \\(<anonymous>\\)(?:(?!\\n\\s+at (?:body|div|main|section|article|aside|header|footer|nav|form|p|span|h1|h2|h3|h4|h5|h6) \\(<anonymous>\\))[\\s\\S])*?\\n\\s+at __next_root_layout_boundary__ \\([^\\n]*\\)`), RegExp(`\\n\\s+at __next_metadata_boundary__[\\n\\s]`), RegExp(`\\n\\s+at __next_viewport_boundary__[\\n\\s]`), RegExp(`\\n\\s+at __next_outlet_boundary__[\\n\\s]`);
+    }, 115: (a, b, c) => {
+      "use strict";
+      c.d(b, { l: () => d });
+      class d {
+        static get(a2, b2, c2) {
+          let d2 = Reflect.get(a2, b2, c2);
+          return "function" == typeof d2 ? d2.bind(a2) : d2;
+        }
+        static set(a2, b2, c2, d2) {
+          return Reflect.set(a2, b2, c2, d2);
+        }
+        static has(a2, b2) {
+          return Reflect.has(a2, b2);
+        }
+        static deleteProperty(a2, b2) {
+          return Reflect.deleteProperty(a2, b2);
+        }
+      }
+    }, 128: (a, b, c) => {
+      "use strict";
+      c.d(b, { M1: () => e, FP: () => d });
+      let d = (0, c(58).xl)();
+      function e(a2) {
+        throw Object.defineProperty(Error(`\`${a2}\` was called outside a request scope. Read more: https://nextjs.org/docs/messages/next-dynamic-api-wrong-context`), "__NEXT_ERROR_CODE", { value: "E251", enumerable: false, configurable: true });
+      }
+    }, 159: (a, b, c) => {
+      "use strict";
+      c.d(b, { F: () => e, h: () => f });
+      let d = "DYNAMIC_SERVER_USAGE";
+      class e extends Error {
+        constructor(a2) {
+          super("Dynamic server usage: " + a2), this.description = a2, this.digest = d;
+        }
+      }
+      function f(a2) {
+        return "object" == typeof a2 && null !== a2 && "digest" in a2 && "string" == typeof a2.digest && a2.digest === d;
+      }
+    }, 165: (a, b, c) => {
+      "use strict";
+      var d = c(356).Buffer;
+      Object.defineProperty(b, "__esModule", { value: true }), !function(a2, b2) {
+        for (var c2 in b2) Object.defineProperty(a2, c2, { enumerable: true, get: b2[c2] });
+      }(b, { handleFetch: function() {
+        return h;
+      }, interceptFetch: function() {
+        return i;
+      }, reader: function() {
+        return f;
+      } });
+      let e = c(392), f = { url: (a2) => a2.url, header: (a2, b2) => a2.headers.get(b2) };
+      async function g(a2, b2) {
+        let { url: c2, method: e2, headers: f2, body: g2, cache: h2, credentials: i2, integrity: j, mode: k, redirect: l, referrer: m, referrerPolicy: n } = b2;
+        return { testData: a2, api: "fetch", request: { url: c2, method: e2, headers: [...Array.from(f2), ["next-test-stack", function() {
+          let a3 = (Error().stack ?? "").split("\n");
+          for (let b3 = 1; b3 < a3.length; b3++) if (a3[b3].length > 0) {
+            a3 = a3.slice(b3);
+            break;
+          }
+          return (a3 = (a3 = (a3 = a3.filter((a4) => !a4.includes("/next/dist/"))).slice(0, 5)).map((a4) => a4.replace("webpack-internal:///(rsc)/", "").trim())).join("    ");
+        }()]], body: g2 ? d.from(await b2.arrayBuffer()).toString("base64") : null, cache: h2, credentials: i2, integrity: j, mode: k, redirect: l, referrer: m, referrerPolicy: n } };
+      }
+      async function h(a2, b2) {
+        let c2 = (0, e.getTestReqInfo)(b2, f);
+        if (!c2) return a2(b2);
+        let { testData: h2, proxyPort: i2 } = c2, j = await g(h2, b2), k = await a2(`http://localhost:${i2}`, { method: "POST", body: JSON.stringify(j), next: { internal: true } });
+        if (!k.ok) throw Object.defineProperty(Error(`Proxy request failed: ${k.status}`), "__NEXT_ERROR_CODE", { value: "E146", enumerable: false, configurable: true });
+        let l = await k.json(), { api: m } = l;
+        switch (m) {
+          case "continue":
+            return a2(b2);
+          case "abort":
+          case "unhandled":
+            throw Object.defineProperty(Error(`Proxy request aborted [${b2.method} ${b2.url}]`), "__NEXT_ERROR_CODE", { value: "E145", enumerable: false, configurable: true });
+          case "fetch":
+            let { status: n, headers: o, body: p } = l.response;
+            return new Response(p ? d.from(p, "base64") : null, { status: n, headers: new Headers(o) });
+          default:
+            return m;
+        }
+      }
+      function i(a2) {
+        return c.g.fetch = function(b2, c2) {
+          var d2;
+          return (null == c2 || null == (d2 = c2.next) ? void 0 : d2.internal) ? a2(b2, c2) : h(a2, new Request(b2, c2));
+        }, () => {
+          c.g.fetch = a2;
+        };
+      }
+    }, 176: (a, b, c) => {
       "use strict";
       let d;
       c.r(b), c.d(b, { default: () => hl });
@@ -1935,11 +2057,8 @@ Learn More: https://nextjs.org/docs/messages/node-module-in-edge-runtime`;
         longMessage;
         meta;
         constructor(a10) {
-          let b10 = this.parseJsonError(a10);
+          let b10 = { code: a10.code, message: a10.message, longMessage: a10.long_message, meta: { paramName: a10.meta?.param_name, sessionId: a10.meta?.session_id, emailAddresses: a10.meta?.email_addresses, identifiers: a10.meta?.identifiers, zxcvbn: a10.meta?.zxcvbn, plan: a10.meta?.plan, isPlanUpgradePossible: a10.meta?.is_plan_upgrade_possible } };
           this.code = b10.code, this.message = b10.message, this.longMessage = b10.longMessage, this.meta = b10.meta;
-        }
-        parseJsonError(a10) {
-          return { code: a10.code, message: a10.message, longMessage: a10.long_message, meta: { paramName: a10.meta?.param_name, sessionId: a10.meta?.session_id, emailAddresses: a10.meta?.email_addresses, identifiers: a10.meta?.identifiers, zxcvbn: a10.meta?.zxcvbn, plan: a10.meta?.plan, isPlanUpgradePossible: a10.meta?.is_plan_upgrade_possible } };
         }
       };
       function bs(a10) {
@@ -2161,7 +2280,7 @@ Clerk Trace ID: ${this.clerkTraceId}`), a11;
         let b10 = a10 ? a10.split(",").map((a11) => a11.trim()) : [];
         return { org: b10.filter((a11) => a11.split(":")[0].includes("o")).map((a11) => a11.split(":")[1]), user: b10.filter((a11) => a11.split(":")[0].includes("u")).map((a11) => a11.split(":")[1]) };
       };
-      var b0 = c(19), b1 = "https://api.clerk.com", b2 = "@clerk/backend@2.20.0", b3 = "2025-04-10", b4 = { Session: "__session", Refresh: "__refresh", ClientUat: "__client_uat", Handshake: "__clerk_handshake", DevBrowser: "__clerk_db_jwt", RedirectCount: "__clerk_redirect_count", HandshakeNonce: "__clerk_handshake_nonce" }, b5 = { ClerkSynced: "__clerk_synced", SuffixedCookies: "suffixed_cookies", ClerkRedirectUrl: "__clerk_redirect_url", DevBrowser: b4.DevBrowser, Handshake: b4.Handshake, HandshakeHelp: "__clerk_help", LegacyDevBrowser: "__dev_session", HandshakeReason: "__clerk_hs_reason", HandshakeNonce: b4.HandshakeNonce, HandshakeFormat: "format" }, b6 = { Cookies: b4, Headers: { Accept: "accept", AuthMessage: "x-clerk-auth-message", Authorization: "authorization", AuthReason: "x-clerk-auth-reason", AuthSignature: "x-clerk-auth-signature", AuthStatus: "x-clerk-auth-status", AuthToken: "x-clerk-auth-token", CacheControl: "cache-control", ClerkRedirectTo: "x-clerk-redirect-to", ClerkRequestData: "x-clerk-request-data", ClerkUrl: "x-clerk-clerk-url", CloudFrontForwardedProto: "cloudfront-forwarded-proto", ContentType: "content-type", ContentSecurityPolicy: "content-security-policy", ContentSecurityPolicyReportOnly: "content-security-policy-report-only", EnableDebug: "x-clerk-debug", ForwardedHost: "x-forwarded-host", ForwardedPort: "x-forwarded-port", ForwardedProto: "x-forwarded-proto", Host: "host", Location: "location", Nonce: "x-nonce", Origin: "origin", Referrer: "referer", SecFetchDest: "sec-fetch-dest", SecFetchSite: "sec-fetch-site", UserAgent: "user-agent", ReportingEndpoints: "reporting-endpoints" }, ContentTypes: { Json: "application/json" }, QueryParameters: b5 }, b7 = (a10, b10, c10, d10) => {
+      var b0 = c(19), b1 = "https://api.clerk.com", b2 = "@clerk/backend@2.22.0", b3 = "2025-11-10", b4 = { Session: "__session", Refresh: "__refresh", ClientUat: "__client_uat", Handshake: "__clerk_handshake", DevBrowser: "__clerk_db_jwt", RedirectCount: "__clerk_redirect_count", HandshakeNonce: "__clerk_handshake_nonce" }, b5 = { ClerkSynced: "__clerk_synced", SuffixedCookies: "suffixed_cookies", ClerkRedirectUrl: "__clerk_redirect_url", DevBrowser: b4.DevBrowser, Handshake: b4.Handshake, HandshakeHelp: "__clerk_help", LegacyDevBrowser: "__dev_session", HandshakeReason: "__clerk_hs_reason", HandshakeNonce: b4.HandshakeNonce, HandshakeFormat: "format" }, b6 = { Cookies: b4, Headers: { Accept: "accept", AuthMessage: "x-clerk-auth-message", Authorization: "authorization", AuthReason: "x-clerk-auth-reason", AuthSignature: "x-clerk-auth-signature", AuthStatus: "x-clerk-auth-status", AuthToken: "x-clerk-auth-token", CacheControl: "cache-control", ClerkRedirectTo: "x-clerk-redirect-to", ClerkRequestData: "x-clerk-request-data", ClerkUrl: "x-clerk-clerk-url", CloudFrontForwardedProto: "cloudfront-forwarded-proto", ContentType: "content-type", ContentSecurityPolicy: "content-security-policy", ContentSecurityPolicyReportOnly: "content-security-policy-report-only", EnableDebug: "x-clerk-debug", ForwardedHost: "x-forwarded-host", ForwardedPort: "x-forwarded-port", ForwardedProto: "x-forwarded-proto", Host: "host", Location: "location", Nonce: "x-nonce", Origin: "origin", Referrer: "referer", SecFetchDest: "sec-fetch-dest", SecFetchSite: "sec-fetch-site", UserAgent: "user-agent", ReportingEndpoints: "reporting-endpoints" }, ContentTypes: { Json: "application/json" }, QueryParameters: b5 }, b7 = (a10, b10, c10, d10) => {
         if ("" === a10) return b8(b10.toString(), c10?.toString());
         let e10 = new URL(a10), f10 = c10 ? new URL(c10, e10) : void 0, g10 = new URL(b10, e10), h2 = `${e10.hostname}:${e10.port}` != `${g10.hostname}:${g10.port}`;
         return f10 && (h2 && f10.searchParams.delete(b6.QueryParameters.ClerkSynced), g10.searchParams.set("redirect_url", f10.toString())), h2 && d10 && g10.searchParams.set(b6.QueryParameters.DevBrowser, d10), g10.toString();
@@ -3281,15 +3400,15 @@ ${b11}`));
           this.id = a11, this.name = b10, this.description = c10, this.slug = d10, this.avatarUrl = e10;
         }
         static fromJSON(b10) {
-          return new a10(b10.id, b10.name, b10.description, b10.slug, b10.avatar_url);
+          return new a10(b10.id, b10.name, b10.description ?? null, b10.slug, b10.avatar_url ?? null);
         }
       }, ee = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2, n2) {
-          this.id = a11, this.productId = b10, this.name = c10, this.slug = d10, this.description = e10, this.isDefault = f10, this.isRecurring = g10, this.hasBaseFee = h2, this.publiclyVisible = i2, this.fee = j2, this.annualFee = k2, this.annualMonthlyFee = l2, this.forPayerType = m2, this.features = n2;
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2) {
+          this.id = a11, this.name = b10, this.slug = c10, this.description = d10, this.isDefault = e10, this.isRecurring = f10, this.hasBaseFee = g10, this.publiclyVisible = h2, this.fee = i2, this.annualFee = j2, this.annualMonthlyFee = k2, this.forPayerType = l2, this.features = m2;
         }
         static fromJSON(b10) {
-          let c10 = (a11) => ({ amount: a11.amount, amountFormatted: a11.amount_formatted, currency: a11.currency, currencySymbol: a11.currency_symbol });
-          return new a10(b10.id, b10.product_id, b10.name, b10.slug, b10.description, b10.is_default, b10.is_recurring, b10.has_base_fee, b10.publicly_visible, c10(b10.fee), c10(b10.annual_fee), c10(b10.annual_monthly_fee), b10.for_payer_type, b10.features.map((a11) => ed.fromJSON(a11)));
+          let c10 = (a11) => a11 ? { amount: a11.amount, amountFormatted: a11.amount_formatted, currency: a11.currency, currencySymbol: a11.currency_symbol } : null;
+          return new a10(b10.id, b10.name, b10.slug, b10.description ?? null, b10.is_default, b10.is_recurring, b10.has_base_fee, b10.publicly_visible, c10(b10.fee), c10(b10.annual_fee), c10(b10.annual_monthly_fee), b10.for_payer_type, (b10.features ?? []).map((a11) => ed.fromJSON(a11)));
         }
       }, ef = class a10 {
         constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2, n2, o2, p2, q2) {
@@ -3299,7 +3418,7 @@ ${b11}`));
           function c10(a11) {
             return a11 ? { amount: a11.amount, amountFormatted: a11.amount_formatted, currency: a11.currency, currencySymbol: a11.currency_symbol } : a11;
           }
-          return new a10(b10.id, b10.status, b10.plan_period, b10.period_start, b10.next_payment, c10(b10.amount), b10.plan ? ee.fromJSON(b10.plan) : null, b10.plan_id ?? null, b10.created_at, b10.updated_at, b10.period_end, b10.canceled_at, b10.past_due_at, b10.ended_at, b10.payer_id, b10.is_free_trial, c10(b10.lifetime_paid));
+          return new a10(b10.id, b10.status, b10.plan_period, b10.period_start, b10.next_payment, c10(b10.amount) ?? void 0, b10.plan ? ee.fromJSON(b10.plan) : null, b10.plan_id ?? null, b10.created_at, b10.updated_at, b10.period_end, b10.canceled_at, b10.past_due_at, b10.ended_at, b10.payer_id, b10.is_free_trial, c10(b10.lifetime_paid) ?? void 0);
         }
       }, eg = class a10 {
         constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2) {
@@ -3307,7 +3426,7 @@ ${b11}`));
         }
         static fromJSON(b10) {
           let c10 = b10.next_payment ? { date: b10.next_payment.date, amount: { amount: b10.next_payment.amount.amount, amountFormatted: b10.next_payment.amount.amount_formatted, currency: b10.next_payment.amount.currency, currencySymbol: b10.next_payment.amount.currency_symbol } } : null;
-          return new a10(b10.id, b10.status, b10.payer_id, b10.created_at, b10.updated_at, b10.active_at ?? null, b10.past_due_at ?? null, b10.subscription_items.map((a11) => ef.fromJSON(a11)), c10, b10.eligible_for_free_trial ?? false);
+          return new a10(b10.id, b10.status, b10.payer_id, b10.created_at, b10.updated_at, b10.active_at ?? null, b10.past_due_at ?? null, (b10.subscription_items ?? []).map((a11) => ef.fromJSON(a11)), c10, b10.eligible_for_free_trial ?? false);
         }
       };
       function eh(a10) {
@@ -4289,7 +4408,7 @@ Original error: ${a10}`);
           }
         }
       };
-      let fL = { secretKey: fp, publishableKey: fr, apiUrl: ft, apiVersion: fo, userAgent: "@clerk/nextjs@6.34.5", proxyUrl: fv, domain: fu, isSatellite: fw, machineSecretKey: fq, sdkMetadata: { name: "@clerk/nextjs", version: "6.34.5", environment: "production" }, telemetry: { disabled: fz, debug: fA } }, fM = (a10) => function(a11) {
+      let fL = { secretKey: fp, publishableKey: fr, apiUrl: ft, apiVersion: fo, userAgent: "@clerk/nextjs@6.35.1", proxyUrl: fv, domain: fu, isSatellite: fw, machineSecretKey: fq, sdkMetadata: { name: "@clerk/nextjs", version: "6.35.1", environment: "production" }, telemetry: { disabled: fz, debug: fA } }, fM = (a10) => function(a11) {
         let b10 = { ...a11 }, c10 = em(b10), d10 = function(a12) {
           let b11 = b9(e2, a12.options), c11 = a12.apiClient;
           return { authenticateRequest: (a13, d11 = {}) => {
@@ -4952,7 +5071,7 @@ ${b12.message}`);
                       return d14.decode(e13).replace(/\uFFFD/g, "");
                     }(a14, 4096)), console.log(a14);
                   }
-                  console.log((f11 = a13, `[clerk debug end: ${f11}] (@clerk/nextjs=6.34.5,next=${fj.rE},timestamp=${Math.round((/* @__PURE__ */ new Date()).getTime() / 1e3)})`));
+                  console.log((f11 = a13, `[clerk debug end: ${f11}] (@clerk/nextjs=6.35.1,next=${fj.rE},timestamp=${Math.round((/* @__PURE__ */ new Date()).getTime() / 1e3)})`));
                 }
               } };
             })(a12, fl) : a12)(), e11 = b11(d11);
@@ -5204,128 +5323,6 @@ ${b12.message}`);
             throw await i(e10, { path: d10, method: b10.method, headers: Object.fromEntries(b10.headers.entries()) }, { routerKind: "Pages Router", routePath: "/middleware", routeType: "middleware", revalidateReason: void 0 }), e10;
           }
         } });
-      }
-    }, 107: (a, b, c) => {
-      "use strict";
-      c.d(b, { I3: () => k, Ui: () => i, xI: () => g, Pk: () => h });
-      var d = c(814), e = c(159);
-      c(979), c(128), c(379), c(770), c(340), c(809);
-      let f = "function" == typeof d.unstable_postpone;
-      function g(a2, b2, c2) {
-        let d2 = Object.defineProperty(new e.F(`Route ${b2.route} couldn't be rendered statically because it used \`${a2}\`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error`), "__NEXT_ERROR_CODE", { value: "E558", enumerable: false, configurable: true });
-        throw c2.revalidate = 0, b2.dynamicUsageDescription = a2, b2.dynamicUsageStack = d2.stack, d2;
-      }
-      function h(a2) {
-        switch (a2.type) {
-          case "cache":
-          case "unstable-cache":
-          case "private-cache":
-            return;
-        }
-      }
-      function i(a2, b2, c2) {
-        (function() {
-          if (!f) throw Object.defineProperty(Error("Invariant: React.unstable_postpone is not defined. This suggests the wrong version of React was loaded. This is a bug in Next.js"), "__NEXT_ERROR_CODE", { value: "E224", enumerable: false, configurable: true });
-        })(), c2 && c2.dynamicAccesses.push({ stack: c2.isDebugDynamicAccesses ? Error().stack : void 0, expression: b2 }), d.unstable_postpone(j(a2, b2));
-      }
-      function j(a2, b2) {
-        return `Route ${a2} needs to bail out of prerendering at this point because it used ${b2}. React throws this special object to indicate where. It should not be caught by your own try/catch. Learn more: https://nextjs.org/docs/messages/ppr-caught-error`;
-      }
-      function k(a2) {
-        return "object" == typeof a2 && null !== a2 && "string" == typeof a2.message && l(a2.message);
-      }
-      function l(a2) {
-        return a2.includes("needs to bail out of prerendering at this point because it used") && a2.includes("Learn more: https://nextjs.org/docs/messages/ppr-caught-error");
-      }
-      if (false === l(j("%%%", "^^^"))) throw Object.defineProperty(Error("Invariant: isDynamicPostpone misidentified a postpone reason. This is a bug in Next.js"), "__NEXT_ERROR_CODE", { value: "E296", enumerable: false, configurable: true });
-      RegExp(`\\n\\s+at Suspense \\(<anonymous>\\)(?:(?!\\n\\s+at (?:body|div|main|section|article|aside|header|footer|nav|form|p|span|h1|h2|h3|h4|h5|h6) \\(<anonymous>\\))[\\s\\S])*?\\n\\s+at __next_root_layout_boundary__ \\([^\\n]*\\)`), RegExp(`\\n\\s+at __next_metadata_boundary__[\\n\\s]`), RegExp(`\\n\\s+at __next_viewport_boundary__[\\n\\s]`), RegExp(`\\n\\s+at __next_outlet_boundary__[\\n\\s]`);
-    }, 115: (a, b, c) => {
-      "use strict";
-      c.d(b, { l: () => d });
-      class d {
-        static get(a2, b2, c2) {
-          let d2 = Reflect.get(a2, b2, c2);
-          return "function" == typeof d2 ? d2.bind(a2) : d2;
-        }
-        static set(a2, b2, c2, d2) {
-          return Reflect.set(a2, b2, c2, d2);
-        }
-        static has(a2, b2) {
-          return Reflect.has(a2, b2);
-        }
-        static deleteProperty(a2, b2) {
-          return Reflect.deleteProperty(a2, b2);
-        }
-      }
-    }, 128: (a, b, c) => {
-      "use strict";
-      c.d(b, { M1: () => e, FP: () => d });
-      let d = (0, c(58).xl)();
-      function e(a2) {
-        throw Object.defineProperty(Error(`\`${a2}\` was called outside a request scope. Read more: https://nextjs.org/docs/messages/next-dynamic-api-wrong-context`), "__NEXT_ERROR_CODE", { value: "E251", enumerable: false, configurable: true });
-      }
-    }, 159: (a, b, c) => {
-      "use strict";
-      c.d(b, { F: () => e, h: () => f });
-      let d = "DYNAMIC_SERVER_USAGE";
-      class e extends Error {
-        constructor(a2) {
-          super("Dynamic server usage: " + a2), this.description = a2, this.digest = d;
-        }
-      }
-      function f(a2) {
-        return "object" == typeof a2 && null !== a2 && "digest" in a2 && "string" == typeof a2.digest && a2.digest === d;
-      }
-    }, 165: (a, b, c) => {
-      "use strict";
-      var d = c(356).Buffer;
-      Object.defineProperty(b, "__esModule", { value: true }), !function(a2, b2) {
-        for (var c2 in b2) Object.defineProperty(a2, c2, { enumerable: true, get: b2[c2] });
-      }(b, { handleFetch: function() {
-        return h;
-      }, interceptFetch: function() {
-        return i;
-      }, reader: function() {
-        return f;
-      } });
-      let e = c(392), f = { url: (a2) => a2.url, header: (a2, b2) => a2.headers.get(b2) };
-      async function g(a2, b2) {
-        let { url: c2, method: e2, headers: f2, body: g2, cache: h2, credentials: i2, integrity: j, mode: k, redirect: l, referrer: m, referrerPolicy: n } = b2;
-        return { testData: a2, api: "fetch", request: { url: c2, method: e2, headers: [...Array.from(f2), ["next-test-stack", function() {
-          let a3 = (Error().stack ?? "").split("\n");
-          for (let b3 = 1; b3 < a3.length; b3++) if (a3[b3].length > 0) {
-            a3 = a3.slice(b3);
-            break;
-          }
-          return (a3 = (a3 = (a3 = a3.filter((a4) => !a4.includes("/next/dist/"))).slice(0, 5)).map((a4) => a4.replace("webpack-internal:///(rsc)/", "").trim())).join("    ");
-        }()]], body: g2 ? d.from(await b2.arrayBuffer()).toString("base64") : null, cache: h2, credentials: i2, integrity: j, mode: k, redirect: l, referrer: m, referrerPolicy: n } };
-      }
-      async function h(a2, b2) {
-        let c2 = (0, e.getTestReqInfo)(b2, f);
-        if (!c2) return a2(b2);
-        let { testData: h2, proxyPort: i2 } = c2, j = await g(h2, b2), k = await a2(`http://localhost:${i2}`, { method: "POST", body: JSON.stringify(j), next: { internal: true } });
-        if (!k.ok) throw Object.defineProperty(Error(`Proxy request failed: ${k.status}`), "__NEXT_ERROR_CODE", { value: "E146", enumerable: false, configurable: true });
-        let l = await k.json(), { api: m } = l;
-        switch (m) {
-          case "continue":
-            return a2(b2);
-          case "abort":
-          case "unhandled":
-            throw Object.defineProperty(Error(`Proxy request aborted [${b2.method} ${b2.url}]`), "__NEXT_ERROR_CODE", { value: "E145", enumerable: false, configurable: true });
-          case "fetch":
-            let { status: n, headers: o, body: p } = l.response;
-            return new Response(p ? d.from(p, "base64") : null, { status: n, headers: new Headers(o) });
-          default:
-            return m;
-        }
-      }
-      function i(a2) {
-        return c.g.fetch = function(b2, c2) {
-          var d2;
-          return (null == c2 || null == (d2 = c2.next) ? void 0 : d2.internal) ? a2(b2, c2) : h(a2, new Request(b2, c2));
-        }, () => {
-          c.g.fetch = a2;
-        };
       }
     }, 213: (a) => {
       (() => {
@@ -7373,7 +7370,7 @@ ${b12.message}`);
         }
       }
     } }, (a) => {
-      var b = a(a.s = 72);
+      var b = a(a.s = 176);
       (_ENTRIES = "undefined" == typeof _ENTRIES ? {} : _ENTRIES)["middleware_src/middleware"] = b;
     }]);
   }
@@ -7563,12 +7560,12 @@ var NEXT_DIR = path.join(__dirname, ".next");
 var OPEN_NEXT_DIR = path.join(__dirname, ".open-next");
 debug({ NEXT_DIR, OPEN_NEXT_DIR });
 var NextConfig = { "env": {}, "webpack": null, "eslint": { "ignoreDuringBuilds": false }, "typescript": { "ignoreBuildErrors": false, "tsconfigPath": "tsconfig.json" }, "typedRoutes": false, "distDir": ".next", "cleanDistDir": true, "assetPrefix": "/app", "cacheMaxMemorySize": 52428800, "configOrigin": "next.config.js", "useFileSystemPublicRoutes": true, "generateEtags": true, "pageExtensions": ["tsx", "ts", "jsx", "js"], "poweredByHeader": true, "compress": true, "images": { "deviceSizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840], "imageSizes": [16, 32, 48, 64, 96, 128, 256, 384], "path": "/app/_next/image", "loader": "default", "loaderFile": "", "domains": [], "disableStaticImages": false, "minimumCacheTTL": 60, "formats": ["image/webp"], "dangerouslyAllowSVG": false, "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;", "contentDispositionType": "attachment", "remotePatterns": [], "unoptimized": false }, "devIndicators": { "position": "bottom-left" }, "onDemandEntries": { "maxInactiveAge": 6e4, "pagesBufferLength": 5 }, "amp": { "canonicalBase": "/app" }, "basePath": "/app", "sassOptions": {}, "trailingSlash": false, "i18n": null, "productionBrowserSourceMaps": false, "excludeDefaultMomentLocales": true, "serverRuntimeConfig": {}, "publicRuntimeConfig": {}, "reactProductionProfiling": false, "reactStrictMode": null, "reactMaxHeadersLength": 6e3, "httpAgentOptions": { "keepAlive": true }, "logging": {}, "compiler": {}, "expireTime": 31536e3, "staticPageGenerationTimeout": 60, "output": "standalone", "modularizeImports": { "@mui/icons-material": { "transform": "@mui/icons-material/{{member}}" }, "lodash": { "transform": "lodash/{{member}}" } }, "outputFileTracingRoot": "/Users/zamani/Desktop/booking-main", "experimental": { "useSkewCookie": false, "cacheLife": { "default": { "stale": 300, "revalidate": 900, "expire": 4294967294 }, "seconds": { "stale": 30, "revalidate": 1, "expire": 60 }, "minutes": { "stale": 300, "revalidate": 60, "expire": 3600 }, "hours": { "stale": 300, "revalidate": 3600, "expire": 86400 }, "days": { "stale": 300, "revalidate": 86400, "expire": 604800 }, "weeks": { "stale": 300, "revalidate": 604800, "expire": 2592e3 }, "max": { "stale": 300, "revalidate": 2592e3, "expire": 4294967294 } }, "cacheHandlers": {}, "cssChunking": true, "multiZoneDraftMode": false, "appNavFailHandling": false, "prerenderEarlyExit": true, "serverMinification": true, "serverSourceMaps": false, "linkNoTouchStart": false, "caseSensitiveRoutes": false, "clientSegmentCache": false, "clientParamParsing": false, "dynamicOnHover": false, "preloadEntriesOnStart": true, "clientRouterFilter": true, "clientRouterFilterRedirects": false, "fetchCacheKeyPrefix": "", "middlewarePrefetch": "flexible", "optimisticClientCache": true, "manualClientBasePath": false, "cpus": 7, "memoryBasedWorkersCount": false, "imgOptConcurrency": null, "imgOptTimeoutInSeconds": 7, "imgOptMaxInputPixels": 268402689, "imgOptSequentialRead": null, "imgOptSkipMetadata": null, "isrFlushToDisk": true, "workerThreads": false, "optimizeCss": false, "nextScriptWorkers": false, "scrollRestoration": false, "externalDir": false, "disableOptimizedLoading": false, "gzipSize": true, "craCompat": false, "esmExternals": true, "fullySpecified": false, "swcTraceProfiling": false, "forceSwcTransforms": false, "largePageDataBytes": 128e3, "typedEnv": false, "parallelServerCompiles": false, "parallelServerBuildTraces": false, "ppr": false, "authInterrupts": false, "webpackMemoryOptimizations": false, "optimizeServerReact": true, "viewTransition": false, "routerBFCache": false, "removeUncaughtErrorAndRejectionListeners": false, "validateRSCRequestHeaders": false, "staleTimes": { "dynamic": 0, "static": 300 }, "serverComponentsHmrCache": true, "staticGenerationMaxConcurrency": 8, "staticGenerationMinPagesPerWorker": 25, "cacheComponents": false, "inlineCss": false, "useCache": false, "globalNotFound": false, "devtoolSegmentExplorer": true, "browserDebugInfoInTerminal": false, "optimizeRouterScrolling": false, "middlewareClientMaxBodySize": 10485760, "optimizePackageImports": ["lucide-react", "date-fns", "lodash-es", "ramda", "antd", "react-bootstrap", "ahooks", "@ant-design/icons", "@headlessui/react", "@headlessui-float/react", "@heroicons/react/20/solid", "@heroicons/react/24/solid", "@heroicons/react/24/outline", "@visx/visx", "@tremor/react", "rxjs", "@mui/material", "@mui/icons-material", "recharts", "react-use", "effect", "@effect/schema", "@effect/platform", "@effect/platform-node", "@effect/platform-browser", "@effect/platform-bun", "@effect/sql", "@effect/sql-mssql", "@effect/sql-mysql2", "@effect/sql-pg", "@effect/sql-sqlite-node", "@effect/sql-sqlite-bun", "@effect/sql-sqlite-wasm", "@effect/sql-sqlite-react-native", "@effect/rpc", "@effect/rpc-http", "@effect/typeclass", "@effect/experimental", "@effect/opentelemetry", "@material-ui/core", "@material-ui/icons", "@tabler/icons-react", "mui-core", "react-icons/ai", "react-icons/bi", "react-icons/bs", "react-icons/cg", "react-icons/ci", "react-icons/di", "react-icons/fa", "react-icons/fa6", "react-icons/fc", "react-icons/fi", "react-icons/gi", "react-icons/go", "react-icons/gr", "react-icons/hi", "react-icons/hi2", "react-icons/im", "react-icons/io", "react-icons/io5", "react-icons/lia", "react-icons/lib", "react-icons/lu", "react-icons/md", "react-icons/pi", "react-icons/ri", "react-icons/rx", "react-icons/si", "react-icons/sl", "react-icons/tb", "react-icons/tfi", "react-icons/ti", "react-icons/vsc", "react-icons/wi"], "trustHostHeader": false, "isExperimentalCompile": false }, "htmlLimitedBots": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight", "bundlePagesRouterDependencies": false, "configFileName": "next.config.js", "turbopack": { "root": "/Users/zamani/Desktop/booking-main" } };
-var BuildId = "ejxfVWOxdAs1WSeOJXvxL";
+var BuildId = "qBzpeDU39Pjcsb-yysAiB";
 var RoutesManifest = { "basePath": "/app", "rewrites": { "beforeFiles": [], "afterFiles": [], "fallback": [] }, "redirects": [{ "source": "/app/", "destination": "/app", "basePath": false, "internal": true, "statusCode": 308, "regex": "^/app/$" }, { "source": "/:path+/", "destination": "/:path+", "internal": true, "statusCode": 308, "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$" }], "routes": { "static": [{ "page": "/", "regex": "^/(?:/)?$", "routeKeys": {}, "namedRegex": "^/(?:/)?$" }, { "page": "/_not-found", "regex": "^/_not\\-found(?:/)?$", "routeKeys": {}, "namedRegex": "^/_not\\-found(?:/)?$" }, { "page": "/about", "regex": "^/about(?:/)?$", "routeKeys": {}, "namedRegex": "^/about(?:/)?$" }, { "page": "/admin", "regex": "^/admin(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin(?:/)?$" }, { "page": "/admin/ContentManagement", "regex": "^/admin/ContentManagement(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/ContentManagement(?:/)?$" }, { "page": "/admin/OperatingHours", "regex": "^/admin/OperatingHours(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/OperatingHours(?:/)?$" }, { "page": "/admin/Reports", "regex": "^/admin/Reports(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/Reports(?:/)?$" }, { "page": "/admin/Services", "regex": "^/admin/Services(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/Services(?:/)?$" }, { "page": "/admin/Team", "regex": "^/admin/Team(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/Team(?:/)?$" }, { "page": "/booking", "regex": "^/booking(?:/)?$", "routeKeys": {}, "namedRegex": "^/booking(?:/)?$" }, { "page": "/client", "regex": "^/client(?:/)?$", "routeKeys": {}, "namedRegex": "^/client(?:/)?$" }, { "page": "/contact", "regex": "^/contact(?:/)?$", "routeKeys": {}, "namedRegex": "^/contact(?:/)?$" }, { "page": "/favicon.ico", "regex": "^/favicon\\.ico(?:/)?$", "routeKeys": {}, "namedRegex": "^/favicon\\.ico(?:/)?$" }, { "page": "/user", "regex": "^/user(?:/)?$", "routeKeys": {}, "namedRegex": "^/user(?:/)?$" }], "dynamic": [{ "page": "/admin/booking/[id]", "regex": "^/admin/booking/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/admin/booking/(?<nxtPid>[^/]+?)(?:/)?$" }, { "page": "/api/booking/[id]", "regex": "^/api/booking/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/api/booking/(?<nxtPid>[^/]+?)(?:/)?$" }, { "page": "/api/booking-settings/[id]", "regex": "^/api/booking\\-settings/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/api/booking\\-settings/(?<nxtPid>[^/]+?)(?:/)?$" }, { "page": "/api/operating-hours/[id]", "regex": "^/api/operating\\-hours/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/api/operating\\-hours/(?<nxtPid>[^/]+?)(?:/)?$" }, { "page": "/user/[id]", "regex": "^/user/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/user/(?<nxtPid>[^/]+?)(?:/)?$" }], "data": { "static": [], "dynamic": [] } }, "locales": [] };
 var ConfigHeaders = [];
-var PrerenderManifest = { "version": 4, "routes": { "/favicon.ico": { "initialHeaders": { "cache-control": "public, max-age=0, must-revalidate", "content-type": "image/x-icon", "x-next-cache-tags": "_N_T_/layout,_N_T_/favicon.ico/layout,_N_T_/favicon.ico/route,_N_T_/favicon.ico" }, "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/favicon.ico", "dataRoute": null, "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/about": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/about", "dataRoute": "/about.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/_not-found": { "initialStatus": 404, "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/_not-found", "dataRoute": "/_not-found.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/contact": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/contact", "dataRoute": "/contact.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/user": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/user", "dataRoute": "/user.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/client": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/client", "dataRoute": "/client.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/booking": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/booking", "dataRoute": "/booking.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/", "dataRoute": "/index.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] } }, "dynamicRoutes": {}, "notFoundRoutes": [], "preview": { "previewModeId": "a44c568382f509404e0130f263177f58", "previewModeSigningKey": "b982d0d1bfe68d6bc6dc371223ca78a110b29121d45859eb53ba7a4067277e2a", "previewModeEncryptionKey": "e0220b25926b3a3c457b1c2aa82c31c49b9770bf170056e458929ff4d41f8f32" } };
-var MiddlewareManifest = { "version": 3, "middleware": { "/": { "files": ["server/edge-runtime-webpack.js", "server/src/middleware.js"], "name": "src/middleware", "page": "/", "matchers": [{ "regexp": "^\\/app(?:\\/(_next\\/data\\/[^/]{1,}))?\\/user(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json)?[\\/#\\?]?$", "originalSource": "/user/:path*" }, { "regexp": "^\\/app(?:\\/(_next\\/data\\/[^/]{1,}))?\\/admin(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json)?[\\/#\\?]?$", "originalSource": "/admin/:path*" }], "wasm": [], "assets": [], "env": { "__NEXT_BUILD_ID": "ejxfVWOxdAs1WSeOJXvxL", "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "WaJlGeY+6l6up0hGQBvZCOhSuYeCiFQyql5Ri00pQ0Y=", "__NEXT_PREVIEW_MODE_ID": "a44c568382f509404e0130f263177f58", "__NEXT_PREVIEW_MODE_SIGNING_KEY": "b982d0d1bfe68d6bc6dc371223ca78a110b29121d45859eb53ba7a4067277e2a", "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "e0220b25926b3a3c457b1c2aa82c31c49b9770bf170056e458929ff4d41f8f32" } } }, "functions": {}, "sortedMiddleware": ["/"] };
-var AppPathRoutesManifest = { "/_not-found/page": "/_not-found", "/api/User/route": "/api/User", "/api/booking-settings/[id]/route": "/api/booking-settings/[id]", "/api/booking-settings/route": "/api/booking-settings", "/api/booking/[id]/route": "/api/booking/[id]", "/api/booking/route": "/api/booking", "/api/operating-hours/[id]/route": "/api/operating-hours/[id]", "/api/operating-hours/route": "/api/operating-hours", "/api/services/route": "/api/services", "/api/team/getActiveProvider/route": "/api/team/getActiveProvider", "/api/team/route": "/api/team", "/favicon.ico/route": "/favicon.ico", "/(public)/booking/page": "/booking", "/(public)/about/page": "/about", "/(public)/client/page": "/client", "/(public)/contact/page": "/contact", "/(public)/page": "/", "/(public)/user/page": "/user", "/(public)/user/[id]/page": "/user/[id]", "/admin/ContentManagement/page": "/admin/ContentManagement", "/admin/OperatingHours/page": "/admin/OperatingHours", "/admin/Reports/page": "/admin/Reports", "/admin/Services/page": "/admin/Services", "/admin/Team/page": "/admin/Team", "/admin/booking/[id]/page": "/admin/booking/[id]", "/admin/page": "/admin" };
+var PrerenderManifest = { "version": 4, "routes": { "/favicon.ico": { "initialHeaders": { "cache-control": "public, max-age=0, must-revalidate", "content-type": "image/x-icon", "x-next-cache-tags": "_N_T_/layout,_N_T_/favicon.ico/layout,_N_T_/favicon.ico/route,_N_T_/favicon.ico" }, "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/favicon.ico", "dataRoute": null, "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/_not-found": { "initialStatus": 404, "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/_not-found", "dataRoute": "/_not-found.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/booking": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/booking", "dataRoute": "/booking.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/client": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/client", "dataRoute": "/client.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/contact": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/contact", "dataRoute": "/contact.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/", "dataRoute": "/index.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/user": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/user", "dataRoute": "/user.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/about": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/about", "dataRoute": "/about.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] } }, "dynamicRoutes": {}, "notFoundRoutes": [], "preview": { "previewModeId": "a44c568382f509404e0130f263177f58", "previewModeSigningKey": "b982d0d1bfe68d6bc6dc371223ca78a110b29121d45859eb53ba7a4067277e2a", "previewModeEncryptionKey": "e0220b25926b3a3c457b1c2aa82c31c49b9770bf170056e458929ff4d41f8f32" } };
+var MiddlewareManifest = { "version": 3, "middleware": { "/": { "files": ["server/edge-runtime-webpack.js", "server/src/middleware.js"], "name": "src/middleware", "page": "/", "matchers": [{ "regexp": "^\\/app(?:\\/(_next\\/data\\/[^/]{1,}))?\\/user(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json)?[\\/#\\?]?$", "originalSource": "/user/:path*" }, { "regexp": "^\\/app(?:\\/(_next\\/data\\/[^/]{1,}))?\\/admin(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json)?[\\/#\\?]?$", "originalSource": "/admin/:path*" }], "wasm": [], "assets": [], "env": { "__NEXT_BUILD_ID": "qBzpeDU39Pjcsb-yysAiB", "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "WaJlGeY+6l6up0hGQBvZCOhSuYeCiFQyql5Ri00pQ0Y=", "__NEXT_PREVIEW_MODE_ID": "a44c568382f509404e0130f263177f58", "__NEXT_PREVIEW_MODE_SIGNING_KEY": "b982d0d1bfe68d6bc6dc371223ca78a110b29121d45859eb53ba7a4067277e2a", "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "e0220b25926b3a3c457b1c2aa82c31c49b9770bf170056e458929ff4d41f8f32" } } }, "functions": {}, "sortedMiddleware": ["/"] };
+var AppPathRoutesManifest = { "/_not-found/page": "/_not-found", "/api/User/route": "/api/User", "/api/booking-settings/[id]/route": "/api/booking-settings/[id]", "/api/booking-settings/route": "/api/booking-settings", "/api/booking/[id]/route": "/api/booking/[id]", "/api/booking/route": "/api/booking", "/api/operating-hours/[id]/route": "/api/operating-hours/[id]", "/api/services/route": "/api/services", "/api/operating-hours/route": "/api/operating-hours", "/api/team/getActiveProvider/route": "/api/team/getActiveProvider", "/api/team/route": "/api/team", "/favicon.ico/route": "/favicon.ico", "/(public)/booking/page": "/booking", "/(public)/about/page": "/about", "/(public)/client/page": "/client", "/(public)/contact/page": "/contact", "/(public)/page": "/", "/(public)/user/[id]/page": "/user/[id]", "/(public)/user/page": "/user", "/admin/OperatingHours/page": "/admin/OperatingHours", "/admin/ContentManagement/page": "/admin/ContentManagement", "/admin/Reports/page": "/admin/Reports", "/admin/Services/page": "/admin/Services", "/admin/Team/page": "/admin/Team", "/admin/booking/[id]/page": "/admin/booking/[id]", "/admin/page": "/admin" };
 var FunctionsConfigManifest = { "version": 1, "functions": {} };
 var PagesManifest = { "/_app": "pages/_app.js", "/_error": "pages/_error.js", "/_document": "pages/_document.js", "/404": "pages/404.html" };
 process.env.NEXT_BUILD_ID = BuildId;

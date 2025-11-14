@@ -10,5 +10,13 @@
   },
   "observability": {
     "enabled": true
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "testlocaldb",
+      "database_id": "fde33126-2075-4aa9-9cab-9e2a83a22b7b", // <--- You MUST replace this
+      "migrations_dir": "./migrations"
+    }
+  ]
 }

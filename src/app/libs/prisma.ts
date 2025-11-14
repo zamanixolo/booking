@@ -1,21 +1,14 @@
-
 import { PrismaClient } from '@prisma/client'
+import { PrismaD1 } from '@prisma/adapter-d1' // <-- FIX #1: Renamed from D1Adapter
+import { getCloudflareContext } from '@opennextjs/cloudflare'
 
-// Prevent multiple instances in dev
-const prismaClientSingleton = () => {
-  return new PrismaClient()
+export function getPrismaClient() {
+  const { env } = getCloudflareContext();
+  
+  // This is where the 'CloudflareEnv' error is, which we fix in Step 2
+  const adapter = new PrismaD1(env.DB); // <-- FIX #2: Renamed from D1Adapter
+  
+  return new PrismaClient({ adapter });
 }
-
-// Type-safe global declaration
-declare const globalThis: {
-  prismaGlobal: ReturnType<typeof prismaClientSingleton>
-} & typeof global
-
-// Use global in dev, otherwise create new
-const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
-
-if (process.env.NODE_ENV !== 'production') {
-  globalThis.prismaGlobal = prisma
-}
-
-export default prisma
+// NOTE: We do not export a single 'prisma' const.
+// We export the function that *creates* the client.
