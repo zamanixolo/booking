@@ -1,14 +1,38 @@
-import { PrismaClient } from "@prisma/client";
+// src/app/libs/operating-hours/OperatingHours.ts
 
-const prisma = new PrismaClient();
+import { OperatingHours, Prisma } from "@prisma/client";
+// 🎯 Import the shared D1 type definition
+import { D1PrismaClient } from '../prisma'; // Adjust the import path as necessary
 
-// 🟢 CREATE
-export async function createOrUpdateOperatingHour(data: {
+
+// 🛑 OLD: const prisma = new PrismaClient(); // This line must be removed
+
+
+// Define common data types for clarity
+export type OperatingHourInput = {
   dayOfWeek: number
   startTime: string
   endTime: string
   isActive?: boolean
-}) {
+};
+
+export type OperatingHourUpdateInput = Partial<OperatingHourInput>;
+
+
+// --- Operating Hours Management Functions ---
+// All functions now accept a 'prisma' instance as the first argument
+
+
+// 🟢 CREATE / UPSERT
+/**
+ * Creates a new operating hour or updates an existing one based on the day of the week.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param data Operating hour data.
+ */
+export async function createOrUpdateOperatingHour(
+  prisma: D1PrismaClient,
+  data: OperatingHourInput
+): Promise<OperatingHours> {
   return await prisma.operatingHours.upsert({
     where: { dayOfWeek: data.dayOfWeek },
     update: {
@@ -26,29 +50,43 @@ export async function createOrUpdateOperatingHour(data: {
 }
 
 // 🟡 READ - all
-export async function getAllOperatingHours() {
+/**
+ * Reads all operating hours, sorted by day of the week.
+ * @param prisma The D1-compatible Prisma client instance.
+ */
+export async function getAllOperatingHours(prisma: D1PrismaClient): Promise<OperatingHours[]> {
   return await prisma.operatingHours.findMany({
     orderBy: { dayOfWeek: 'asc' },
   })
 }
 
 // 🟢 READ - single
-export async function getOperatingHourById(id: string) {
+/**
+ * Reads a single operating hour by its ID.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param id The operating hour's internal database UUID.
+ */
+export async function getOperatingHourById(
+  prisma: D1PrismaClient,
+  id: string
+): Promise<OperatingHours | null> {
   return await prisma.operatingHours.findUnique({
     where: { id },
   })
 }
 
 // 🟠 UPDATE
+/**
+ * Updates a single operating hour by its ID.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param id The operating hour's internal database UUID.
+ * @param data Data to update.
+ */
 export async function updateOperatingHour(
+  prisma: D1PrismaClient,
   id: string,
-  data: {
-    dayOfWeek?: number
-    startTime?: string
-    endTime?: string
-    isActive?: boolean
-  }
-) {
+  data: OperatingHourUpdateInput
+): Promise<OperatingHours> {
   return await prisma.operatingHours.update({
     where: { id },
     data,
@@ -56,7 +94,15 @@ export async function updateOperatingHour(
 }
 
 // 🔴 DELETE
-export async function deleteOperatingHour(id: string) {
+/**
+ * Deletes a single operating hour by its ID.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param id The operating hour's internal database UUID.
+ */
+export async function deleteOperatingHour(
+  prisma: D1PrismaClient,
+  id: string
+): Promise<OperatingHours> {
   return await prisma.operatingHours.delete({
     where: { id },
   })

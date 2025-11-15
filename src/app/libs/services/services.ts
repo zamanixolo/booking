@@ -1,59 +1,108 @@
-import { PrismaClient } from "@prisma/client";
+// src/app/libs/services/Service.ts
 
-const prisma = new PrismaClient();
+import { Service, Prisma } from "@prisma/client";
+// 🎯 Import the shared D1 type definition
+import { D1PrismaClient } from '../prisma'; // Adjust the import path as necessary
 
-// CREATE Service
-export const createService = async (serviceData: {
-  name: string
-  description?: string
 
-  providers?: string[] // Add providers support
-}) => {
+// 🛑 OLD: const prisma = new PrismaClient(); // This line must be removed
+
+
+// Define common data types for clarity
+export type ServiceCreateInput = {
+  name: string;
+  description?: string | null;
+  providers?: string[]; // Assuming provider IDs are passed as strings
+};
+
+export type ServiceUpdateInput = {
+  name?: string;
+  description?: string;
+  duration?: number;
+  price?: number;
+  isActive?: boolean;
+  providers?: string[];
+};
+
+
+// --- Service Management Functions ---
+// All functions now accept a 'prisma' instance as the first argument
+
+/**
+ * Create a new service.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param serviceData Service creation data.
+ */
+export const createService = async (
+  prisma: D1PrismaClient,
+  serviceData: ServiceCreateInput
+): Promise<Service> => {
   return await prisma.service.create({
     data: {
       name: serviceData.name,
       description: serviceData.description,
+      // If connecting providers during creation, logic goes here
     }
-  })
-}
+  });
+};
 
-// READ Services
-export const getAllServices = async () => {
+/**
+ * READ all active services.
+ * @param prisma The D1-compatible Prisma client instance.
+ */
+export const getAllServices = async (prisma: D1PrismaClient): Promise<Service[]> => {
   return await prisma.service.findMany({
     where: { isActive: true }
-   
-  })
-}
+  });
+};
 
-export const getServiceById = async (id: string) => {
+/**
+ * READ service by ID.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param id The service's internal database UUID.
+ */
+export const getServiceById = async (
+  prisma: D1PrismaClient,
+  id: string
+): Promise<Service | null> => {
   return await prisma.service.findUnique({
     where: { id }
-  })
-}
+  });
+};
 
-// UPDATE Service
-export const updateService = async (id: string, updateData: {
-  name?: string
-  description?: string
-  duration?: number
-  price?: number
-  isActive?: boolean
-  providers?: string[] // Add providers support
-}) => {
+/**
+ * UPDATE Service by ID.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param id The service's internal database UUID.
+ * @param updateData Data to update.
+ */
+export const updateService = async (
+  prisma: D1PrismaClient,
+  id: string,
+  updateData: ServiceUpdateInput
+): Promise<Service> => {
   return await prisma.service.update({
     where: { id },
     data: {
       name: updateData.name,
       description: updateData.description,
       isActive: updateData.isActive,
-      
-  }})
-}
+      // Logic for updating provider links would also go here if necessary
+    }
+  });
+};
 
-// DELETE Service (soft delete)
-export const deleteService = async (id: string) => {
+/**
+ * DELETE Service (soft delete).
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param id The service's internal database UUID.
+ */
+export const deleteService = async (
+  prisma: D1PrismaClient,
+  id: string
+): Promise<Service> => {
   return await prisma.service.update({
     where: { id },
     data: { isActive: false }
-  })
-}
+  });
+};

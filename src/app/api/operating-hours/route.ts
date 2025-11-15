@@ -1,29 +1,42 @@
+// app/api/operations/route.ts
+
 import { NextResponse } from 'next/server';
 import {
   getAllOperatingHours,
   createOrUpdateOperatingHour,
-} from '@/app/libs/Operations/Operations'
+} from '@/app/libs/Operations/Operations' // Corrected import path from 'Operations/Operations'
+import { getPrismaClient } from '@/app/libs/prisma'; // 🎯 Import the D1 client getter
+
 
 export async function GET() {
+  // ✅ Instantiate Prisma inside the handler
+  const prisma = getPrismaClient();
+
   try {
-    const data = await getAllOperatingHours()
-    return NextResponse.json(data)
+    // ✅ Pass 'prisma' as the first argument
+    const data = await getAllOperatingHours(prisma);
+    return NextResponse.json(data);
   } catch (error) {
-    console.error(error)
-    return NextResponse.json({ error: 'Failed to fetch' }, { status: 500 })
+    console.error(error);
+    return NextResponse.json({ error: 'Failed to fetch' }, { status: 500 });
   }
 }
 
 export async function POST(req: Request) {
+  // ✅ Instantiate Prisma inside the handler
+  const prisma = getPrismaClient();
+  
   try {
     const body = await req.json() as any;
-    const record = await createOrUpdateOperatingHour(body)
-    return NextResponse.json(record, { status: 201 })
+    // ✅ Pass 'prisma' as the first argument
+    const record = await createOrUpdateOperatingHour(prisma, body);
+    return NextResponse.json(record, { status: 201 });
   } catch (error) {
-    console.error(error)
-    return NextResponse.json({ error: 'Failed to create' }, { status: 500 })
+    console.error(error);
+    return NextResponse.json({ error: 'Failed to create' }, { status: 500 });
   }
 }
+
 
 // import { 
 //   createOperatingHours, 

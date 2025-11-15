@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { currentUser } from '@clerk/nextjs/server';
 import { getProviderByClerkId } from '@/app/libs/providers/providers';
 import { getUserByClerkId } from '@/app/libs/users/user';
+import { getPrismaClient } from '../libs/prisma';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,8 +19,9 @@ export default async function AdminLayout({ children }: { children: ReactNode })
 
   // 2️⃣ Try to find provider and user in DB
   const clerkId = user.id;
-  const provider = await getProviderByClerkId(clerkId);
-  const dbUser = await getUserByClerkId(clerkId);
+  const prisma = getPrismaClient()
+  const provider = await getProviderByClerkId(prisma,clerkId);
+  const dbUser = await getUserByClerkId(prisma,clerkId);
 
   // 3️⃣ If not a provider → redirect to /user/:id or /user
   if (!provider) {

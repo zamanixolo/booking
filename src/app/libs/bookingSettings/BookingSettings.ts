@@ -1,13 +1,41 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+// src/app/libs/booking-settings/BookingSettings.ts
 
-// CREATE BookingSettings with multiple providers
-export const createBookingSettings = async (data: {
+import { BookingSettings, Prisma } from "@prisma/client";
+// 🎯 Import the shared D1 type definition
+import { D1PrismaClient } from '../prisma'; // Adjust the import path as necessary
+
+
+// 🛑 OLD: const prisma = new PrismaClient(); // This line must be removed
+
+
+// Define common data types for clarity
+export type BookingSettingsCreateInput = {
   providerIds: string[];
   serviceId: string;
   defaultSessionDuration: number;
   defaultPrice: number;
-}) => {
+};
+
+export type BookingSettingsUpdateInput = {
+  providerIds?: string[];
+  serviceId?: string;
+  defaultSessionDuration?: number;
+  defaultPrice?: number;
+};
+
+
+// --- Booking Settings Management Functions ---
+// All functions now accept a 'prisma' instance as the first argument
+
+/**
+ * CREATE BookingSettings with multiple providers.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param data Booking settings creation data.
+ */
+export const createBookingSettings = async (
+  prisma: D1PrismaClient,
+  data: BookingSettingsCreateInput
+): Promise<BookingSettings> => {
   return await prisma.bookingSettings.create({
     data: {
       service: { connect: { id: data.serviceId } },
@@ -24,8 +52,11 @@ export const createBookingSettings = async (data: {
   });
 };
 
-// READ all BookingSettings
-export const getBookingSettings = async () => {
+/**
+ * READ all BookingSettings.
+ * @param prisma The D1-compatible Prisma client instance.
+ */
+export const getBookingSettings = async (prisma: D1PrismaClient): Promise<BookingSettings[]> => {
   return await prisma.bookingSettings.findMany({
     include: {
       service: true,
@@ -34,8 +65,15 @@ export const getBookingSettings = async () => {
   });
 };
 
-// READ BookingSettings by ID
-export const getBookingSettingsById = async (id: string) => {
+/**
+ * READ BookingSettings by ID.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param id The settings internal database UUID.
+ */
+export const getBookingSettingsById = async (
+  prisma: D1PrismaClient,
+  id: string
+): Promise<BookingSettings | null> => {
   return await prisma.bookingSettings.findUnique({
     where: { id },
     include: {
@@ -45,22 +83,24 @@ export const getBookingSettingsById = async (id: string) => {
   });
 };
 
-// UPDATE BookingSettings (including providers)
+/**
+ * UPDATE BookingSettings (including providers).
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param id The settings internal database UUID.
+ * @param data Data to update.
+ */
 export const updateBookingSettings = async (
+  prisma: D1PrismaClient,
   id: string,
-  data: {
-    providerIds?: string[];
-    serviceId?: string;
-    defaultSessionDuration?: number;
-    defaultPrice?: number;
-  }
-) => {
+  data: BookingSettingsUpdateInput
+): Promise<BookingSettings> => {
   return await prisma.bookingSettings.update({
     where: { id },
     data: {
       ...(data.serviceId && { service: { connect: { id: data.serviceId } } }),
       ...(data.providerIds && {
         providers: {
+          // Use 'set' to replace the entire list of connected providers
           set: data.providerIds.map((id) => ({ id })),
         },
       }),
@@ -76,8 +116,15 @@ export const updateBookingSettings = async (
   });
 };
 
-// DELETE BookingSettings
-export const deleteBookingSettings = async (id: string) => {
+/**
+ * DELETE BookingSettings.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param id The settings internal database UUID.
+ */
+export const deleteBookingSettings = async (
+  prisma: D1PrismaClient,
+  id: string
+): Promise<BookingSettings> => {
   return await prisma.bookingSettings.delete({
     where: { id },
   });

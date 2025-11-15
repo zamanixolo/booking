@@ -2,6 +2,7 @@ import { createProvider, deleteProvider, getAllProviders, updateProvider } from 
 import { NextResponse } from 'next/server'
 import { ProviderRole } from '@prisma/client'
 import { clerkClient } from '@clerk/nextjs/server'
+import { getPrismaClient } from '@/app/libs/prisma'
 
 // Define the Provider input type (for type-safety)
 interface ProviderInput {
@@ -18,7 +19,8 @@ interface ProviderInput {
 
 // ✅ GET request
 export async function GET() {
-  const team = await getAllProviders()
+  const prisma=getPrismaClient()
+  const team = await getAllProviders(prisma)
   return NextResponse.json(team)
 }
 
@@ -26,8 +28,8 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const newMember: ProviderInput = await req.json()
-
-    const team = await getAllProviders()
+    const prisma=getPrismaClient()
+    const team = await getAllProviders(prisma)
     if (team.some((member) => member.email === newMember.email)) {
       return NextResponse.json({ msg: 'Member with this email already exists' }, { status: 400 })
     }
@@ -58,7 +60,7 @@ export async function POST(req: Request) {
       clerkId: clerkUser.id,
     }
 
-    const data = await createProvider(providerData)
+    const data = await createProvider(prisma,providerData)
     console.log('✅ Created Member:', data)
     return NextResponse.json(data, { status: 201 })
   } catch (error) {
@@ -71,7 +73,7 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const body: ProviderInput = await req.json()
-
+    const prisma=getPrismaClient()
     let role: ProviderRole | undefined
     if (body.role && Object.values(ProviderRole).includes(body.role)) {
       role = body.role
@@ -90,7 +92,7 @@ export async function PUT(req: Request) {
       return NextResponse.json({ msg: 'Missing provider ID' }, { status: 400 })
     }
 
-    const updated = await updateProvider(body.id, updateData)
+    const updated = await updateProvider(prisma,body.id, updateData)
 
     if (!updated) {
       return NextResponse.json({ msg: 'Member not found' }, { status: 404 })
@@ -107,12 +109,12 @@ export async function PUT(req: Request) {
 export async function DELETE(req: Request) {
   try {
     const body = (await req.json()) as { id: string }
-
+    const prisma=getPrismaClient()
     if (!body.id) {
       return NextResponse.json({ msg: 'Missing provider ID' }, { status: 400 })
     }
 
-    const deleted = await deleteProvider(body.id)
+    const deleted = await deleteProvider(prisma,body.id)
 
     if (!deleted) {
       return NextResponse.json({ msg: 'Member not found' }, { status: 404 })

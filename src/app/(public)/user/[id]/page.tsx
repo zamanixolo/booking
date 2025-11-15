@@ -5,6 +5,7 @@ import { getProviderByClerkId } from '@/app/libs/providers/providers'
 import { getUserByClerkId } from '@/app/libs/users/user'
 import { redirect } from 'next/navigation'
 import { currentUser } from '@clerk/nextjs/server'
+import { getPrismaClient } from '@/app/libs/prisma'
 
 // ✅ In Next.js 15, params is a Promise
 export default async function UserProfilePage({
@@ -16,9 +17,9 @@ export default async function UserProfilePage({
   const user = await currentUser()
 
   if (!user) redirect('/user')
-
-  const dbUser = await getUserByClerkId(id)
-  const dbProvider = await getProviderByClerkId(id)
+  const prisma = getPrismaClient()
+  const dbUser = await getUserByClerkId(prisma,id)
+  const dbProvider = await getProviderByClerkId(prisma,id)
 
   if (!dbUser && !dbProvider) redirect('/user')
   if (dbProvider) redirect('/admin')

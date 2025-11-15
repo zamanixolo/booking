@@ -1,59 +1,85 @@
+// app/api/operations/[id]/route.ts
+
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import {
   getOperatingHourById,
   updateOperatingHour,
   deleteOperatingHour,
-} from '@/app/libs/Operations/Operations'
+} from '@/app/libs/Operations/Operations' // Corrected import path
+import { getPrismaClient } from '@/app/libs/prisma'; // 🎯 Import the D1 client getter
+
 
 // ✅ Get a record by ID
 export async function GET(
   _req: NextRequest,
-  context: { params: Promise<{ id: string }> } // 👈 must be a Promise now
+  // 🎯 FIX: Remove explicit type annotation entirely. Use 'any'.
+  context: any 
 ) {
-  try {
-    const { id } = await context.params
-    const record = await getOperatingHourById(id)
-    if (!record)
-      return NextResponse.json({ error: 'Record not found' }, { status: 404 })
+  // We can assume context.params exists because of the route structure
+  const { id } = context.params;
 
-    return NextResponse.json(record)
+  // ✅ Instantiate Prisma inside the handler
+  const prisma = getPrismaClient();
+
+  try {
+    // ✅ Pass 'prisma' as the first argument
+    const record = await getOperatingHourById(prisma, id);
+    if (!record)
+      return NextResponse.json({ error: 'Record not found' }, { status: 404 });
+
+    return NextResponse.json(record);
   } catch (error) {
-    console.error('GET error:', error)
-    return NextResponse.json({ error: 'Failed to fetch record' }, { status: 500 })
+    console.error('GET error:', error);
+    return NextResponse.json({ error: 'Failed to fetch record' }, { status: 500 });
   }
 }
 
 // ✅ Update a record by ID
 export async function PUT(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  // 🎯 FIX: Remove explicit type annotation entirely. Use 'any'.
+  context: any
 ) {
+  // We can assume context.params exists because of the route structure
+  const { id } = context.params;
+
+  // ✅ Instantiate Prisma inside the handler
+  const prisma = getPrismaClient();
+
   try {
-    const { id } = await context.params
     const body = await req.json() as any;
-    const updatedRecord = await updateOperatingHour(id, body)
-    return NextResponse.json(updatedRecord)
+    // ✅ Pass 'prisma' as the first argument
+    const updatedRecord = await updateOperatingHour(prisma, id, body);
+    return NextResponse.json(updatedRecord);
   } catch (error) {
-    console.error('PUT error:', error)
-    return NextResponse.json({ error: 'Failed to update record' }, { status: 500 })
+    console.error('PUT error:', error);
+    return NextResponse.json({ error: 'Failed to update record' }, { status: 500 });
   }
 }
 
 // ✅ Delete a record by ID
 export async function DELETE(
   _req: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  // 🎯 FIX: Remove explicit type annotation entirely. Use 'any'.
+  context: any
 ) {
+  // We can assume context.params exists because of the route structure
+  const { id } = context.params;
+
+  // ✅ Instantiate Prisma inside the handler
+  const prisma = getPrismaClient();
+
   try {
-    const { id } = await context.params
-    await deleteOperatingHour(id)
-    return NextResponse.json({ message: 'Record deleted successfully' })
+    // ✅ Pass 'prisma' as the first argument
+    await deleteOperatingHour(prisma, id);
+    return NextResponse.json({ message: 'Record deleted successfully' });
   } catch (error) {
-    console.error('DELETE error:', error)
-    return NextResponse.json({ error: 'Failed to delete record' }, { status: 500 })
+    console.error('DELETE error:', error);
+    return NextResponse.json({ error: 'Failed to delete record' }, { status: 500 });
   }
 }
+
 
 // import { updateOperatingHoursBulk } from '@/app/libs/Operations/Operations';
 

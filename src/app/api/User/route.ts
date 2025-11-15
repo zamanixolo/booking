@@ -1,12 +1,13 @@
 // src/app/api/User/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserByClerkId, createUser, updateUserByClerkId } from '@/app/libs/users/user';
+import { getPrismaClient } from '@/app/libs/prisma';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json() as any;
     const { clerkId } = body;
-
+    const prisma=getPrismaClient()
     if (!clerkId) {
       return NextResponse.json(
         { error: 'clerkId is required' },
@@ -15,7 +16,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Find user by clerkId
-    const user = await getUserByClerkId(clerkId);
+    const user = await getUserByClerkId(prisma,clerkId);
 
     if (!user) {
       return NextResponse.json({
@@ -56,7 +57,7 @@ export async function PUT(request: NextRequest) {
   try {
     const body = await request.json() as any;
     const { clerkId, email, firstName, lastName, phone, imageurl } = body;
-
+    const prisma=getPrismaClient()
     if (!clerkId || !email || !firstName || !lastName) {
       return NextResponse.json(
         { error: 'clerkId, email, firstName, and lastName are required' },
@@ -65,13 +66,13 @@ export async function PUT(request: NextRequest) {
     }
 
     // Find existing user
-    const existingUser = await getUserByClerkId(clerkId);
+    const existingUser = await getUserByClerkId(prisma,clerkId);
 
     let user;
 
     if (existingUser) {
       // Update existing user
-      user = await updateUserByClerkId(clerkId, {
+      user = await updateUserByClerkId(prisma,clerkId, {
         email,
         firstName,
         lastName,
@@ -80,7 +81,7 @@ export async function PUT(request: NextRequest) {
       });
     } else {
       // Create new user
-      user = await createUser({
+      user = await createUser(prisma,{
         clerkId,
         email,
         firstName,

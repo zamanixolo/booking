@@ -1,69 +1,111 @@
-import { PrismaClient } from "@prisma/client";
+// src/lib/user/user.ts
 
-const prisma = new PrismaClient();
+import { User, Prisma } from '@prisma/client';
+// 🎯 Import the shared D1 type definition from the central prisma.ts file
+import { D1PrismaClient } from '../prisma'; 
 
-
-// Create a new user
-export const createUser = async (data: {
+// Define common data types for clarity
+export type UserCreateInput = {
   clerkId: string;
   email: string;
   firstName: string;
   lastName: string;
-  phone?: string;
+  phone?: string | null;
   role?: "CLIENT" | "TRAINER" | "ADMIN";
-  imageurl?: string;
-}) => {
+  imageurl?: string | null;
+};
+
+export type UserUpdateInput = Partial<Omit<UserCreateInput, 'clerkId'>>;
+
+// --- User Management Functions ---
+// All functions now accept a 'prisma' instance as the first argument
+
+/**
+ * Create a new user.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param data User creation data.
+ */
+export const createUser = async (
+  prisma: D1PrismaClient,
+  data: UserCreateInput
+): Promise<User> => {
+  // Normalize the role field, defaulting to CLIENT if not provided
   const formattedData = {
     ...data,
-    role: data.role ? (data.role as any) : "CLIENT", // ✅ normalize role
+    role: data.role || "CLIENT",
   };
 
   return prisma.user.create({
-    data: formattedData,
+    data: formattedData as Prisma.UserCreateInput,
   });
 };
 
-// Get all users
-export const getUsers = async () => {
+/**
+ * Get all users.
+ * @param prisma The D1-compatible Prisma client instance.
+ */
+export const getUsers = async (prisma: D1PrismaClient): Promise<User[]> => {
   return prisma.user.findMany({
     include: { provider: true },
   });
 };
 
-// Get user by Clerk ID
-export const getUserByClerkId = async (clerkId: string) => {
+/**
+ * Get user by Clerk ID.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param clerkId The user's Clerk ID.
+ */
+export const getUserByClerkId = async (
+  prisma: D1PrismaClient,
+  clerkId: string
+): Promise<User | null> => {
   return prisma.user.findUnique({
     where: { clerkId },
     include: { provider: true },
   });
 };
 
-// Get user by internal UUID
-export const getUserById = async (id: string) => {
+/**
+ * Get user by internal UUID.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param id The user's internal database UUID.
+ */
+export const getUserById = async (
+  prisma: D1PrismaClient,
+  id: string
+): Promise<User | null> => {
   return prisma.user.findUnique({
     where: { id },
     include: { provider: true },
   });
 };
 
-// Get user by email
-export const getUserByEmail = async (email: string) => {
+/**
+ * Get user by email address.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param email The user's email address.
+ */
+export const getUserByEmail = async (
+  prisma: D1PrismaClient,
+  email: string
+): Promise<User | null> => {
   return prisma.user.findUnique({
     where: { email },
     include: { provider: true },
   });
 };
 
-// Update user by internal ID
-export const updateUser = async (id: string, data: {
-  clerkId?: string;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-  role?: "CLIENT" | "TRAINER" | "ADMIN";
-  imageurl?: string;
-}) => {
+/**
+ * Update user by internal ID.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param id The user's internal database UUID.
+ * @param data User update data.
+ */
+export const updateUser = async (
+  prisma: D1PrismaClient,
+  id: string,
+  data: UserUpdateInput
+): Promise<User> => {
   const formattedData = {
     ...data,
     ...(data.role && { role: data.role as any }),
@@ -71,19 +113,21 @@ export const updateUser = async (id: string, data: {
 
   return prisma.user.update({
     where: { id },
-    data: formattedData,
+    data: formattedData as Prisma.UserUpdateInput,
   });
 };
 
-// Update user by Clerk ID
-export const updateUserByClerkId = async (clerkId: string, data: {
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-  role?: "CLIENT" | "TRAINER" | "ADMIN";
-  imageurl?: string;
-}) => {
+/**
+ * Update user by Clerk ID.
+ * @param prisma The D1-compatible Prisma client instance.
+ * @param clerkId The user's Clerk ID.
+ * @param data User update data.
+ */
+export const updateUserByClerkId = async (
+  prisma: D1PrismaClient,
+  clerkId: string,
+  data: UserUpdateInput
+): Promise<User> => {
   const formattedData = {
     ...data,
     ...(data.role && { role: data.role as any }),
@@ -91,6 +135,6 @@ export const updateUserByClerkId = async (clerkId: string, data: {
 
   return prisma.user.update({
     where: { clerkId },
-    data: formattedData,
+    data: formattedData as Prisma.UserUpdateInput,
   });
 };
