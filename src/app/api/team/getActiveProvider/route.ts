@@ -1,11 +1,26 @@
+// app/api/providers/route.ts
+
+// ✅ Force the Edge runtime (required for D1)
+export const runtime = 'nodejs';
+
 import { NextResponse } from 'next/server'
 
 import { getProviderAvailable } from '@/app/libs/providers/providers'
-import { getPrismaClient } from '@/app/libs/prisma'
 
-// GET request
+
+// GET request (Read available providers)
 export async function GET() {
-   const prisma=getPrismaClient()
-  const team = await getProviderAvailable(prisma)
-  return NextResponse.json(team)
+  try {
+    // The library function is now D1/Edge compatible
+    const team = await getProviderAvailable()
+  
+    if(!team || team.length === 0){
+      return NextResponse.json({msg:'no member found', team: []})
+    }
+  
+    return NextResponse.json({team},{status:200})
+  } catch (error) {
+    console.error("Error fetching available providers:", error);
+    return NextResponse.json({ error: "Failed to fetch providers" }, { status: 500 });
+  }
 }

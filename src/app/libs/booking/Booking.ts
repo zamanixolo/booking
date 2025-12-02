@@ -1,152 +1,181 @@
-// src/app/libs/booking/Booking.ts
+// app/libs/bookings/bookings.ts
 
-import { Booking, BookingStatus, Prisma } from '@prisma/client';
-// Import the shared D1 type definition
-import { D1PrismaClient } from '../prisma'; // Adjust the import path as necessary
-
-
-// 🛑 OLD: const prisma = new PrismaClient(); // This line must be removed
-
-
-// Define common data types for clarity
-// Use the exact Prisma input type that expects flat IDs (clientId, providerId, etc.)
-export type BookingCreateInput = Prisma.BookingCreateInput;
-
-export type BookingUpdateInput = {
-  status?: BookingStatus;
-  price?: number;
-  sessionDuration?: number;
-  date?: Date;
-  time?: string;
+export interface BookingType {
+  id: string;
+  clientId?: string;
+  providerId: string;
+  serviceId: string;
+  price: number;
+  sessionDuration: number;
+  date: string; // ISO string
+  time: string;
+  status: string; // can be PENDING, CONFIRMED, CANCELLED, etc.
   specialRequests?: string;
-};
+  createdAt: string;
+  updatedAt: string;
+}
 
+// ---------------------------
+// Helper to format Booking object
+// ---------------------------
+function formatBooking(row: any): BookingType {
+  return {
+    id: row.id,
+    clientId: row.clientId || undefined,
+    providerId: row.providerId,
+    serviceId: row.serviceId,
+    price: row.price,
+    sessionDuration: row.sessionDuration,
+    date: row.date,
+    time: row.time,
+    status: row.status,
+    specialRequests: row.specialRequests || undefined,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+  };
+}
 
-// --- Booking Management Functions ---
-// All functions now accept a 'prisma' instance as the first argument
-
-
-// CREATE - Create a new booking
-/**
- * Creates a new booking record.
- * @param prisma The D1-compatible Prisma client instance.
- * @param data Booking creation data.
- */
-export const createBooking = async (
-  prisma: D1PrismaClient,
-  data: BookingCreateInput
-): Promise<Booking> => {
-  
-  // The 'data' object now conforms perfectly to what 'prisma.booking.create' expects
-  return await prisma.booking.create({
-    data: {
-      ...data,
-      // Ensure date is a Date object if it came in as a string
-      date: new Date(data.date), 
+// ---------------------------
+// D1 runQuery helper
+// ---------------------------
+async function runQuery(sql: string) {
+  const res = await fetch(process.env.CLOUDFLAIRAPI!, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.CLOUDFLARE_D1_TOKEN}`,
+      "Content-Type": "application/json",
     },
-    include: {
-      client: true,
-      provider: true,
-      services: true,
-    },
+    body: JSON.stringify({ sql }),
   });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`D1 query failed: ${res.status} ${res.statusText} - ${text}`);
+  }
+
+  const data: any = await res.json();
+  return data.result || [];
+}
+
+// ---------------------------
+// CREATE Booking
+// ---------------------------
+export const createBooking = async (data: {
+  clientId?: string;
+  providerId: string;
+  serviceId: string;
+  price: number;
+  sessionDuration: number;
+  date: string | Date;
+  time: string;
+  specialRequests?: string;
+}): Promise<BookingType> => {
+  const id = `${data.providerId}-${Math.random()}`;
+  const dateStr = data.date instanceof Date ? data.date.toISOString() : data.date;
+
+  const sql = `
+    INSERT INTO Booking (
+      id, clientId, providerId, serviceId, price, sessionDuration, date, time, status, specialRequests, createdAt, updatedAt
+    ) VALUES (
+      '${id}',
+      ${data.clientId ? `'${data.clientId}'` : 'NULL'},
+      '${data.providerId}',
+      '${data.serviceId}',
+      ${data.price},
+      ${data.sessionDuration},
+      '${dateStr}',
+      '${data.time}',
+      'PENDING',
+      ${data.specialRequests ? `'${data.specialRequests.replace("'", "''")}'` : 'NULL'},
+      CURRENT_TIMESTAMP,
+      CURRENT_TIMESTAMP
+    )
+    RETURNING *;
+  `;
+
+  const result = await runQuery(sql);
+
+  return result[0].results[0]
 };
 
+// ---------------------------
 // READ - Get all bookings
-/**
- * Gets all bookings in the system.
- * @param prisma The D1-compatible Prisma client instance.
- */
-export const getAllBookings = async (prisma: D1PrismaClient): Promise<Booking[]> => {
-  return await prisma.booking.findMany({
-    include: { client: true, provider: true, services: true, },
-    orderBy: { date: 'desc' },
-  });
+// ---------------------------
+export const getAllBookings = async (): Promise<BookingType[]> => {
+  const rows = await runQuery(`SELECT * FROM Booking ORDER BY date DESC;`);
+  return rows[0].results;
 };
 
+// ---------------------------
 // READ - Get bookings by client
-/**
- * Gets bookings associated with a specific client ID.
- * @param prisma The D1-compatible Prisma client instance.
- * @param clientId The client's internal database UUID.
- */
-export const getBookingsByClient = async (
-  prisma: D1PrismaClient,
-  clientId: string
-): Promise<Booking[]> => {
-  return await prisma.booking.findMany({
-    where: { clientId },
-    include: { client: true, provider: true, services: true, },
-    orderBy: { date: 'desc' },
-  });
+// ---------------------------
+export const getBookingsByClient = async (clientId: string): Promise<BookingType[]> => {
+  const rows = await runQuery(`SELECT * FROM Booking WHERE clientId='${clientId}' ORDER BY date DESC;`);
+  
+  return rows[0].results;
 };
 
+// ---------------------------
 // READ - Get single booking by ID
-/**
- * Gets a single booking by its ID.
- * @param prisma The D1-compatible Prisma client instance.
- * @param id The booking's internal database UUID.
- */
-export const getBookingById = async (
-  prisma: D1PrismaClient,
-  id: string
-): Promise<Booking | null> => {
-  return await prisma.booking.findUnique({
-    where: { id },
-    include: { client: true, provider: true, services: true, },
-  });
+// ---------------------------
+export const getBookingById = async (id: string): Promise<BookingType | null> => {
+  const rows = await runQuery(`SELECT * FROM Booking WHERE id='${id}' LIMIT 1;`);
+  
+  if (!rows.length) return null;
+  return formatBooking(rows[0]);
 };
 
+// ---------------------------
 // READ - Get bookings by provider
-/**
- * Gets bookings associated with a specific provider ID.
- * @param prisma The D1-compatible Prisma client instance.
- * @param providerId The provider's internal database UUID.
- */
-export const getBookingsByProvider = async (
-  prisma: D1PrismaClient,
-  providerId: string
-): Promise<Booking[]> => {
-  return await prisma.booking.findMany({
-    where: { providerId },
-    include: { client: true, provider: true, services: true, },
-    orderBy: { date: 'desc' },
-  });
+// ---------------------------
+export const getBookingsByProvider = async (providerId: string): Promise<BookingType[]> => {
+  const rows = await runQuery(`SELECT * FROM Booking WHERE providerId='${providerId}' ORDER BY date DESC;`);
+  return rows.map(formatBooking);
 };
 
-// UPDATE - Update booking
-/**
- * Updates a single booking record by its ID.
- * @param prisma The D1-compatible Prisma client instance.
- * @param id The booking's internal database UUID.
- * @param data Data to update.
- */
+// ---------------------------
+// UPDATE Booking
+// ---------------------------
 export const updateBooking = async (
-  prisma: D1PrismaClient,
   id: string,
-  data: BookingUpdateInput
-): Promise<Booking> => {
-  return await prisma.booking.update({
-    where: { id },
-    data: {
-      ...data,
-      ...(data.date && { date: new Date(data.date) }), 
-    } as Prisma.BookingUpdateInput,
-    include: { client: true, provider: true, services: true, },
-  });
+  data: Partial<Omit<BookingType, 'id' | 'createdAt' | 'updatedAt'>>
+): Promise<BookingType> => {
+  const updates = Object.entries(data)
+    .map(([k, v]) => {
+      if (v === null) return `${k}=NULL`;
+      if (k === 'date') {
+       const dateStr =
+       typeof v === "object" && v !== null && "toISOString" in v
+        ? (v as Date).toISOString()
+        : v;
+
+        return `date='${dateStr}'`;
+      }
+      if (typeof v === 'string') return `${k}='${v.replace("'", "''")}'`;
+      return `${k}=${v}`;
+    })
+    .join(',');
+
+  const sql = `
+    UPDATE Booking
+    SET ${updates}, updatedAt=CURRENT_TIMESTAMP
+    WHERE id='${id}'
+    RETURNING *;
+  `;
+
+  const result = await runQuery(sql);
+  return formatBooking(result[0]);
 };
 
-// DELETE - Delete booking
-/**
- * Deletes a single booking record by its ID.
- * @param prisma The D1-compatible Prisma client instance.
- * @param id The booking's internal database UUID.
- */
-export const deleteBooking = async (
-  prisma: D1PrismaClient,
-  id: string
-): Promise<Booking> => {
-  return await prisma.booking.delete({
-    where: { id },
-  });
+// ---------------------------
+// DELETE Booking
+// ---------------------------
+export const deleteBooking = async (id: string): Promise<BookingType> => {
+  const sql = `
+    DELETE FROM Booking
+    WHERE id='${id}'
+    RETURNING *;
+  `;
+  const result = await runQuery(sql);
+  return formatBooking(result[0]);
 };

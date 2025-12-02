@@ -1,118 +1,77 @@
-// src/app/api/User/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { getUserByClerkId, createUser, updateUserByClerkId } from '@/app/libs/users/user';
-import { getPrismaClient } from '@/app/libs/prisma';
+import { NextRequest, NextResponse } from "next/server";
+import { getUserByClerkId, createUser, updateUserByClerkId } from "@/app/libs/users/user";
 
-export async function POST(request: NextRequest) {
+// ✅ Edge runtime
+// export const runtime = 'nodejs';
+
+interface UserRequestBody {
+  clerkId?: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  imageurl?: string;
+}
+export async function POST(req: NextRequest) {
+  let body: any;
   try {
-    const body = await request.json() as any;
-    const { clerkId } = body;
-    const prisma=getPrismaClient()
-    if (!clerkId) {
-      return NextResponse.json(
-        { error: 'clerkId is required' },
-        { status: 400 }
-      );
-    }
+    body = await req.json();
 
-    // Find user by clerkId
-    const user = await getUserByClerkId(prisma,clerkId);
+  } catch (err) {
+    console.error("Failed to parse JSON:", err);
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
 
+  if (body.type !== "user.created") {
+    return NextResponse.json({ message: "Ignored event type" }, { status: 200 });
+  }
+
+  const userData = body.data;
+
+  const clerkId = userData.id;
+  const firstName = userData.first_name || "";
+  const lastName = userData.last_name || "";
+  const email = userData.email_addresses?.[0]?.email_address || "";
+  const imageurl = userData.image_url || userData.profile_image_url || "";
+
+  if (!clerkId) {
+    return NextResponse.json({ error: "No clerkId in payload" }, { status: 400 });
+  }
+
+  try {
+    // Check if user already exists
+    let user = await getUserByClerkId(clerkId);
+    
     if (!user) {
-      return NextResponse.json({
-        email: '',
-        firstName: '',
-        lastName: '',
-        phone: '',
-        imageurl: '',
+      // Create user in your DB
+      user = await createUser({
+        clerkId,
+        firstName,
+        lastName,
+        email,
+        imageurl,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       });
     }
 
-    return NextResponse.json({
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      phone: user.phone || '',
-      imageurl: user.imageurl || '',
-    });
-
-  } catch (error: any) {
-    console.error('Error in User API POST:', error);
-    
-    if (error.name === 'PrismaClientInitializationError') {
-      return NextResponse.json(
-        { error: 'Database connection failed. Please try again.' },
-        { status: 503 }
-      );
-    }
-    
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json(user, { status: 200 });
+  } catch (err) {
+    console.error("Failed to create/get user:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
-export async function PUT(request: NextRequest) {
-  try {
-    const body = await request.json() as any;
-    const { clerkId, email, firstName, lastName, phone, imageurl } = body;
-    const prisma=getPrismaClient()
-    if (!clerkId || !email || !firstName || !lastName) {
-      return NextResponse.json(
-        { error: 'clerkId, email, firstName, and lastName are required' },
-        { status: 400 }
-      );
-    }
+export async function PUT(req: NextRequest) {
+  const body =  (await req.json()) as UserRequestBody; 
+  const { clerkId, email, firstName, lastName, phone, imageurl } = body;
+  if (!clerkId || !email || !firstName || !lastName)
+    return NextResponse.json({ error: "clerkId, email, firstName, lastName required" }, { status: 400 });
 
-    // Find existing user
-    const existingUser = await getUserByClerkId(prisma,clerkId);
+  const existing = await getUserByClerkId(clerkId);
+  const user = existing
+    ? await updateUserByClerkId(clerkId, { email, firstName, lastName, phone, imageurl })
+    : await createUser({ clerkId, email, firstName, lastName, phone, imageurl });
 
-    let user;
-
-    if (existingUser) {
-      // Update existing user
-      user = await updateUserByClerkId(prisma,clerkId, {
-        email,
-        firstName,
-        lastName,
-        phone,
-        imageurl,
-      });
-    } else {
-      // Create new user
-      user = await createUser(prisma,{
-        clerkId,
-        email,
-        firstName,
-        lastName,
-        phone,
-        imageurl,
-        role: 'CLIENT',
-      });
-    }
-
-    return NextResponse.json({
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      phone: user.phone,
-      imageurl: user.imageurl,
-    });
-
-  } catch (error: any) {
-    console.error('Error in User API PUT:', error);
-    
-    if (error.code === 'P2002') {
-      return NextResponse.json(
-        { error: 'User with this email already exists' },
-        { status: 409 }
-      );
-    }
-    
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json(user);
 }

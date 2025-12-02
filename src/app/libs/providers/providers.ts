@@ -1,128 +1,135 @@
-// src/lib/provider/provider.ts
-
-import { ProviderRole, Provider, Prisma } from "@prisma/client";
-// 🎯 Import the shared D1 type definition from the central prisma.ts file (UP two levels)
-import { D1PrismaClient } from '../prisma';
-
-
-// Define common data types for clarity
-export type ProviderCreateInput = {
+export interface ProviderType {
+  id: string;
+  clerkId: string;
   firstName: string;
   lastName: string;
-  email?: string | null;
-  imageurl?: string | null;
-  bio?: string | null;
-  role?: string; // Coming from frontend
-  userId?: string | null;
-  clerkId: string;
-};
-
-export type ProviderUpdateInput = {
-  firstName?: string;
-  lastName?: string;
-  bio?: string;
+  email?: string;
   imageurl?: string;
-  rating?: number;
-  totalReviews?: number;
-  role?: ProviderRole;
-  isAvailable?: boolean;
-};
+  bio?: string;
+  role: string; // string instead of Prisma enum
+  userId?: string;
+  isAvailable: boolean;
+  rating: number;
+  totalReviews: number;
+  user?: any | null;
+  bookings?: any[];
+  bookingSettings?: any[];
+  createdAt: string;
+  updatedAt: string;
+}
 
+// Helper to format provider
+function formatProvider(p: any): ProviderType|undefined {
+  if(!p){return}
+  return {
+    id: p.id,
+    clerkId: p.clerkId || "",
+    firstName: p.firstName,
+    lastName: p.lastName,
+    email: p.email || undefined,
+    imageurl: p.imageurl || undefined,
+    bio: p.bio || undefined,
+    role: p.role || "TRAINER",
+    userId: p.userId || undefined,
+    isAvailable: p.isAvailable ?? true,
+    rating: p.rating ?? 0,
+    totalReviews: p.totalReviews ?? 0,
+    user: p.user || null,
+    bookings: p.bookings || [],
+    bookingSettings: p.bookingSettings || [],
+    createdAt: p.createdAt,
+    updatedAt: p.updatedAt,
+  };
+}
 
-// --- Provider Management Functions ---
-// All functions now accept a 'prisma' instance as the first argument
+// ---------------------------
+// D1 fetch helper
+// ---------------------------
+async function runQuery(sql: string) {
+  const res = await fetch(process.env.CLOUDFLAIRAPI!, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.CLOUDFLARE_D1_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ sql }),
+  });
 
-/**
- * Create a new provider.
- * @param prisma The D1-compatible Prisma client instance.
- * @param providerData Provider creation data.
- */
-export const createProvider = async (
-  prisma: D1PrismaClient,
-  providerData: ProviderCreateInput
-): Promise<Provider> => {
-  let role: ProviderRole | undefined;
-  if (providerData.role && Object.values(ProviderRole).includes(providerData.role as ProviderRole)) {
-    role = providerData.role as ProviderRole;
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`D1 query failed: ${res.status} ${res.statusText} - ${text}`);
   }
 
-  return await prisma.provider.create({
-    data: { ...providerData, role } as Prisma.ProviderCreateInput,
-    include: { user: true, bookingSettings: true },
-  });
+  const data:any = await res.json();
+  return data.result || [];
+}
+
+// ---------------------------
+// CREATE provider
+// ---------------------------
+export const createProvider = async (data: Partial<ProviderType>): Promise<ProviderType> => {
+  const columns = Object.keys(data).join(",");
+  const values = Object.values(data)
+    .map((v) => `'${v?.toString().replace("'", "''")}'`)
+    .join(",");
+  const sql = `INSERT INTO Provider (${columns}) VALUES (${values}) RETURNING *;`;
+  const result = await runQuery(sql);
+  return formatProvider(result[0]);
 };
 
-/**
- * READ all providers.
- * @param prisma The D1-compatible Prisma client instance.
- */
-export const getAllProviders = async (prisma: D1PrismaClient): Promise<Provider[]> => {
-  return await prisma.provider.findMany({
-    include: { user: true, bookingSettings: true },
-  });
+// ---------------------------
+// READ all providers
+// ---------------------------
+export const getAllProviders = async (): Promise<ProviderType[]> => {
+  const rows = await runQuery("SELECT * FROM Provider;");
+  return rows[0].results
 };
 
-/**
- * READ provider by ID.
- * @param prisma The D1-compatible Prisma client instance.
- */
-export const getProviderById = async (
-  prisma: D1PrismaClient,
-  id: string
-): Promise<Provider | null> => {
-  return await prisma.provider.findUnique({
-    where: { id },
-    include: { user: true, bookings: true, bookingSettings: true },
-  });
+// ---------------------------
+// READ provider by ID
+// ---------------------------
+export const getProviderById = async (id: string): Promise<ProviderType | null> => {
+  const rows = await runQuery(`SELECT * FROM Provider WHERE id='${id}' LIMIT 1;`);
+  if (!rows.length) return null;
+  return formatProvider(rows[0]);
 };
 
-export const getProviderByClerkId = async (
-  prisma: D1PrismaClient,
-  clerkId: string
-): Promise<Provider | null> => {
-  return prisma.provider.findUnique({
-    where: { clerkId },
-    include: { user: true, bookings: true, bookingSettings: true },
-  });
+// ---------------------------
+// READ provider by Clerk ID
+// ---------------------------
+export const getProviderByClerkId = async (clerkId: string): Promise<ProviderType | null> => {
+  const rows = await runQuery(`SELECT * FROM Provider WHERE clerkId='${clerkId}' LIMIT 1;`);
+ 
+  if (!rows.length) return null;
+  return formatProvider(rows[0].results[0]);
 };
 
-export const getProviderAvailable = async (prisma: D1PrismaClient): Promise<Provider[]> => {
-  return await prisma.provider.findMany({
-    where: { isAvailable:true },
-    include: { user: true, bookings: true, bookingSettings: true }, 
-    orderBy: { rating: 'desc' },
-  });
+// ---------------------------
+// READ available providers
+// ---------------------------
+export const getProviderAvailable = async (): Promise<ProviderType[]> => {
+  const rows = await runQuery("SELECT * FROM Provider WHERE isAvailable=1;");
+  return rows[0].results;
 };
 
-export const getProviderByUserId = async (
-  prisma: D1PrismaClient,
-  userId: string
-): Promise<Provider | null> => {
-  return await prisma.provider.findUnique({
-    where: { userId },
-    include: { user: true, bookingSettings: true },
-  });
-};
-
-/**
- * UPDATE provider by ID.
- */
+// ---------------------------
+// UPDATE provider by ID
+// ---------------------------
 export const updateProvider = async (
-  prisma: D1PrismaClient,
   id: string,
-  updateData: ProviderUpdateInput
-): Promise<Provider> => {
-  return await prisma.provider.update({
-    where: { id },
-    data: updateData as Prisma.ProviderUpdateInput,
-  });
+  data: Partial<ProviderType>
+): Promise<ProviderType> => {
+  const updates = Object.entries(data)
+    .map(([k, v]) => `${k}='${v?.toString().replace("'", "''")}'`)
+    .join(",");
+  const sql = `UPDATE Provider SET ${updates}, updatedAt=CURRENT_TIMESTAMP WHERE id='${id}' RETURNING *;`;
+  const result = await runQuery(sql);
+  return formatProvider(result[0]);
 };
 
-/**
- * DELETE provider by ID.
- */
-export const deleteProvider = async (prisma: D1PrismaClient, id: string): Promise<Provider> => {
-  return await prisma.provider.delete({
-    where: { id },
-  });
+// ---------------------------
+// DELETE provider by ID
+// ---------------------------
+export const deleteProvider = async (id: string): Promise<void> => {
+  await runQuery(`DELETE FROM Provider WHERE id='${id}';`);
 };

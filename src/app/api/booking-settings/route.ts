@@ -1,21 +1,31 @@
-// app/api/booking-settings/route.ts
+// src/app/api/booking-settings/route.ts
+
+// ✅ Force the Edge runtime (required for D1)
+// export const runtime = 'edge';
 
 import { NextResponse } from "next/server";
 import {
   createBookingSettings,
   getBookingSettings,
   updateBookingSettings,
-} from "@/app/libs/bookingSettings/BookingSettings"; // Corrected import path
-import { getPrismaClient } from '@/app/libs/prisma'; // 🎯 Import the D1 client getter
+} from "@/app/libs/bookingSettings/BookingSettings";
+
+// Define the expected shape of the request body for POST
+interface BookingSettingsRequestBody {
+  id?: string;
+  providerIds: string[];
+  serviceId: string;
+  defaultSessionDuration: number;
+  defaultPrice: number;
+}
 
 
+// ✅ GET (Read Settings)
 export async function GET() {
-  // ✅ Instantiate Prisma inside the handler
-  const prisma = getPrismaClient();
 
   try {
-    // ✅ Pass 'prisma' as the first argument
-    const settings = await getBookingSettings(prisma);
+    const settings = await getBookingSettings();
+   console.log(settings)
     return NextResponse.json(settings);
   } catch (error) {
     console.error(error);
@@ -23,12 +33,11 @@ export async function GET() {
   }
 }
 
+// ✅ POST (Create or Update Settings)
 export async function POST(req: Request) {
-  // ✅ Instantiate Prisma inside the handler
-  const prisma = getPrismaClient();
-
   try {
-    const body = await req.json() as any;
+    // Type cast the request body
+    const body: BookingSettingsRequestBody = await req.json();
     const { id, providerIds, serviceId, defaultSessionDuration, defaultPrice } = body;
 
     if (!providerIds?.length || !serviceId) {
@@ -38,16 +47,16 @@ export async function POST(req: Request) {
     let result;
 
     if (id) {
-      // ✅ Pass 'prisma' as the first argument
-      result = await updateBookingSettings(prisma, id, {
+      // Logic for updating settings
+      result = await updateBookingSettings(id, {
         providerIds,
         serviceId,
         defaultSessionDuration,
         defaultPrice,
       });
     } else {
-      // ✅ Pass 'prisma' as the first argument
-      result = await createBookingSettings(prisma, {
+      // Logic for creating new settings
+      result = await createBookingSettings({
         providerIds,
         serviceId,
         defaultSessionDuration,

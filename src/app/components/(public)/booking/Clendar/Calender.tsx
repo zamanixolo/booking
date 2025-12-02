@@ -5,7 +5,8 @@ interface Props {
   viewNum: (val: any) => void;
   viewselected: number;
   data: any;
-  avaiableDate: { dayOfWeek: number; isActive: boolean }[];
+  avaiableDate: { dayOfWeek: number; isActive: boolean ; startTime: string;
+  endTime: string; }[];
 }
 
 function Calendar({ select, viewNum, viewselected, data, avaiableDate }: Props) {

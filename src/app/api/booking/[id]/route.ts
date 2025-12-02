@@ -1,134 +1,176 @@
-// app/api/booking/route.ts
+// src/app/api/booking/[id]/route.ts
+
+// Force the Edge runtime (required for D1 and Cloudflare context)
+// export const runtime = 'edge';
 
 import { NextResponse } from 'next/server';
 import { 
-  createBooking, 
-  getAllBookings, 
-  getBookingsByClient, 
-  getBookingsByProvider, 
+  getBookingById, 
   updateBooking, 
-  deleteBooking,
+  deleteBooking 
 } from '@/app/libs/booking/Booking';
-import { getUserByClerkId } from '@/app/libs/users/user'; // Corrected import path
-import { getPrismaClient } from '@/app/libs/prisma';
+import { BookingStatus } from '@prisma/client';
 
+// Define the expected shape of the request body for an update (PUT/PATCH)
+interface BookingRequestBody {
+  status?: BookingStatus | string;
+  price?: number;
+  sessionDuration?: number;
+  date?: string;
+  time?: string;
+  specialRequests?: string;
+  clientId?: string;
+  providerId?: string;
+  serviceId?: string;
+}
 
-/* ---------------------- GET (READ BOOKINGS) ---------------------- */
-export async function GET(req: Request) {
-  // ✅ Instantiate Prisma inside the handler
-  const prisma = getPrismaClient();
-
+// =======================
+// ✅ GET (Read by ID)
+// =======================
+export async function GET(req: Request, context: any) {
   try {
-    const { searchParams } = new URL(req.url);
-    const clientId = searchParams.get("clientId");
-    const providerId = searchParams.get("providerId");
-    
-    let bookings: any[] = [];
+    const id = context.params.id;
 
-    if (clientId) {
-      // ✅ Pass 'prisma' as the first argument
-      const user = await getUserByClerkId(prisma, clientId);
-      
-      if (!user) {
-        bookings = [];
-      } else {
-        // ✅ Pass 'prisma' as the first argument
-        bookings = await getBookingsByClient(prisma, user.id);
-      }
-    } else if (providerId) {
-      // ✅ Pass 'prisma' as the first argument
-      bookings = await getBookingsByProvider(prisma, providerId);
-    } else {
-      // ✅ Pass 'prisma' as the first argument
-      bookings = await getAllBookings(prisma);
+    const booking = await getBookingById(id);
+    if (!booking) {
+      return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
     }
 
-    return NextResponse.json(bookings, { status: 200 });
+    return NextResponse.json(booking);
   } catch (error) {
-    console.error("Error fetching bookings:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch bookings" },
-      { status: 500 }
-    );
+    console.error('Error fetching booking:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
-/* ---------------------- POST (CREATE BOOKING) ---------------------- */
-export async function POST(req: Request) {
-  // ✅ Instantiate Prisma inside the handler
-  const prisma = getPrismaClient();
-
+// =======================
+// ✅ PUT (Update)
+// =======================
+export async function PUT(req: Request, context: any) {
   try {
-    const data = await req.json() as any;
-    let finalClientId: string | undefined = data.clientId;
+    const id = context.params.id;
+    const body: BookingRequestBody = await req.json();
 
-    if (finalClientId) {
-      // ✅ Pass 'prisma' as the first argument
-      const user = await getUserByClerkId(prisma, finalClientId);
-      
-      if (!user) {
-        console.warn(`User with clerkId ${finalClientId} not found in database`);
-        finalClientId = undefined;
-      } else {
-        finalClientId = user.id;
-      }
-    }
+    const updated = await updateBooking(id, {
+      status: body.status as BookingStatus,
+      price: body.price,
+      sessionDuration: body.sessionDuration,
+      date: body.date ? new Date(body.date) : undefined,
+      time: body.time,
+      specialRequests: body.specialRequests,
+    });
 
-    // 🎯 FIX: Use 'as any' on the input object to bypass the type conflict
-    const newBooking = await createBooking(prisma, {
-      clientId: finalClientId || null, 
-      providerId: data.providerId,
-      serviceId: data.serviceId,
-      price: data.price,
-      sessionDuration: data.sessionDuration,
-      date: new Date(data.date), 
-      time: data.time,
-      specialRequests: data.specialRequests ?? "",
-    } as any); // <--- Type assertion applied here
-
-    return NextResponse.json(newBooking, { status: 201 });
-  } catch (error: any) {
-    console.error("Error creating booking:", error);
-
-    if (error.code) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
-    }
-
-    return NextResponse.json(
-      { error: "Failed to create booking" },
-      { status: 500 }
-    );
+    return NextResponse.json(updated);
+  } catch (error) {
+    console.error('Error updating booking:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
-/* ---------------------- PATCH (UPDATE BOOKING) ---------------------- */
+// =======================
+// ✅ DELETE
+// =======================
+export async function DELETE(req: Request, context: any) {
+  try {
+    const id = context.params.id;
+
+    await deleteBooking(id);
+    return NextResponse.json({ message: 'Booking deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting booking:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+// =======================
+// ✅ PATCH (Partial Update)
+// =======================
 export async function PATCH(req: Request) {
-  // ✅ Instantiate Prisma inside the handler
-  const prisma = getPrismaClient();
-
   try {
-    const data = await req.json() as any;
+    const data: BookingRequestBody & { id: string } = await req.json();
     const { id, ...updateData } = data;
 
     if (!id) {
       return NextResponse.json(
-        { error: "Missing booking ID" },
+        { error: "Booking ID is required" },
         { status: 400 }
       );
     }
 
-    // ✅ Pass 'prisma' as the first argument to updateBooking
-    const updatedBooking = await updateBooking(prisma, id, {
-      status: updateData.status,
+    const currentBooking = await getBookingById(id);
+
+    if (!currentBooking) {
+      return NextResponse.json(
+        { error: "Booking not found" },
+        { status: 404 }
+      );
+    }
+
+    const validationErrors: string[] = [];
+
+    const immutableStatuses = ['COMPLETED', 'CANCELLED', 'NO_SHOW'];
+    if (immutableStatuses.includes(currentBooking.status)) {
+      validationErrors.push(`Cannot modify ${currentBooking.status.toLowerCase()} bookings`);
+    }
+
+    const bookingDate = new Date(currentBooking.date);
+    const now = new Date();
+    if (bookingDate < now) {
+      validationErrors.push("Cannot modify past bookings");
+    }
+
+    if (updateData.status) {
+      const validTransitions: Record<string, string[]> = {
+        'PENDING': ['CONFIRMED', 'CANCELLED'],
+        'CONFIRMED': ['IN_PROGRESS', 'CANCELLED'],
+        'IN_PROGRESS': ['COMPLETED', 'CANCELLED']
+      };
+      const allowedTransitions = validTransitions[currentBooking.status] || [];
+      if (!allowedTransitions.includes(updateData.status)) {
+        validationErrors.push(
+          `Cannot change status from ${currentBooking.status} to ${updateData.status}`
+        );
+      }
+    }
+
+    if (updateData.date) {
+      const newDate = new Date(updateData.date);
+      if (newDate < now) {
+        validationErrors.push("Cannot change booking to a past date");
+      }
+    }
+
+    if (updateData.providerId && updateData.providerId !== currentBooking.providerId) {
+      validationErrors.push("Cannot change provider for existing booking");
+    }
+
+    if (updateData.serviceId && updateData.serviceId !== currentBooking.serviceId) {
+      validationErrors.push("Cannot change service for existing booking");
+    }
+
+    if (updateData.price !== undefined && currentBooking.status === 'COMPLETED') {
+      if (updateData.price < currentBooking.price) {
+        validationErrors.push("Cannot reduce price for completed bookings");
+      }
+    }
+
+    if (validationErrors.length > 0) {
+      return NextResponse.json(
+        { errors: validationErrors },
+        { status: 400 }
+      );
+    }
+
+    const updatedBooking = await updateBooking(id, {
+      status: updateData.status ? (updateData.status as BookingStatus) : undefined,
       price: updateData.price,
       sessionDuration: updateData.sessionDuration,
-      date: updateData.date,
+      date: updateData.date ? new Date(updateData.date) : undefined,
       time: updateData.time,
-      specialRequests: updateData.specialRequests,
     });
 
     return NextResponse.json(updatedBooking, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error updating booking:", error);
     return NextResponse.json(
       { error: "Failed to update booking" },
@@ -137,30 +179,41 @@ export async function PATCH(req: Request) {
   }
 }
 
-/* ---------------------- DELETE (DELETE BOOKING) ---------------------- */
-export async function DELETE(req: Request) {
-  // ✅ Instantiate Prisma inside the handler
-  const prisma = getPrismaClient();
+// Booking Update Validation Rules
+// 1. Status-Based Restrictions
+// ❌ COMPLETED bookings cannot be modified
 
-  try {
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
+// ❌ CANCELLED bookings cannot be modified
 
-    if (!id) {
-      return NextResponse.json(
-        { error: "Missing booking ID" },
-        { status: 400 }
-      );
-    }
+// ❌ NO_SHOW bookings cannot be modified
 
-    // ✅ Pass 'prisma' as the first argument to deleteBooking
-    const deleted = await deleteBooking(prisma, id);
-    return NextResponse.json(deleted, { status: 200 });
-  } catch (error: any) {
-    console.error("Error deleting booking:", error);
-    return NextResponse.json(
-      { error: "Failed to delete booking" },
-      { status: 500 }
-    );
-  }
-}
+// 2. Time-Based Restrictions
+// ❌ Past bookings (date has passed) cannot be modified
+
+// ⚠️ Bookings within 24 hours of start time cannot be modified (except by admin)
+
+// 3. Status Flow Rules
+// ✅ PENDING → CONFIRMED, CANCELLED
+
+// ✅ CONFIRMED → IN_PROGRESS, CANCELLED
+
+// ✅ IN_PROGRESS → COMPLETED, CANCELLED
+
+// ❌ Cannot go backwards in status (e.g., CONFIRMED → PENDING)
+
+// 4. Date/Time Rules
+// ❌ Cannot change to a past date
+
+// ❌ Cannot change to a time that has already passed
+
+// ⚠️ Rescheduling must be at least 2 hours in advance
+
+// 5. Price Rules
+// ❌ Cannot reduce price for COMPLETED bookings
+
+// ✅ Can add discounts before service starts
+
+// 6. Provider Rules
+// ❌ Cannot change provider after booking has started
+
+// ❌ Cannot change service type after booking has started

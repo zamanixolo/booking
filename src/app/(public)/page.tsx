@@ -2,10 +2,11 @@ import Hero from "../components/(public)/home/Hero/Hero";
 import DescriptionLeft from "../components/(public)/home/DescriptionLeft/DescriptionLeft";
 import DescriptionRight from "../components/(public)/home/DescriptionRight/DescriptionRight";
 import Reviwes from "../components/(public)/home/Reviwes/Reviwes";
+import { getAllProviders } from "../libs/providers/providers";
 
 
-export default function Home() {
-  
+export default async function Home() {
+
   return (
     <div>
    <Hero

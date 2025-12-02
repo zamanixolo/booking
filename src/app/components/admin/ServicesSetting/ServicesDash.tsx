@@ -30,7 +30,7 @@ function ServicesDash() {
   const fetchServices = async () => {
     try {
       setLoading(true)
-      const res = await fetch('/api/services')
+      const res = await fetch('/app/api/services')
       if (!res.ok) throw new Error('Failed to fetch services')
       const data: ServiceType[] = await res.json()
       setServices(data)
@@ -67,10 +67,14 @@ function ServicesDash() {
 
   const handleDeleteService = async (serviceId: string) => {
     if (!confirm('Are you sure you want to delete this service?')) return
-    
+   
     try {
-      const res = await fetch(`/api/services/${serviceId}`, {
-        method: 'DELETE'
+      const res = await fetch(`/app/api/services`, {
+        method: 'DELETE',
+        headers:{
+          'Content-Type':'Application/JSON'
+        },
+        body:JSON.stringify(serviceId)
       })
       
       if (res.ok) {

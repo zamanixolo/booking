@@ -32,7 +32,7 @@ function AddMember({ openAddTeamMember }: AddMemberProps) {
     setIsLoading(true)
     
     try {
-      const response = await fetch('/api/team', {
+      const response = await fetch('/app/api/team', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -49,14 +49,14 @@ function AddMember({ openAddTeamMember }: AddMemberProps) {
 
       if (response.status === 201) {
         const createdProvider = await response.json()
-        console.log('Created provider:', createdProvider)
+       
         openAddTeamMember()
       } else if (response.status === 409) {
         alert('Provider with this email already exists')
       } else {
-        const error = await response.json() as any
+        const error = await response.json()
         console.error('Failed to create provider:', error)
-        alert(error.msg || 'Failed to create provider')
+        // alert(error.msg || 'Failed to create provider')
       }
     } catch (error) {
       console.error('Error creating provider:', error)

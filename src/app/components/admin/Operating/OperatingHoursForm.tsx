@@ -24,7 +24,7 @@ const DAYS_OF_WEEK = [
 
 export default function OperatingHoursForm({ providers, onSuccess }: OperatingHoursFormProps) {
   const [formData, setFormData] = useState({
-    // providerId: '',
+    isActive: false,
     dayOfWeek: '',
     startTime: '09:00',
     endTime: '17:00'
@@ -40,7 +40,7 @@ export default function OperatingHoursForm({ providers, onSuccess }: OperatingHo
     setSuccess('')
 
     try {
-      const res = await fetch('/api/operating-hours', {
+      const res = await fetch('/app/api/operating-hours', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -52,15 +52,15 @@ export default function OperatingHoursForm({ providers, onSuccess }: OperatingHo
       if (res.ok) {
         setSuccess('Operating hours created successfully!')
         setFormData({
-          // providerId: '',
+          isActive: false,
           dayOfWeek: '',
           startTime: '09:00',
           endTime: '17:00'
         })
         if (onSuccess) onSuccess()
       } else {
-        const data = await res.json() as any
-        setError(data.error || 'Failed to create operating hours')
+        const data = await res.json()
+        setError( 'Failed to create operating hours')
       }
     } catch (err) {
       setError('Error creating operating hours')
@@ -155,7 +155,24 @@ export default function OperatingHoursForm({ providers, onSuccess }: OperatingHo
             />
           </div>
         </div>
-
+        <div className="flex items-center space-x-2">
+            <label className="text-sm font-medium">Active:</label>
+            <button
+             type="button"
+             onClick={() =>
+             setFormData(prev => ({ ...prev, isActive: !prev.isActive }))
+             }
+            className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
+            formData.isActive ? 'bg-green-500' : 'bg-gray-300'
+             }`}
+             >
+    <span
+      className={`bg-white w-4 h-4 rounded-full shadow transform transition-transform duration-300 ${
+        formData.isActive ? 'translate-x-6' : ''
+      }`}
+    />
+  </button>
+</div>
         <button
           type="submit"
           disabled={loading}

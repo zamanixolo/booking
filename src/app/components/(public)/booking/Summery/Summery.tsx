@@ -19,9 +19,9 @@ function Summery({ viewNum, viewselected, data ,bookingsetting}: Props) {
     }
 
     // Get providers for the selected service
-    const providerData = Array.isArray(bookingsetting[data.serviceNum]?.providers)
-      ? bookingsetting[data.serviceNum].providers
-      : [bookingsetting[data.serviceNum]?.providers].filter(Boolean);
+    const providerData = Array.isArray(bookingsetting[data.serviceNum]?.provider)
+      ? bookingsetting[data.serviceNum].provider
+      : [bookingsetting[data.serviceNum]?.provider].filter(Boolean);
   
     // Find the provider matching the selected firstName
     const selectedProvider = providerData.find(
@@ -45,14 +45,17 @@ function Summery({ viewNum, viewselected, data ,bookingsetting}: Props) {
     };
   
     try {
-      const createbooking = await fetch('/api/booking', {
+      const createbooking = await fetch('/app/api/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bookinginfo),
       });
   
-      const res = await createbooking.json();
-      
+      const res = await (createbooking.json())as any;
+     
+      if(res.status==201){
+       alert('booking success');
+      }
     } catch (error) {
       console.error('Error creating booking:', error);
     }

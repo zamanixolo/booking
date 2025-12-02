@@ -21,6 +21,7 @@ rating:number;
 role:string;
 }
 function Member({ select, viewNum, viewselected, data ,bookingsetting}: Props) {
+  
   // need a loading state
   const [members,setMembers]=useState<TeamMember[]>([])
 
@@ -28,9 +29,9 @@ function Member({ select, viewNum, viewselected, data ,bookingsetting}: Props) {
   //   const providerData = Array.isArray(bookingsetting[data.serviceNum]?.provider)
   // ? bookingsetting[data.serviceNum].provider
   // : [bookingsetting[data.serviceNum]?.provider].filter(Boolean);
-  const providerData =bookingsetting[data.serviceNum].providers
+  const providerData =bookingsetting[data.serviceNum].provider
   setMembers(providerData)
-   
+
   },[])
 
   return (
@@ -50,7 +51,7 @@ function Member({ select, viewNum, viewselected, data ,bookingsetting}: Props) {
               className={`p-4 border rounded-lg cursor-pointer shadow hover:shadow-lg transition
                 ${isSelected ? "bg-gray-400 border-gray-400" : "bg-white"}`}
             >
-              <Image
+              <img
                 src={'next.svg'}
                 alt={member.firstName}
                 height={200}

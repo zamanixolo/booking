@@ -8,7 +8,7 @@ function History() {
        <h2>History</h2>
     </div> 
     <div className="h-[80vh] relative w-[40%]">
-    <Image src={'/next.svg'} alt={'name'} fill/>
+    <img src={'/next.svg'} alt={'name'} />
     </div>
  </div>
   )

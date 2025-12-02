@@ -16,7 +16,7 @@ Object.defineProperty = function(o, p, a) {
 
   
   
-  globalThis.openNextDebug = false;globalThis.openNextVersion = "3.8.5";
+  globalThis.openNextDebug = false;globalThis.openNextVersion = "3.9.0";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -280,12 +280,6 @@ var require_dist = __commonJS({
   }
 });
 
-// node_modules/@opennextjs/aws/dist/logger.js
-var init_logger2 = __esm({
-  "node_modules/@opennextjs/aws/dist/logger.js"() {
-  }
-});
-
 // node_modules/@opennextjs/aws/dist/http/util.js
 function parseSetCookieHeader(cookies) {
   if (!cookies) {
@@ -313,7 +307,7 @@ function getQueryFromIterator(it) {
 }
 var init_util = __esm({
   "node_modules/@opennextjs/aws/dist/http/util.js"() {
-    init_logger2();
+    init_logger();
   }
 });
 
@@ -916,4413 +910,6 @@ var require_middleware = __commonJS({
         }, () => {
           c.g.fetch = a2;
         };
-      }
-    }, 176: (a, b, c) => {
-      "use strict";
-      let d;
-      c.r(b), c.d(b, { default: () => hl });
-      var e = {};
-      async function f() {
-        return "_ENTRIES" in globalThis && _ENTRIES.middleware_instrumentation && await _ENTRIES.middleware_instrumentation;
-      }
-      c.r(e), c.d(e, { config: () => hh, default: () => hg });
-      let g = null;
-      async function h() {
-        if ("phase-production-build" === process.env.NEXT_PHASE) return;
-        g || (g = f());
-        let a10 = await g;
-        if (null == a10 ? void 0 : a10.register) try {
-          await a10.register();
-        } catch (a11) {
-          throw a11.message = `An error occurred while loading instrumentation hook: ${a11.message}`, a11;
-        }
-      }
-      async function i(...a10) {
-        let b10 = await f();
-        try {
-          var c10;
-          await (null == b10 || null == (c10 = b10.onRequestError) ? void 0 : c10.call(b10, ...a10));
-        } catch (a11) {
-          console.error("Error in instrumentation.onRequestError:", a11);
-        }
-      }
-      let j = null;
-      function k() {
-        return j || (j = h()), j;
-      }
-      function l(a10) {
-        return `The edge runtime does not support Node.js '${a10}' module.
-Learn More: https://nextjs.org/docs/messages/node-module-in-edge-runtime`;
-      }
-      process !== c.g.process && (process.env = c.g.process.env, c.g.process = process);
-      try {
-        Object.defineProperty(globalThis, "__import_unsupported", { value: function(a10) {
-          let b10 = new Proxy(function() {
-          }, { get(b11, c10) {
-            if ("then" === c10) return {};
-            throw Object.defineProperty(Error(l(a10)), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
-          }, construct() {
-            throw Object.defineProperty(Error(l(a10)), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
-          }, apply(c10, d10, e10) {
-            if ("function" == typeof e10[0]) return e10[0](b10);
-            throw Object.defineProperty(Error(l(a10)), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
-          } });
-          return new Proxy({}, { get: () => b10 });
-        }, enumerable: false, configurable: false });
-      } catch {
-      }
-      k();
-      class m extends Error {
-        constructor({ page: a10 }) {
-          super(`The middleware "${a10}" accepts an async API directly with the form:
-  
-  export function middleware(request, event) {
-    return NextResponse.redirect('/new-location')
-  }
-  
-  Read more: https://nextjs.org/docs/messages/middleware-new-signature
-  `);
-        }
-      }
-      class n extends Error {
-        constructor() {
-          super(`The request.page has been deprecated in favour of \`URLPattern\`.
-  Read more: https://nextjs.org/docs/messages/middleware-request-page
-  `);
-        }
-      }
-      class o extends Error {
-        constructor() {
-          super(`The request.ua has been removed in favour of \`userAgent\` function.
-  Read more: https://nextjs.org/docs/messages/middleware-parse-user-agent
-  `);
-        }
-      }
-      let p = "_N_T_", q = { shared: "shared", reactServerComponents: "rsc", serverSideRendering: "ssr", actionBrowser: "action-browser", apiNode: "api-node", apiEdge: "api-edge", middleware: "middleware", instrument: "instrument", edgeAsset: "edge-asset", appPagesBrowser: "app-pages-browser", pagesDirBrowser: "pages-dir-browser", pagesDirEdge: "pages-dir-edge", pagesDirNode: "pages-dir-node" };
-      function r(a10) {
-        var b10, c10, d10, e10, f10, g10 = [], h2 = 0;
-        function i2() {
-          for (; h2 < a10.length && /\s/.test(a10.charAt(h2)); ) h2 += 1;
-          return h2 < a10.length;
-        }
-        for (; h2 < a10.length; ) {
-          for (b10 = h2, f10 = false; i2(); ) if ("," === (c10 = a10.charAt(h2))) {
-            for (d10 = h2, h2 += 1, i2(), e10 = h2; h2 < a10.length && "=" !== (c10 = a10.charAt(h2)) && ";" !== c10 && "," !== c10; ) h2 += 1;
-            h2 < a10.length && "=" === a10.charAt(h2) ? (f10 = true, h2 = e10, g10.push(a10.substring(b10, d10)), b10 = h2) : h2 = d10 + 1;
-          } else h2 += 1;
-          (!f10 || h2 >= a10.length) && g10.push(a10.substring(b10, a10.length));
-        }
-        return g10;
-      }
-      function s(a10) {
-        let b10 = {}, c10 = [];
-        if (a10) for (let [d10, e10] of a10.entries()) "set-cookie" === d10.toLowerCase() ? (c10.push(...r(e10)), b10[d10] = 1 === c10.length ? c10[0] : c10) : b10[d10] = e10;
-        return b10;
-      }
-      function t(a10) {
-        try {
-          return String(new URL(String(a10)));
-        } catch (b10) {
-          throw Object.defineProperty(Error(`URL is malformed "${String(a10)}". Please use only absolute URLs - https://nextjs.org/docs/messages/middleware-relative-urls`, { cause: b10 }), "__NEXT_ERROR_CODE", { value: "E61", enumerable: false, configurable: true });
-        }
-      }
-      ({ ...q, GROUP: { builtinReact: [q.reactServerComponents, q.actionBrowser], serverOnly: [q.reactServerComponents, q.actionBrowser, q.instrument, q.middleware], neutralTarget: [q.apiNode, q.apiEdge], clientOnly: [q.serverSideRendering, q.appPagesBrowser], bundled: [q.reactServerComponents, q.actionBrowser, q.serverSideRendering, q.appPagesBrowser, q.shared, q.instrument, q.middleware], appPages: [q.reactServerComponents, q.serverSideRendering, q.appPagesBrowser, q.actionBrowser] } });
-      let u = Symbol("response"), v = Symbol("passThrough"), w = Symbol("waitUntil");
-      class x {
-        constructor(a10, b10) {
-          this[v] = false, this[w] = b10 ? { kind: "external", function: b10 } : { kind: "internal", promises: [] };
-        }
-        respondWith(a10) {
-          this[u] || (this[u] = Promise.resolve(a10));
-        }
-        passThroughOnException() {
-          this[v] = true;
-        }
-        waitUntil(a10) {
-          if ("external" === this[w].kind) return (0, this[w].function)(a10);
-          this[w].promises.push(a10);
-        }
-      }
-      class y extends x {
-        constructor(a10) {
-          var b10;
-          super(a10.request, null == (b10 = a10.context) ? void 0 : b10.waitUntil), this.sourcePage = a10.page;
-        }
-        get request() {
-          throw Object.defineProperty(new m({ page: this.sourcePage }), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
-        }
-        respondWith() {
-          throw Object.defineProperty(new m({ page: this.sourcePage }), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
-        }
-      }
-      function z(a10) {
-        return a10.replace(/\/$/, "") || "/";
-      }
-      function A(a10) {
-        let b10 = a10.indexOf("#"), c10 = a10.indexOf("?"), d10 = c10 > -1 && (b10 < 0 || c10 < b10);
-        return d10 || b10 > -1 ? { pathname: a10.substring(0, d10 ? c10 : b10), query: d10 ? a10.substring(c10, b10 > -1 ? b10 : void 0) : "", hash: b10 > -1 ? a10.slice(b10) : "" } : { pathname: a10, query: "", hash: "" };
-      }
-      function B(a10, b10) {
-        if (!a10.startsWith("/") || !b10) return a10;
-        let { pathname: c10, query: d10, hash: e10 } = A(a10);
-        return "" + b10 + c10 + d10 + e10;
-      }
-      function C(a10, b10) {
-        if (!a10.startsWith("/") || !b10) return a10;
-        let { pathname: c10, query: d10, hash: e10 } = A(a10);
-        return "" + c10 + b10 + d10 + e10;
-      }
-      function D(a10, b10) {
-        if ("string" != typeof a10) return false;
-        let { pathname: c10 } = A(a10);
-        return c10 === b10 || c10.startsWith(b10 + "/");
-      }
-      let E = /* @__PURE__ */ new WeakMap();
-      function F(a10, b10) {
-        let c10;
-        if (!b10) return { pathname: a10 };
-        let d10 = E.get(b10);
-        d10 || (d10 = b10.map((a11) => a11.toLowerCase()), E.set(b10, d10));
-        let e10 = a10.split("/", 2);
-        if (!e10[1]) return { pathname: a10 };
-        let f10 = e10[1].toLowerCase(), g10 = d10.indexOf(f10);
-        return g10 < 0 ? { pathname: a10 } : (c10 = b10[g10], { pathname: a10 = a10.slice(c10.length + 1) || "/", detectedLocale: c10 });
-      }
-      let G = /(?!^https?:\/\/)(127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}|\[::1\]|localhost)/;
-      function H(a10, b10) {
-        return new URL(String(a10).replace(G, "localhost"), b10 && String(b10).replace(G, "localhost"));
-      }
-      let I = Symbol("NextURLInternal");
-      class J {
-        constructor(a10, b10, c10) {
-          let d10, e10;
-          "object" == typeof b10 && "pathname" in b10 || "string" == typeof b10 ? (d10 = b10, e10 = c10 || {}) : e10 = c10 || b10 || {}, this[I] = { url: H(a10, d10 ?? e10.base), options: e10, basePath: "" }, this.analyze();
-        }
-        analyze() {
-          var a10, b10, c10, d10, e10;
-          let f10 = function(a11, b11) {
-            var c11, d11;
-            let { basePath: e11, i18n: f11, trailingSlash: g11 } = null != (c11 = b11.nextConfig) ? c11 : {}, h3 = { pathname: a11, trailingSlash: "/" !== a11 ? a11.endsWith("/") : g11 };
-            e11 && D(h3.pathname, e11) && (h3.pathname = function(a12, b12) {
-              if (!D(a12, b12)) return a12;
-              let c12 = a12.slice(b12.length);
-              return c12.startsWith("/") ? c12 : "/" + c12;
-            }(h3.pathname, e11), h3.basePath = e11);
-            let i2 = h3.pathname;
-            if (h3.pathname.startsWith("/_next/data/") && h3.pathname.endsWith(".json")) {
-              let a12 = h3.pathname.replace(/^\/_next\/data\//, "").replace(/\.json$/, "").split("/");
-              h3.buildId = a12[0], i2 = "index" !== a12[1] ? "/" + a12.slice(1).join("/") : "/", true === b11.parseData && (h3.pathname = i2);
-            }
-            if (f11) {
-              let a12 = b11.i18nProvider ? b11.i18nProvider.analyze(h3.pathname) : F(h3.pathname, f11.locales);
-              h3.locale = a12.detectedLocale, h3.pathname = null != (d11 = a12.pathname) ? d11 : h3.pathname, !a12.detectedLocale && h3.buildId && (a12 = b11.i18nProvider ? b11.i18nProvider.analyze(i2) : F(i2, f11.locales)).detectedLocale && (h3.locale = a12.detectedLocale);
-            }
-            return h3;
-          }(this[I].url.pathname, { nextConfig: this[I].options.nextConfig, parseData: true, i18nProvider: this[I].options.i18nProvider }), g10 = function(a11, b11) {
-            let c11;
-            if ((null == b11 ? void 0 : b11.host) && !Array.isArray(b11.host)) c11 = b11.host.toString().split(":", 1)[0];
-            else {
-              if (!a11.hostname) return;
-              c11 = a11.hostname;
-            }
-            return c11.toLowerCase();
-          }(this[I].url, this[I].options.headers);
-          this[I].domainLocale = this[I].options.i18nProvider ? this[I].options.i18nProvider.detectDomainLocale(g10) : function(a11, b11, c11) {
-            if (a11) for (let f11 of (c11 && (c11 = c11.toLowerCase()), a11)) {
-              var d11, e11;
-              if (b11 === (null == (d11 = f11.domain) ? void 0 : d11.split(":", 1)[0].toLowerCase()) || c11 === f11.defaultLocale.toLowerCase() || (null == (e11 = f11.locales) ? void 0 : e11.some((a12) => a12.toLowerCase() === c11))) return f11;
-            }
-          }(null == (b10 = this[I].options.nextConfig) || null == (a10 = b10.i18n) ? void 0 : a10.domains, g10);
-          let h2 = (null == (c10 = this[I].domainLocale) ? void 0 : c10.defaultLocale) || (null == (e10 = this[I].options.nextConfig) || null == (d10 = e10.i18n) ? void 0 : d10.defaultLocale);
-          this[I].url.pathname = f10.pathname, this[I].defaultLocale = h2, this[I].basePath = f10.basePath ?? "", this[I].buildId = f10.buildId, this[I].locale = f10.locale ?? h2, this[I].trailingSlash = f10.trailingSlash;
-        }
-        formatPathname() {
-          var a10;
-          let b10;
-          return b10 = function(a11, b11, c10, d10) {
-            if (!b11 || b11 === c10) return a11;
-            let e10 = a11.toLowerCase();
-            return !d10 && (D(e10, "/api") || D(e10, "/" + b11.toLowerCase())) ? a11 : B(a11, "/" + b11);
-          }((a10 = { basePath: this[I].basePath, buildId: this[I].buildId, defaultLocale: this[I].options.forceLocale ? void 0 : this[I].defaultLocale, locale: this[I].locale, pathname: this[I].url.pathname, trailingSlash: this[I].trailingSlash }).pathname, a10.locale, a10.buildId ? void 0 : a10.defaultLocale, a10.ignorePrefix), (a10.buildId || !a10.trailingSlash) && (b10 = z(b10)), a10.buildId && (b10 = C(B(b10, "/_next/data/" + a10.buildId), "/" === a10.pathname ? "index.json" : ".json")), b10 = B(b10, a10.basePath), !a10.buildId && a10.trailingSlash ? b10.endsWith("/") ? b10 : C(b10, "/") : z(b10);
-        }
-        formatSearch() {
-          return this[I].url.search;
-        }
-        get buildId() {
-          return this[I].buildId;
-        }
-        set buildId(a10) {
-          this[I].buildId = a10;
-        }
-        get locale() {
-          return this[I].locale ?? "";
-        }
-        set locale(a10) {
-          var b10, c10;
-          if (!this[I].locale || !(null == (c10 = this[I].options.nextConfig) || null == (b10 = c10.i18n) ? void 0 : b10.locales.includes(a10))) throw Object.defineProperty(TypeError(`The NextURL configuration includes no locale "${a10}"`), "__NEXT_ERROR_CODE", { value: "E597", enumerable: false, configurable: true });
-          this[I].locale = a10;
-        }
-        get defaultLocale() {
-          return this[I].defaultLocale;
-        }
-        get domainLocale() {
-          return this[I].domainLocale;
-        }
-        get searchParams() {
-          return this[I].url.searchParams;
-        }
-        get host() {
-          return this[I].url.host;
-        }
-        set host(a10) {
-          this[I].url.host = a10;
-        }
-        get hostname() {
-          return this[I].url.hostname;
-        }
-        set hostname(a10) {
-          this[I].url.hostname = a10;
-        }
-        get port() {
-          return this[I].url.port;
-        }
-        set port(a10) {
-          this[I].url.port = a10;
-        }
-        get protocol() {
-          return this[I].url.protocol;
-        }
-        set protocol(a10) {
-          this[I].url.protocol = a10;
-        }
-        get href() {
-          let a10 = this.formatPathname(), b10 = this.formatSearch();
-          return `${this.protocol}//${this.host}${a10}${b10}${this.hash}`;
-        }
-        set href(a10) {
-          this[I].url = H(a10), this.analyze();
-        }
-        get origin() {
-          return this[I].url.origin;
-        }
-        get pathname() {
-          return this[I].url.pathname;
-        }
-        set pathname(a10) {
-          this[I].url.pathname = a10;
-        }
-        get hash() {
-          return this[I].url.hash;
-        }
-        set hash(a10) {
-          this[I].url.hash = a10;
-        }
-        get search() {
-          return this[I].url.search;
-        }
-        set search(a10) {
-          this[I].url.search = a10;
-        }
-        get password() {
-          return this[I].url.password;
-        }
-        set password(a10) {
-          this[I].url.password = a10;
-        }
-        get username() {
-          return this[I].url.username;
-        }
-        set username(a10) {
-          this[I].url.username = a10;
-        }
-        get basePath() {
-          return this[I].basePath;
-        }
-        set basePath(a10) {
-          this[I].basePath = a10.startsWith("/") ? a10 : `/${a10}`;
-        }
-        toString() {
-          return this.href;
-        }
-        toJSON() {
-          return this.href;
-        }
-        [Symbol.for("edge-runtime.inspect.custom")]() {
-          return { href: this.href, origin: this.origin, protocol: this.protocol, username: this.username, password: this.password, host: this.host, hostname: this.hostname, port: this.port, pathname: this.pathname, search: this.search, searchParams: this.searchParams, hash: this.hash };
-        }
-        clone() {
-          return new J(String(this), this[I].options);
-        }
-      }
-      var K = c(28);
-      let L = Symbol("internal request");
-      class M extends Request {
-        constructor(a10, b10 = {}) {
-          let c10 = "string" != typeof a10 && "url" in a10 ? a10.url : String(a10);
-          t(c10), a10 instanceof Request ? super(a10, b10) : super(c10, b10);
-          let d10 = new J(c10, { headers: s(this.headers), nextConfig: b10.nextConfig });
-          this[L] = { cookies: new K.tm(this.headers), nextUrl: d10, url: d10.toString() };
-        }
-        [Symbol.for("edge-runtime.inspect.custom")]() {
-          return { cookies: this.cookies, nextUrl: this.nextUrl, url: this.url, bodyUsed: this.bodyUsed, cache: this.cache, credentials: this.credentials, destination: this.destination, headers: Object.fromEntries(this.headers), integrity: this.integrity, keepalive: this.keepalive, method: this.method, mode: this.mode, redirect: this.redirect, referrer: this.referrer, referrerPolicy: this.referrerPolicy, signal: this.signal };
-        }
-        get cookies() {
-          return this[L].cookies;
-        }
-        get nextUrl() {
-          return this[L].nextUrl;
-        }
-        get page() {
-          throw new n();
-        }
-        get ua() {
-          throw new o();
-        }
-        get url() {
-          return this[L].url;
-        }
-      }
-      var N = c(115);
-      let O = Symbol("internal response"), P = /* @__PURE__ */ new Set([301, 302, 303, 307, 308]);
-      function Q(a10, b10) {
-        var c10;
-        if (null == a10 || null == (c10 = a10.request) ? void 0 : c10.headers) {
-          if (!(a10.request.headers instanceof Headers)) throw Object.defineProperty(Error("request.headers must be an instance of Headers"), "__NEXT_ERROR_CODE", { value: "E119", enumerable: false, configurable: true });
-          let c11 = [];
-          for (let [d10, e10] of a10.request.headers) b10.set("x-middleware-request-" + d10, e10), c11.push(d10);
-          b10.set("x-middleware-override-headers", c11.join(","));
-        }
-      }
-      class R extends Response {
-        constructor(a10, b10 = {}) {
-          super(a10, b10);
-          let c10 = this.headers, d10 = new Proxy(new K.VO(c10), { get(a11, d11, e10) {
-            switch (d11) {
-              case "delete":
-              case "set":
-                return (...e11) => {
-                  let f10 = Reflect.apply(a11[d11], a11, e11), g10 = new Headers(c10);
-                  return f10 instanceof K.VO && c10.set("x-middleware-set-cookie", f10.getAll().map((a12) => (0, K.Ud)(a12)).join(",")), Q(b10, g10), f10;
-                };
-              default:
-                return N.l.get(a11, d11, e10);
-            }
-          } });
-          this[O] = { cookies: d10, url: b10.url ? new J(b10.url, { headers: s(c10), nextConfig: b10.nextConfig }) : void 0 };
-        }
-        [Symbol.for("edge-runtime.inspect.custom")]() {
-          return { cookies: this.cookies, url: this.url, body: this.body, bodyUsed: this.bodyUsed, headers: Object.fromEntries(this.headers), ok: this.ok, redirected: this.redirected, status: this.status, statusText: this.statusText, type: this.type };
-        }
-        get cookies() {
-          return this[O].cookies;
-        }
-        static json(a10, b10) {
-          let c10 = Response.json(a10, b10);
-          return new R(c10.body, c10);
-        }
-        static redirect(a10, b10) {
-          let c10 = "number" == typeof b10 ? b10 : (null == b10 ? void 0 : b10.status) ?? 307;
-          if (!P.has(c10)) throw Object.defineProperty(RangeError('Failed to execute "redirect" on "response": Invalid status code'), "__NEXT_ERROR_CODE", { value: "E529", enumerable: false, configurable: true });
-          let d10 = "object" == typeof b10 ? b10 : {}, e10 = new Headers(null == d10 ? void 0 : d10.headers);
-          return e10.set("Location", t(a10)), new R(null, { ...d10, headers: e10, status: c10 });
-        }
-        static rewrite(a10, b10) {
-          let c10 = new Headers(null == b10 ? void 0 : b10.headers);
-          return c10.set("x-middleware-rewrite", t(a10)), Q(b10, c10), new R(null, { ...b10, headers: c10 });
-        }
-        static next(a10) {
-          let b10 = new Headers(null == a10 ? void 0 : a10.headers);
-          return b10.set("x-middleware-next", "1"), Q(a10, b10), new R(null, { ...a10, headers: b10 });
-        }
-      }
-      function S(a10, b10) {
-        let c10 = "string" == typeof b10 ? new URL(b10) : b10, d10 = new URL(a10, b10), e10 = d10.origin === c10.origin;
-        return { url: e10 ? d10.toString().slice(c10.origin.length) : d10.toString(), isRelative: e10 };
-      }
-      let T = "next-router-prefetch", U = ["rsc", "next-router-state-tree", T, "next-hmr-refresh", "next-router-segment-prefetch"], V = "_rsc";
-      var W = c(458), X = c(261), Y = function(a10) {
-        return a10.handleRequest = "BaseServer.handleRequest", a10.run = "BaseServer.run", a10.pipe = "BaseServer.pipe", a10.getStaticHTML = "BaseServer.getStaticHTML", a10.render = "BaseServer.render", a10.renderToResponseWithComponents = "BaseServer.renderToResponseWithComponents", a10.renderToResponse = "BaseServer.renderToResponse", a10.renderToHTML = "BaseServer.renderToHTML", a10.renderError = "BaseServer.renderError", a10.renderErrorToResponse = "BaseServer.renderErrorToResponse", a10.renderErrorToHTML = "BaseServer.renderErrorToHTML", a10.render404 = "BaseServer.render404", a10;
-      }(Y || {}), Z = function(a10) {
-        return a10.loadDefaultErrorComponents = "LoadComponents.loadDefaultErrorComponents", a10.loadComponents = "LoadComponents.loadComponents", a10;
-      }(Z || {}), $ = function(a10) {
-        return a10.getRequestHandler = "NextServer.getRequestHandler", a10.getServer = "NextServer.getServer", a10.getServerRequestHandler = "NextServer.getServerRequestHandler", a10.createServer = "createServer.createServer", a10;
-      }($ || {}), _ = function(a10) {
-        return a10.compression = "NextNodeServer.compression", a10.getBuildId = "NextNodeServer.getBuildId", a10.createComponentTree = "NextNodeServer.createComponentTree", a10.clientComponentLoading = "NextNodeServer.clientComponentLoading", a10.getLayoutOrPageModule = "NextNodeServer.getLayoutOrPageModule", a10.generateStaticRoutes = "NextNodeServer.generateStaticRoutes", a10.generateFsStaticRoutes = "NextNodeServer.generateFsStaticRoutes", a10.generatePublicRoutes = "NextNodeServer.generatePublicRoutes", a10.generateImageRoutes = "NextNodeServer.generateImageRoutes.route", a10.sendRenderResult = "NextNodeServer.sendRenderResult", a10.proxyRequest = "NextNodeServer.proxyRequest", a10.runApi = "NextNodeServer.runApi", a10.render = "NextNodeServer.render", a10.renderHTML = "NextNodeServer.renderHTML", a10.imageOptimizer = "NextNodeServer.imageOptimizer", a10.getPagePath = "NextNodeServer.getPagePath", a10.getRoutesManifest = "NextNodeServer.getRoutesManifest", a10.findPageComponents = "NextNodeServer.findPageComponents", a10.getFontManifest = "NextNodeServer.getFontManifest", a10.getServerComponentManifest = "NextNodeServer.getServerComponentManifest", a10.getRequestHandler = "NextNodeServer.getRequestHandler", a10.renderToHTML = "NextNodeServer.renderToHTML", a10.renderError = "NextNodeServer.renderError", a10.renderErrorToHTML = "NextNodeServer.renderErrorToHTML", a10.render404 = "NextNodeServer.render404", a10.startResponse = "NextNodeServer.startResponse", a10.route = "route", a10.onProxyReq = "onProxyReq", a10.apiResolver = "apiResolver", a10.internalFetch = "internalFetch", a10;
-      }(_ || {}), aa = function(a10) {
-        return a10.startServer = "startServer.startServer", a10;
-      }(aa || {}), ab = function(a10) {
-        return a10.getServerSideProps = "Render.getServerSideProps", a10.getStaticProps = "Render.getStaticProps", a10.renderToString = "Render.renderToString", a10.renderDocument = "Render.renderDocument", a10.createBodyResult = "Render.createBodyResult", a10;
-      }(ab || {}), ac = function(a10) {
-        return a10.renderToString = "AppRender.renderToString", a10.renderToReadableStream = "AppRender.renderToReadableStream", a10.getBodyResult = "AppRender.getBodyResult", a10.fetch = "AppRender.fetch", a10;
-      }(ac || {}), ad = function(a10) {
-        return a10.executeRoute = "Router.executeRoute", a10;
-      }(ad || {}), ae = function(a10) {
-        return a10.runHandler = "Node.runHandler", a10;
-      }(ae || {}), af = function(a10) {
-        return a10.runHandler = "AppRouteRouteHandlers.runHandler", a10;
-      }(af || {}), ag = function(a10) {
-        return a10.generateMetadata = "ResolveMetadata.generateMetadata", a10.generateViewport = "ResolveMetadata.generateViewport", a10;
-      }(ag || {}), ah = function(a10) {
-        return a10.execute = "Middleware.execute", a10;
-      }(ah || {});
-      let ai = ["Middleware.execute", "BaseServer.handleRequest", "Render.getServerSideProps", "Render.getStaticProps", "AppRender.fetch", "AppRender.getBodyResult", "Render.renderDocument", "Node.runHandler", "AppRouteRouteHandlers.runHandler", "ResolveMetadata.generateMetadata", "ResolveMetadata.generateViewport", "NextNodeServer.createComponentTree", "NextNodeServer.findPageComponents", "NextNodeServer.getLayoutOrPageModule", "NextNodeServer.startResponse", "NextNodeServer.clientComponentLoading"], aj = ["NextNodeServer.findPageComponents", "NextNodeServer.createComponentTree", "NextNodeServer.clientComponentLoading"];
-      function ak(a10) {
-        return null !== a10 && "object" == typeof a10 && "then" in a10 && "function" == typeof a10.then;
-      }
-      let { context: al, propagation: am, trace: an, SpanStatusCode: ao, SpanKind: ap, ROOT_CONTEXT: aq } = d = c(817);
-      class ar extends Error {
-        constructor(a10, b10) {
-          super(), this.bubble = a10, this.result = b10;
-        }
-      }
-      let as = (a10, b10) => {
-        (function(a11) {
-          return "object" == typeof a11 && null !== a11 && a11 instanceof ar;
-        })(b10) && b10.bubble ? a10.setAttribute("next.bubble", true) : (b10 && (a10.recordException(b10), a10.setAttribute("error.type", b10.name)), a10.setStatus({ code: ao.ERROR, message: null == b10 ? void 0 : b10.message })), a10.end();
-      }, at = /* @__PURE__ */ new Map(), au = d.createContextKey("next.rootSpanId"), av = 0, aw = { set(a10, b10, c10) {
-        a10.push({ key: b10, value: c10 });
-      } };
-      class ax {
-        getTracerInstance() {
-          return an.getTracer("next.js", "0.0.1");
-        }
-        getContext() {
-          return al;
-        }
-        getTracePropagationData() {
-          let a10 = al.active(), b10 = [];
-          return am.inject(a10, b10, aw), b10;
-        }
-        getActiveScopeSpan() {
-          return an.getSpan(null == al ? void 0 : al.active());
-        }
-        withPropagatedContext(a10, b10, c10) {
-          let d10 = al.active();
-          if (an.getSpanContext(d10)) return b10();
-          let e10 = am.extract(d10, a10, c10);
-          return al.with(e10, b10);
-        }
-        trace(...a10) {
-          var b10;
-          let [c10, d10, e10] = a10, { fn: f10, options: g10 } = "function" == typeof d10 ? { fn: d10, options: {} } : { fn: e10, options: { ...d10 } }, h2 = g10.spanName ?? c10;
-          if (!ai.includes(c10) && "1" !== process.env.NEXT_OTEL_VERBOSE || g10.hideSpan) return f10();
-          let i2 = this.getSpanContext((null == g10 ? void 0 : g10.parentSpan) ?? this.getActiveScopeSpan()), j2 = false;
-          i2 ? (null == (b10 = an.getSpanContext(i2)) ? void 0 : b10.isRemote) && (j2 = true) : (i2 = (null == al ? void 0 : al.active()) ?? aq, j2 = true);
-          let k2 = av++;
-          return g10.attributes = { "next.span_name": h2, "next.span_type": c10, ...g10.attributes }, al.with(i2.setValue(au, k2), () => this.getTracerInstance().startActiveSpan(h2, g10, (a11) => {
-            let b11 = "performance" in globalThis && "measure" in performance ? globalThis.performance.now() : void 0, d11 = () => {
-              at.delete(k2), b11 && process.env.NEXT_OTEL_PERFORMANCE_PREFIX && aj.includes(c10 || "") && performance.measure(`${process.env.NEXT_OTEL_PERFORMANCE_PREFIX}:next-${(c10.split(".").pop() || "").replace(/[A-Z]/g, (a12) => "-" + a12.toLowerCase())}`, { start: b11, end: performance.now() });
-            };
-            j2 && at.set(k2, new Map(Object.entries(g10.attributes ?? {})));
-            try {
-              if (f10.length > 1) return f10(a11, (b13) => as(a11, b13));
-              let b12 = f10(a11);
-              if (ak(b12)) return b12.then((b13) => (a11.end(), b13)).catch((b13) => {
-                throw as(a11, b13), b13;
-              }).finally(d11);
-              return a11.end(), d11(), b12;
-            } catch (b12) {
-              throw as(a11, b12), d11(), b12;
-            }
-          }));
-        }
-        wrap(...a10) {
-          let b10 = this, [c10, d10, e10] = 3 === a10.length ? a10 : [a10[0], {}, a10[1]];
-          return ai.includes(c10) || "1" === process.env.NEXT_OTEL_VERBOSE ? function() {
-            let a11 = d10;
-            "function" == typeof a11 && "function" == typeof e10 && (a11 = a11.apply(this, arguments));
-            let f10 = arguments.length - 1, g10 = arguments[f10];
-            if ("function" != typeof g10) return b10.trace(c10, a11, () => e10.apply(this, arguments));
-            {
-              let d11 = b10.getContext().bind(al.active(), g10);
-              return b10.trace(c10, a11, (a12, b11) => (arguments[f10] = function(a13) {
-                return null == b11 || b11(a13), d11.apply(this, arguments);
-              }, e10.apply(this, arguments)));
-            }
-          } : e10;
-        }
-        startSpan(...a10) {
-          let [b10, c10] = a10, d10 = this.getSpanContext((null == c10 ? void 0 : c10.parentSpan) ?? this.getActiveScopeSpan());
-          return this.getTracerInstance().startSpan(b10, c10, d10);
-        }
-        getSpanContext(a10) {
-          return a10 ? an.setSpan(al.active(), a10) : void 0;
-        }
-        getRootSpanAttributes() {
-          let a10 = al.active().getValue(au);
-          return at.get(a10);
-        }
-        setRootSpanAttribute(a10, b10) {
-          let c10 = al.active().getValue(au), d10 = at.get(c10);
-          d10 && d10.set(a10, b10);
-        }
-      }
-      let ay = (() => {
-        let a10 = new ax();
-        return () => a10;
-      })(), az = "__prerender_bypass";
-      Symbol("__next_preview_data"), Symbol(az);
-      class aA {
-        constructor(a10, b10, c10, d10) {
-          var e10;
-          let f10 = a10 && function(a11, b11) {
-            let c11 = W.o.from(a11.headers);
-            return { isOnDemandRevalidate: c11.get("x-prerender-revalidate") === b11.previewModeId, revalidateOnlyGenerated: c11.has("x-prerender-revalidate-if-generated") };
-          }(b10, a10).isOnDemandRevalidate, g10 = null == (e10 = c10.get(az)) ? void 0 : e10.value;
-          this._isEnabled = !!(!f10 && g10 && a10 && g10 === a10.previewModeId), this._previewModeId = null == a10 ? void 0 : a10.previewModeId, this._mutableCookies = d10;
-        }
-        get isEnabled() {
-          return this._isEnabled;
-        }
-        enable() {
-          if (!this._previewModeId) throw Object.defineProperty(Error("Invariant: previewProps missing previewModeId this should never happen"), "__NEXT_ERROR_CODE", { value: "E93", enumerable: false, configurable: true });
-          this._mutableCookies.set({ name: az, value: this._previewModeId, httpOnly: true, sameSite: "none", secure: true, path: "/" }), this._isEnabled = true;
-        }
-        disable() {
-          this._mutableCookies.set({ name: az, value: "", httpOnly: true, sameSite: "none", secure: true, path: "/", expires: /* @__PURE__ */ new Date(0) }), this._isEnabled = false;
-        }
-      }
-      function aB(a10, b10) {
-        if ("x-middleware-set-cookie" in a10.headers && "string" == typeof a10.headers["x-middleware-set-cookie"]) {
-          let c10 = a10.headers["x-middleware-set-cookie"], d10 = new Headers();
-          for (let a11 of r(c10)) d10.append("set-cookie", a11);
-          for (let a11 of new K.VO(d10).getAll()) b10.set(a11);
-        }
-      }
-      var aC = c(128), aD = c(213), aE = c.n(aD), aF = c(809), aG = c(379);
-      class aH {
-        constructor(a10, b10, c10) {
-          this.prev = null, this.next = null, this.key = a10, this.data = b10, this.size = c10;
-        }
-      }
-      class aI {
-        constructor() {
-          this.prev = null, this.next = null;
-        }
-      }
-      class aJ {
-        constructor(a10, b10) {
-          this.cache = /* @__PURE__ */ new Map(), this.totalSize = 0, this.maxSize = a10, this.calculateSize = b10, this.head = new aI(), this.tail = new aI(), this.head.next = this.tail, this.tail.prev = this.head;
-        }
-        addToHead(a10) {
-          a10.prev = this.head, a10.next = this.head.next, this.head.next.prev = a10, this.head.next = a10;
-        }
-        removeNode(a10) {
-          a10.prev.next = a10.next, a10.next.prev = a10.prev;
-        }
-        moveToHead(a10) {
-          this.removeNode(a10), this.addToHead(a10);
-        }
-        removeTail() {
-          let a10 = this.tail.prev;
-          return this.removeNode(a10), a10;
-        }
-        set(a10, b10) {
-          let c10 = (null == this.calculateSize ? void 0 : this.calculateSize.call(this, b10)) ?? 1;
-          if (c10 > this.maxSize) return void console.warn("Single item size exceeds maxSize");
-          let d10 = this.cache.get(a10);
-          if (d10) d10.data = b10, this.totalSize = this.totalSize - d10.size + c10, d10.size = c10, this.moveToHead(d10);
-          else {
-            let d11 = new aH(a10, b10, c10);
-            this.cache.set(a10, d11), this.addToHead(d11), this.totalSize += c10;
-          }
-          for (; this.totalSize > this.maxSize && this.cache.size > 0; ) {
-            let a11 = this.removeTail();
-            this.cache.delete(a11.key), this.totalSize -= a11.size;
-          }
-        }
-        has(a10) {
-          return this.cache.has(a10);
-        }
-        get(a10) {
-          let b10 = this.cache.get(a10);
-          if (b10) return this.moveToHead(b10), b10.data;
-        }
-        *[Symbol.iterator]() {
-          let a10 = this.head.next;
-          for (; a10 && a10 !== this.tail; ) {
-            let b10 = a10;
-            yield [b10.key, b10.data], a10 = a10.next;
-          }
-        }
-        remove(a10) {
-          let b10 = this.cache.get(a10);
-          b10 && (this.removeNode(b10), this.cache.delete(a10), this.totalSize -= b10.size);
-        }
-        get size() {
-          return this.cache.size;
-        }
-        get currentSize() {
-          return this.totalSize;
-        }
-      }
-      c(356).Buffer, new aJ(52428800, (a10) => a10.size), process.env.NEXT_PRIVATE_DEBUG_CACHE && console.debug.bind(console, "DefaultCacheHandler:"), process.env.NEXT_PRIVATE_DEBUG_CACHE && ((a10, ...b10) => {
-        console.log(`use-cache: ${a10}`, ...b10);
-      }), Symbol.for("@next/cache-handlers");
-      let aK = Symbol.for("@next/cache-handlers-map"), aL = Symbol.for("@next/cache-handlers-set"), aM = globalThis;
-      function aN() {
-        if (aM[aK]) return aM[aK].entries();
-      }
-      async function aO(a10, b10) {
-        if (!a10) return b10();
-        let c10 = aP(a10);
-        try {
-          return await b10();
-        } finally {
-          let b11 = function(a11, b12) {
-            let c11 = new Set(a11.pendingRevalidatedTags), d10 = new Set(a11.pendingRevalidateWrites);
-            return { pendingRevalidatedTags: b12.pendingRevalidatedTags.filter((a12) => !c11.has(a12)), pendingRevalidates: Object.fromEntries(Object.entries(b12.pendingRevalidates).filter(([b13]) => !(b13 in a11.pendingRevalidates))), pendingRevalidateWrites: b12.pendingRevalidateWrites.filter((a12) => !d10.has(a12)) };
-          }(c10, aP(a10));
-          await aR(a10, b11);
-        }
-      }
-      function aP(a10) {
-        return { pendingRevalidatedTags: a10.pendingRevalidatedTags ? [...a10.pendingRevalidatedTags] : [], pendingRevalidates: { ...a10.pendingRevalidates }, pendingRevalidateWrites: a10.pendingRevalidateWrites ? [...a10.pendingRevalidateWrites] : [] };
-      }
-      async function aQ(a10, b10) {
-        if (0 === a10.length) return;
-        let c10 = [];
-        b10 && c10.push(b10.revalidateTag(a10));
-        let d10 = function() {
-          if (aM[aL]) return aM[aL].values();
-        }();
-        if (d10) for (let b11 of d10) c10.push(b11.expireTags(...a10));
-        await Promise.all(c10);
-      }
-      async function aR(a10, b10) {
-        let c10 = (null == b10 ? void 0 : b10.pendingRevalidatedTags) ?? a10.pendingRevalidatedTags ?? [], d10 = (null == b10 ? void 0 : b10.pendingRevalidates) ?? a10.pendingRevalidates ?? {}, e10 = (null == b10 ? void 0 : b10.pendingRevalidateWrites) ?? a10.pendingRevalidateWrites ?? [];
-        return Promise.all([aQ(c10, a10.incrementalCache), ...Object.values(d10), ...e10]);
-      }
-      var aS = c(669), aT = c(566);
-      class aU {
-        constructor({ waitUntil: a10, onClose: b10, onTaskError: c10 }) {
-          this.workUnitStores = /* @__PURE__ */ new Set(), this.waitUntil = a10, this.onClose = b10, this.onTaskError = c10, this.callbackQueue = new (aE())(), this.callbackQueue.pause();
-        }
-        after(a10) {
-          if (ak(a10)) this.waitUntil || aV(), this.waitUntil(a10.catch((a11) => this.reportTaskError("promise", a11)));
-          else if ("function" == typeof a10) this.addCallback(a10);
-          else throw Object.defineProperty(Error("`after()`: Argument must be a promise or a function"), "__NEXT_ERROR_CODE", { value: "E50", enumerable: false, configurable: true });
-        }
-        addCallback(a10) {
-          this.waitUntil || aV();
-          let b10 = aC.FP.getStore();
-          b10 && this.workUnitStores.add(b10);
-          let c10 = aT.Z.getStore(), d10 = c10 ? c10.rootTaskSpawnPhase : null == b10 ? void 0 : b10.phase;
-          this.runCallbacksOnClosePromise || (this.runCallbacksOnClosePromise = this.runCallbacksOnClose(), this.waitUntil(this.runCallbacksOnClosePromise));
-          let e10 = (0, aS.cg)(async () => {
-            try {
-              await aT.Z.run({ rootTaskSpawnPhase: d10 }, () => a10());
-            } catch (a11) {
-              this.reportTaskError("function", a11);
-            }
-          });
-          this.callbackQueue.add(e10);
-        }
-        async runCallbacksOnClose() {
-          return await new Promise((a10) => this.onClose(a10)), this.runCallbacks();
-        }
-        async runCallbacks() {
-          if (0 === this.callbackQueue.size) return;
-          for (let a11 of this.workUnitStores) a11.phase = "after";
-          let a10 = aG.J.getStore();
-          if (!a10) throw Object.defineProperty(new aF.z("Missing workStore in AfterContext.runCallbacks"), "__NEXT_ERROR_CODE", { value: "E547", enumerable: false, configurable: true });
-          return aO(a10, () => (this.callbackQueue.start(), this.callbackQueue.onIdle()));
-        }
-        reportTaskError(a10, b10) {
-          if (console.error("promise" === a10 ? "A promise passed to `after()` rejected:" : "An error occurred in a function passed to `after()`:", b10), this.onTaskError) try {
-            null == this.onTaskError || this.onTaskError.call(this, b10);
-          } catch (a11) {
-            console.error(Object.defineProperty(new aF.z("`onTaskError` threw while handling an error thrown from an `after` task", { cause: a11 }), "__NEXT_ERROR_CODE", { value: "E569", enumerable: false, configurable: true }));
-          }
-        }
-      }
-      function aV() {
-        throw Object.defineProperty(Error("`after()` will not work correctly, because `waitUntil` is not available in the current environment."), "__NEXT_ERROR_CODE", { value: "E91", enumerable: false, configurable: true });
-      }
-      function aW(a10) {
-        let b10, c10 = { then: (d10, e10) => (b10 || (b10 = a10()), b10.then((a11) => {
-          c10.value = a11;
-        }).catch(() => {
-        }), b10.then(d10, e10)) };
-        return c10;
-      }
-      class aX {
-        onClose(a10) {
-          if (this.isClosed) throw Object.defineProperty(Error("Cannot subscribe to a closed CloseController"), "__NEXT_ERROR_CODE", { value: "E365", enumerable: false, configurable: true });
-          this.target.addEventListener("close", a10), this.listeners++;
-        }
-        dispatchClose() {
-          if (this.isClosed) throw Object.defineProperty(Error("Cannot close a CloseController multiple times"), "__NEXT_ERROR_CODE", { value: "E229", enumerable: false, configurable: true });
-          this.listeners > 0 && this.target.dispatchEvent(new Event("close")), this.isClosed = true;
-        }
-        constructor() {
-          this.target = new EventTarget(), this.listeners = 0, this.isClosed = false;
-        }
-      }
-      function aY() {
-        return { previewModeId: process.env.__NEXT_PREVIEW_MODE_ID || "", previewModeSigningKey: process.env.__NEXT_PREVIEW_MODE_SIGNING_KEY || "", previewModeEncryptionKey: process.env.__NEXT_PREVIEW_MODE_ENCRYPTION_KEY || "" };
-      }
-      let aZ = Symbol.for("@next/request-context");
-      async function a$(a10, b10, c10) {
-        let d10 = [], e10 = c10 && c10.size > 0;
-        for (let b11 of ((a11) => {
-          let b12 = ["/layout"];
-          if (a11.startsWith("/")) {
-            let c11 = a11.split("/");
-            for (let a12 = 1; a12 < c11.length + 1; a12++) {
-              let d11 = c11.slice(0, a12).join("/");
-              d11 && (d11.endsWith("/page") || d11.endsWith("/route") || (d11 = `${d11}${!d11.endsWith("/") ? "/" : ""}layout`), b12.push(d11));
-            }
-          }
-          return b12;
-        })(a10)) b11 = `${p}${b11}`, d10.push(b11);
-        if (b10.pathname && !e10) {
-          let a11 = `${p}${b10.pathname}`;
-          d10.push(a11);
-        }
-        return { tags: d10, expirationsByCacheKind: function(a11) {
-          let b11 = /* @__PURE__ */ new Map(), c11 = aN();
-          if (c11) for (let [d11, e11] of c11) "getExpiration" in e11 && b11.set(d11, aW(async () => e11.getExpiration(...a11)));
-          return b11;
-        }(d10) };
-      }
-      class a_ extends M {
-        constructor(a10) {
-          super(a10.input, a10.init), this.sourcePage = a10.page;
-        }
-        get request() {
-          throw Object.defineProperty(new m({ page: this.sourcePage }), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
-        }
-        respondWith() {
-          throw Object.defineProperty(new m({ page: this.sourcePage }), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
-        }
-        waitUntil() {
-          throw Object.defineProperty(new m({ page: this.sourcePage }), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
-        }
-      }
-      let a0 = { keys: (a10) => Array.from(a10.keys()), get: (a10, b10) => a10.get(b10) ?? void 0 }, a1 = (a10, b10) => ay().withPropagatedContext(a10.headers, b10, a0), a2 = false;
-      async function a3(a10) {
-        var b10;
-        let d10, e10;
-        if (!a2 && (a2 = true, "true" === process.env.NEXT_PRIVATE_TEST_PROXY)) {
-          let { interceptTestApis: a11, wrapRequestHandler: b11 } = c(720);
-          a11(), a1 = b11(a1);
-        }
-        await k();
-        let f10 = void 0 !== globalThis.__BUILD_MANIFEST;
-        a10.request.url = a10.request.url.replace(/\.rsc($|\?)/, "$1");
-        let g10 = a10.bypassNextUrl ? new URL(a10.request.url) : new J(a10.request.url, { headers: a10.request.headers, nextConfig: a10.request.nextConfig });
-        for (let a11 of [...g10.searchParams.keys()]) {
-          let b11 = g10.searchParams.getAll(a11), c10 = function(a12) {
-            for (let b12 of ["nxtP", "nxtI"]) if (a12 !== b12 && a12.startsWith(b12)) return a12.substring(b12.length);
-            return null;
-          }(a11);
-          if (c10) {
-            for (let a12 of (g10.searchParams.delete(c10), b11)) g10.searchParams.append(c10, a12);
-            g10.searchParams.delete(a11);
-          }
-        }
-        let h2 = process.env.__NEXT_BUILD_ID || "";
-        "buildId" in g10 && (h2 = g10.buildId || "", g10.buildId = "");
-        let i2 = function(a11) {
-          let b11 = new Headers();
-          for (let [c10, d11] of Object.entries(a11)) for (let a12 of Array.isArray(d11) ? d11 : [d11]) void 0 !== a12 && ("number" == typeof a12 && (a12 = a12.toString()), b11.append(c10, a12));
-          return b11;
-        }(a10.request.headers), j2 = i2.has("x-nextjs-data"), l2 = "1" === i2.get("rsc");
-        j2 && "/index" === g10.pathname && (g10.pathname = "/");
-        let m2 = /* @__PURE__ */ new Map();
-        if (!f10) for (let a11 of U) {
-          let b11 = i2.get(a11);
-          null !== b11 && (m2.set(a11, b11), i2.delete(a11));
-        }
-        let n2 = g10.searchParams.get(V), o2 = new a_({ page: a10.page, input: function(a11) {
-          let b11 = "string" == typeof a11, c10 = b11 ? new URL(a11) : a11;
-          return c10.searchParams.delete(V), b11 ? c10.toString() : c10;
-        }(g10).toString(), init: { body: a10.request.body, headers: i2, method: a10.request.method, nextConfig: a10.request.nextConfig, signal: a10.request.signal } });
-        j2 && Object.defineProperty(o2, "__isData", { enumerable: false, value: true }), !globalThis.__incrementalCacheShared && a10.IncrementalCache && (globalThis.__incrementalCache = new a10.IncrementalCache({ CurCacheHandler: a10.incrementalCacheHandler, minimalMode: true, fetchCacheKeyPrefix: "", dev: false, requestHeaders: a10.request.headers, getPrerenderManifest: () => ({ version: -1, routes: {}, dynamicRoutes: {}, notFoundRoutes: [], preview: aY() }) }));
-        let p2 = a10.request.waitUntil ?? (null == (b10 = function() {
-          let a11 = globalThis[aZ];
-          return null == a11 ? void 0 : a11.get();
-        }()) ? void 0 : b10.waitUntil), q2 = new y({ request: o2, page: a10.page, context: p2 ? { waitUntil: p2 } : void 0 });
-        if ((d10 = await a1(o2, () => {
-          if ("/middleware" === a10.page || "/src/middleware" === a10.page) {
-            let b11 = q2.waitUntil.bind(q2), c10 = new aX();
-            return ay().trace(ah.execute, { spanName: `middleware ${o2.method} ${o2.nextUrl.pathname}`, attributes: { "http.target": o2.nextUrl.pathname, "http.method": o2.method } }, async () => {
-              try {
-                var d11, f11, g11, i3, j3, k2;
-                let l3 = aY(), m3 = await a$("/", o2.nextUrl, null), n3 = (j3 = o2.nextUrl, k2 = (a11) => {
-                  e10 = a11;
-                }, function(a11, b12, c11, d12, e11, f12, g12, h3, i4, j4, k3, l4) {
-                  function m4(a12) {
-                    c11 && c11.setHeader("Set-Cookie", a12);
-                  }
-                  let n4 = {};
-                  return { type: "request", phase: a11, implicitTags: f12, url: { pathname: d12.pathname, search: d12.search ?? "" }, rootParams: e11, get headers() {
-                    return n4.headers || (n4.headers = function(a12) {
-                      let b13 = W.o.from(a12);
-                      for (let a13 of U) b13.delete(a13);
-                      return W.o.seal(b13);
-                    }(b12.headers)), n4.headers;
-                  }, get cookies() {
-                    if (!n4.cookies) {
-                      let a12 = new K.tm(W.o.from(b12.headers));
-                      aB(b12, a12), n4.cookies = X.Ck.seal(a12);
-                    }
-                    return n4.cookies;
-                  }, set cookies(value) {
-                    n4.cookies = value;
-                  }, get mutableCookies() {
-                    if (!n4.mutableCookies) {
-                      let a12 = function(a13, b13) {
-                        let c12 = new K.tm(W.o.from(a13));
-                        return X.K8.wrap(c12, b13);
-                      }(b12.headers, g12 || (c11 ? m4 : void 0));
-                      aB(b12, a12), n4.mutableCookies = a12;
-                    }
-                    return n4.mutableCookies;
-                  }, get userspaceMutableCookies() {
-                    return n4.userspaceMutableCookies || (n4.userspaceMutableCookies = (0, X.EJ)(this)), n4.userspaceMutableCookies;
-                  }, get draftMode() {
-                    return n4.draftMode || (n4.draftMode = new aA(i4, b12, this.cookies, this.mutableCookies)), n4.draftMode;
-                  }, renderResumeDataCache: h3 ?? null, isHmrRefresh: j4, serverComponentsHmrCache: k3 || globalThis.__serverComponentsHmrCache, devFallbackParams: null };
-                }("action", o2, void 0, j3, {}, m3, k2, void 0, l3, false, void 0, null)), p3 = function({ page: a11, renderOpts: b12, isPrefetchRequest: c11, buildId: d12, previouslyRevalidatedTags: e11 }) {
-                  var f12;
-                  let g12 = !b12.shouldWaitOnAllReady && !b12.supportsDynamicResponse && !b12.isDraftMode && !b12.isPossibleServerAction, h3 = b12.dev ?? false, i4 = h3 || g12 && (!!process.env.NEXT_DEBUG_BUILD || "1" === process.env.NEXT_SSG_FETCH_METRICS), j4 = { isStaticGeneration: g12, page: a11, route: (f12 = a11.split("/").reduce((a12, b13, c12, d13) => b13 ? "(" === b13[0] && b13.endsWith(")") || "@" === b13[0] || ("page" === b13 || "route" === b13) && c12 === d13.length - 1 ? a12 : a12 + "/" + b13 : a12, "")).startsWith("/") ? f12 : "/" + f12, incrementalCache: b12.incrementalCache || globalThis.__incrementalCache, cacheLifeProfiles: b12.cacheLifeProfiles, isRevalidate: b12.isRevalidate, isBuildTimePrerendering: b12.nextExport, hasReadableErrorStacks: b12.hasReadableErrorStacks, fetchCache: b12.fetchCache, isOnDemandRevalidate: b12.isOnDemandRevalidate, isDraftMode: b12.isDraftMode, isPrefetchRequest: c11, buildId: d12, reactLoadableManifest: (null == b12 ? void 0 : b12.reactLoadableManifest) || {}, assetPrefix: (null == b12 ? void 0 : b12.assetPrefix) || "", afterContext: function(a12) {
-                    let { waitUntil: b13, onClose: c12, onAfterTaskError: d13 } = a12;
-                    return new aU({ waitUntil: b13, onClose: c12, onTaskError: d13 });
-                  }(b12), cacheComponentsEnabled: b12.experimental.cacheComponents, dev: h3, previouslyRevalidatedTags: e11, refreshTagsByCacheKind: function() {
-                    let a12 = /* @__PURE__ */ new Map(), b13 = aN();
-                    if (b13) for (let [c12, d13] of b13) "refreshTags" in d13 && a12.set(c12, aW(async () => d13.refreshTags()));
-                    return a12;
-                  }(), runInCleanSnapshot: (0, aS.$p)(), shouldTrackFetchMetrics: i4 };
-                  return b12.store = j4, j4;
-                }({ page: "/", renderOpts: { cacheLifeProfiles: null == (f11 = a10.request.nextConfig) || null == (d11 = f11.experimental) ? void 0 : d11.cacheLife, experimental: { isRoutePPREnabled: false, cacheComponents: false, authInterrupts: !!(null == (i3 = a10.request.nextConfig) || null == (g11 = i3.experimental) ? void 0 : g11.authInterrupts) }, supportsDynamicResponse: true, waitUntil: b11, onClose: c10.onClose.bind(c10), onAfterTaskError: void 0 }, isPrefetchRequest: "1" === o2.headers.get(T), buildId: h2 ?? "", previouslyRevalidatedTags: [] });
-                return await aG.J.run(p3, () => aC.FP.run(n3, a10.handler, o2, q2));
-              } finally {
-                setTimeout(() => {
-                  c10.dispatchClose();
-                }, 0);
-              }
-            });
-          }
-          return a10.handler(o2, q2);
-        })) && !(d10 instanceof Response)) throw Object.defineProperty(TypeError("Expected an instance of Response to be returned"), "__NEXT_ERROR_CODE", { value: "E567", enumerable: false, configurable: true });
-        d10 && e10 && d10.headers.set("set-cookie", e10);
-        let r2 = null == d10 ? void 0 : d10.headers.get("x-middleware-rewrite");
-        if (d10 && r2 && (l2 || !f10)) {
-          let b11 = new J(r2, { forceLocale: true, headers: a10.request.headers, nextConfig: a10.request.nextConfig });
-          f10 || b11.host !== o2.nextUrl.host || (b11.buildId = h2 || b11.buildId, d10.headers.set("x-middleware-rewrite", String(b11)));
-          let { url: c10, isRelative: e11 } = S(b11.toString(), g10.toString());
-          !f10 && j2 && d10.headers.set("x-nextjs-rewrite", c10), l2 && e11 && (g10.pathname !== b11.pathname && d10.headers.set("x-nextjs-rewritten-path", b11.pathname), g10.search !== b11.search && d10.headers.set("x-nextjs-rewritten-query", b11.search.slice(1)));
-        }
-        if (d10 && r2 && l2 && n2) {
-          let a11 = new URL(r2);
-          a11.searchParams.has(V) || (a11.searchParams.set(V, n2), d10.headers.set("x-middleware-rewrite", a11.toString()));
-        }
-        let s2 = null == d10 ? void 0 : d10.headers.get("Location");
-        if (d10 && s2 && !f10) {
-          let b11 = new J(s2, { forceLocale: false, headers: a10.request.headers, nextConfig: a10.request.nextConfig });
-          d10 = new Response(d10.body, d10), b11.host === g10.host && (b11.buildId = h2 || b11.buildId, d10.headers.set("Location", b11.toString())), j2 && (d10.headers.delete("Location"), d10.headers.set("x-nextjs-redirect", S(b11.toString(), g10.toString()).url));
-        }
-        let t2 = d10 || R.next(), u2 = t2.headers.get("x-middleware-override-headers"), v2 = [];
-        if (u2) {
-          for (let [a11, b11] of m2) t2.headers.set(`x-middleware-request-${a11}`, b11), v2.push(a11);
-          v2.length > 0 && t2.headers.set("x-middleware-override-headers", u2 + "," + v2.join(","));
-        }
-        return { response: t2, waitUntil: ("internal" === q2[w].kind ? Promise.all(q2[w].promises).then(() => {
-        }) : void 0) ?? Promise.resolve(), fetchMetrics: o2.fetchMetrics };
-      }
-      function a4(a10) {
-        return a10.replace(/([.+*?=^!:${}()[\]|/\\])/g, "\\$1");
-      }
-      function a5(a10) {
-        return a10 && a10.sensitive ? "" : "i";
-      }
-      function a6(a10, b10, c10) {
-        var d10;
-        return a10 instanceof RegExp ? function(a11, b11) {
-          if (!b11) return a11;
-          for (var c11 = /\((?:\?<(.*?)>)?(?!\?)/g, d11 = 0, e10 = c11.exec(a11.source); e10; ) b11.push({ name: e10[1] || d11++, prefix: "", suffix: "", modifier: "", pattern: "" }), e10 = c11.exec(a11.source);
-          return a11;
-        }(a10, b10) : Array.isArray(a10) ? (d10 = a10.map(function(a11) {
-          return a6(a11, b10, c10).source;
-        }), new RegExp("(?:".concat(d10.join("|"), ")"), a5(c10))) : function(a11, b11, c11) {
-          void 0 === c11 && (c11 = {});
-          for (var d11 = c11.strict, e10 = void 0 !== d11 && d11, f10 = c11.start, g10 = c11.end, h2 = c11.encode, i2 = void 0 === h2 ? function(a12) {
-            return a12;
-          } : h2, j2 = c11.delimiter, k2 = c11.endsWith, l2 = "[".concat(a4(void 0 === k2 ? "" : k2), "]|$"), m2 = "[".concat(a4(void 0 === j2 ? "/#?" : j2), "]"), n2 = void 0 === f10 || f10 ? "^" : "", o2 = 0; o2 < a11.length; o2++) {
-            var p2 = a11[o2];
-            if ("string" == typeof p2) n2 += a4(i2(p2));
-            else {
-              var q2 = a4(i2(p2.prefix)), r2 = a4(i2(p2.suffix));
-              if (p2.pattern) if (b11 && b11.push(p2), q2 || r2) if ("+" === p2.modifier || "*" === p2.modifier) {
-                var s2 = "*" === p2.modifier ? "?" : "";
-                n2 += "(?:".concat(q2, "((?:").concat(p2.pattern, ")(?:").concat(r2).concat(q2, "(?:").concat(p2.pattern, "))*)").concat(r2, ")").concat(s2);
-              } else n2 += "(?:".concat(q2, "(").concat(p2.pattern, ")").concat(r2, ")").concat(p2.modifier);
-              else {
-                if ("+" === p2.modifier || "*" === p2.modifier) throw TypeError('Can not repeat "'.concat(p2.name, '" without a prefix and suffix'));
-                n2 += "(".concat(p2.pattern, ")").concat(p2.modifier);
-              }
-              else n2 += "(?:".concat(q2).concat(r2, ")").concat(p2.modifier);
-            }
-          }
-          if (void 0 === g10 || g10) e10 || (n2 += "".concat(m2, "?")), n2 += c11.endsWith ? "(?=".concat(l2, ")") : "$";
-          else {
-            var t2 = a11[a11.length - 1], u2 = "string" == typeof t2 ? m2.indexOf(t2[t2.length - 1]) > -1 : void 0 === t2;
-            e10 || (n2 += "(?:".concat(m2, "(?=").concat(l2, "))?")), u2 || (n2 += "(?=".concat(m2, "|").concat(l2, ")"));
-          }
-          return new RegExp(n2, a5(c11));
-        }(function(a11, b11) {
-          void 0 === b11 && (b11 = {});
-          for (var c11 = function(a12) {
-            for (var b12 = [], c12 = 0; c12 < a12.length; ) {
-              var d12 = a12[c12];
-              if ("*" === d12 || "+" === d12 || "?" === d12) {
-                b12.push({ type: "MODIFIER", index: c12, value: a12[c12++] });
-                continue;
-              }
-              if ("\\" === d12) {
-                b12.push({ type: "ESCAPED_CHAR", index: c12++, value: a12[c12++] });
-                continue;
-              }
-              if ("{" === d12) {
-                b12.push({ type: "OPEN", index: c12, value: a12[c12++] });
-                continue;
-              }
-              if ("}" === d12) {
-                b12.push({ type: "CLOSE", index: c12, value: a12[c12++] });
-                continue;
-              }
-              if (":" === d12) {
-                for (var e11 = "", f11 = c12 + 1; f11 < a12.length; ) {
-                  var g11 = a12.charCodeAt(f11);
-                  if (g11 >= 48 && g11 <= 57 || g11 >= 65 && g11 <= 90 || g11 >= 97 && g11 <= 122 || 95 === g11) {
-                    e11 += a12[f11++];
-                    continue;
-                  }
-                  break;
-                }
-                if (!e11) throw TypeError("Missing parameter name at ".concat(c12));
-                b12.push({ type: "NAME", index: c12, value: e11 }), c12 = f11;
-                continue;
-              }
-              if ("(" === d12) {
-                var h3 = 1, i3 = "", f11 = c12 + 1;
-                if ("?" === a12[f11]) throw TypeError('Pattern cannot start with "?" at '.concat(f11));
-                for (; f11 < a12.length; ) {
-                  if ("\\" === a12[f11]) {
-                    i3 += a12[f11++] + a12[f11++];
-                    continue;
-                  }
-                  if (")" === a12[f11]) {
-                    if (0 == --h3) {
-                      f11++;
-                      break;
-                    }
-                  } else if ("(" === a12[f11] && (h3++, "?" !== a12[f11 + 1])) throw TypeError("Capturing groups are not allowed at ".concat(f11));
-                  i3 += a12[f11++];
-                }
-                if (h3) throw TypeError("Unbalanced pattern at ".concat(c12));
-                if (!i3) throw TypeError("Missing pattern at ".concat(c12));
-                b12.push({ type: "PATTERN", index: c12, value: i3 }), c12 = f11;
-                continue;
-              }
-              b12.push({ type: "CHAR", index: c12, value: a12[c12++] });
-            }
-            return b12.push({ type: "END", index: c12, value: "" }), b12;
-          }(a11), d11 = b11.prefixes, e10 = void 0 === d11 ? "./" : d11, f10 = b11.delimiter, g10 = void 0 === f10 ? "/#?" : f10, h2 = [], i2 = 0, j2 = 0, k2 = "", l2 = function(a12) {
-            if (j2 < c11.length && c11[j2].type === a12) return c11[j2++].value;
-          }, m2 = function(a12) {
-            var b12 = l2(a12);
-            if (void 0 !== b12) return b12;
-            var d12 = c11[j2], e11 = d12.type, f11 = d12.index;
-            throw TypeError("Unexpected ".concat(e11, " at ").concat(f11, ", expected ").concat(a12));
-          }, n2 = function() {
-            for (var a12, b12 = ""; a12 = l2("CHAR") || l2("ESCAPED_CHAR"); ) b12 += a12;
-            return b12;
-          }, o2 = function(a12) {
-            for (var b12 = 0; b12 < g10.length; b12++) {
-              var c12 = g10[b12];
-              if (a12.indexOf(c12) > -1) return true;
-            }
-            return false;
-          }, p2 = function(a12) {
-            var b12 = h2[h2.length - 1], c12 = a12 || (b12 && "string" == typeof b12 ? b12 : "");
-            if (b12 && !c12) throw TypeError('Must have text between two parameters, missing text after "'.concat(b12.name, '"'));
-            return !c12 || o2(c12) ? "[^".concat(a4(g10), "]+?") : "(?:(?!".concat(a4(c12), ")[^").concat(a4(g10), "])+?");
-          }; j2 < c11.length; ) {
-            var q2 = l2("CHAR"), r2 = l2("NAME"), s2 = l2("PATTERN");
-            if (r2 || s2) {
-              var t2 = q2 || "";
-              -1 === e10.indexOf(t2) && (k2 += t2, t2 = ""), k2 && (h2.push(k2), k2 = ""), h2.push({ name: r2 || i2++, prefix: t2, suffix: "", pattern: s2 || p2(t2), modifier: l2("MODIFIER") || "" });
-              continue;
-            }
-            var u2 = q2 || l2("ESCAPED_CHAR");
-            if (u2) {
-              k2 += u2;
-              continue;
-            }
-            if (k2 && (h2.push(k2), k2 = ""), l2("OPEN")) {
-              var t2 = n2(), v2 = l2("NAME") || "", w2 = l2("PATTERN") || "", x2 = n2();
-              m2("CLOSE"), h2.push({ name: v2 || (w2 ? i2++ : ""), pattern: v2 && !w2 ? p2(t2) : w2, prefix: t2, suffix: x2, modifier: l2("MODIFIER") || "" });
-              continue;
-            }
-            m2("END");
-          }
-          return h2;
-        }(a10, c10), b10, c10);
-      }
-      let a7 = () => {
-        try {
-          return true;
-        } catch {
-        }
-        return false;
-      }, a8 = /* @__PURE__ */ new Set(), a9 = [".lcl.dev", ".lclstage.dev", ".lclclerk.com"], ba = [".accounts.dev", ".accountsstage.dev", ".accounts.lclclerk.com"], bb = [".lcl.dev", ".stg.dev", ".lclstage.dev", ".stgstage.dev", ".dev.lclclerk.com", ".stg.lclclerk.com", ".accounts.lclclerk.com", "accountsstage.dev", "accounts.dev"], bc = [".lcl.dev", "lclstage.dev", ".lclclerk.com", ".accounts.lclclerk.com"], bd = [".accountsstage.dev"], be = "https://api.clerk.com", bf = (a10) => "undefined" != typeof atob && "function" == typeof atob ? atob(a10) : "undefined" != typeof global && global.Buffer ? new global.Buffer(a10, "base64").toString() : a10, bg = "pk_live_";
-      function bh(a10) {
-        if (!a10.endsWith("$")) return false;
-        let b10 = a10.slice(0, -1);
-        return !b10.includes("$") && b10.includes(".");
-      }
-      function bi(a10, b10 = {}) {
-        let c10;
-        if (!(a10 = a10 || "") || !bj(a10)) {
-          if (b10.fatal && !a10) throw Error("Publishable key is missing. Ensure that your publishable key is correctly configured. Double-check your environment configuration for your keys, or access them here: https://dashboard.clerk.com/last-active?path=api-keys");
-          if (b10.fatal && !bj(a10)) throw Error("Publishable key not valid.");
-          return null;
-        }
-        let d10 = a10.startsWith(bg) ? "production" : "development";
-        try {
-          c10 = bf(a10.split("_")[2]);
-        } catch {
-          if (b10.fatal) throw Error("Publishable key not valid: Failed to decode key.");
-          return null;
-        }
-        if (!bh(c10)) {
-          if (b10.fatal) throw Error("Publishable key not valid: Decoded key has invalid format.");
-          return null;
-        }
-        let e10 = c10.slice(0, -1);
-        return b10.proxyUrl ? e10 = b10.proxyUrl : "development" !== d10 && b10.domain && b10.isSatellite && (e10 = `clerk.${b10.domain}`), { instanceType: d10, frontendApi: e10 };
-      }
-      function bj(a10 = "") {
-        try {
-          if (!(a10.startsWith(bg) || a10.startsWith("pk_test_"))) return false;
-          let b10 = a10.split("_");
-          if (3 !== b10.length) return false;
-          let c10 = b10[2];
-          if (!c10) return false;
-          let d10 = bf(c10);
-          return bh(d10);
-        } catch {
-          return false;
-        }
-      }
-      function bk(a10) {
-        return a10.startsWith("test_") || a10.startsWith("sk_test_");
-      }
-      async function bl(a10, b10 = globalThis.crypto.subtle) {
-        var c10;
-        let d10 = new TextEncoder().encode(a10);
-        return (c10 = String.fromCharCode(...new Uint8Array(await b10.digest("sha-1", d10))), "undefined" != typeof btoa && "function" == typeof btoa ? btoa(c10) : "undefined" != typeof global && global.Buffer ? new global.Buffer(c10).toString("base64") : c10).replace(/\+/gi, "-").replace(/\//gi, "_").substring(0, 8);
-      }
-      let bm = { initialDelay: 125, maxDelayBetweenRetries: 0, factor: 2, shouldRetry: (a10, b10) => b10 < 5, retryImmediately: false, jitter: true }, bn = async (a10) => new Promise((b10) => setTimeout(b10, a10)), bo = (a10, b10) => b10 ? a10 * (1 + Math.random()) : a10, bp = async (a10, b10 = {}) => {
-        let c10 = 0, { shouldRetry: d10, initialDelay: e10, maxDelayBetweenRetries: f10, factor: g10, retryImmediately: h2, jitter: i2, onBeforeRetry: j2 } = { ...bm, ...b10 }, k2 = /* @__PURE__ */ ((a11) => {
-          let b11 = 0;
-          return async () => {
-            await bn((() => {
-              let c11 = a11.initialDelay * Math.pow(a11.factor, b11);
-              return c11 = bo(c11, a11.jitter), Math.min(a11.maxDelayBetweenRetries || c11, c11);
-            })()), b11++;
-          };
-        })({ initialDelay: e10, maxDelayBetweenRetries: f10, factor: g10, jitter: i2 });
-        for (; ; ) try {
-          return await a10();
-        } catch (a11) {
-          if (!d10(a11, ++c10)) throw a11;
-          j2 && await j2(c10), h2 && 1 === c10 ? await bn(bo(100, i2)) : await k2();
-        }
-      };
-      function bq(a10) {
-        return function(b10) {
-          let c10 = b10 ?? this;
-          if (!c10) throw TypeError(`${a10.kind || a10.name} type guard requires an error object`);
-          return c10 instanceof a10;
-        };
-      }
-      var br = class {
-        static kind = "ClerkApiError";
-        code;
-        message;
-        longMessage;
-        meta;
-        constructor(a10) {
-          let b10 = { code: a10.code, message: a10.message, longMessage: a10.long_message, meta: { paramName: a10.meta?.param_name, sessionId: a10.meta?.session_id, emailAddresses: a10.meta?.email_addresses, identifiers: a10.meta?.identifiers, zxcvbn: a10.meta?.zxcvbn, plan: a10.meta?.plan, isPlanUpgradePossible: a10.meta?.is_plan_upgrade_possible } };
-          this.code = b10.code, this.message = b10.message, this.longMessage = b10.longMessage, this.meta = b10.meta;
-        }
-      };
-      function bs(a10) {
-        return new br(a10);
-      }
-      bq(br);
-      var bt = class a10 extends Error {
-        static kind = "ClerkError";
-        clerkError = true;
-        code;
-        longMessage;
-        docsUrl;
-        cause;
-        get name() {
-          return this.constructor.name;
-        }
-        constructor(b10) {
-          super(new.target.formatMessage(new.target.kind, b10.message, b10.code, b10.docsUrl), { cause: b10.cause }), Object.setPrototypeOf(this, a10.prototype), this.code = b10.code, this.docsUrl = b10.docsUrl, this.longMessage = b10.longMessage, this.cause = b10.cause;
-        }
-        toString() {
-          return `[${this.name}]
-Message:${this.message}`;
-        }
-        static formatMessage(a11, b10, c10, d10) {
-          let e10 = "Clerk:", f10 = RegExp(e10.replace(" ", "\\s*"), "i");
-          return b10 = b10.replace(f10, ""), b10 = `${e10} ${b10.trim()}
-
-(code="${c10}")
-
-`, d10 && (b10 += `
-
-Docs: ${d10}`), b10;
-        }
-      }, bu = class a10 extends bt {
-        static kind = "ClerkAPIResponseError";
-        status;
-        clerkTraceId;
-        retryAfter;
-        errors;
-        constructor(b10, c10) {
-          let { data: d10, status: e10, clerkTraceId: f10, retryAfter: g10 } = c10;
-          super({ ...c10, message: b10, code: "api_response_error" }), Object.setPrototypeOf(this, a10.prototype), this.status = e10, this.clerkTraceId = f10, this.retryAfter = g10, this.errors = (d10 || []).map((a11) => new br(a11));
-        }
-        toString() {
-          let a11 = `[${this.name}]
-Message:${this.message}
-Status:${this.status}
-Serialized errors: ${this.errors.map((a12) => JSON.stringify(a12))}`;
-          return this.clerkTraceId && (a11 += `
-Clerk Trace ID: ${this.clerkTraceId}`), a11;
-        }
-        static formatMessage(a11, b10, c10, d10) {
-          return b10;
-        }
-      };
-      bq(bu);
-      let bv = Object.freeze({ InvalidProxyUrlErrorMessage: "The proxyUrl passed to Clerk is invalid. The expected value for proxyUrl is an absolute URL or a relative path with a leading '/'. (key={{url}})", InvalidPublishableKeyErrorMessage: "The publishableKey passed to Clerk is invalid. You can get your Publishable key at https://dashboard.clerk.com/last-active?path=api-keys. (key={{key}})", MissingPublishableKeyErrorMessage: "Missing publishableKey. You can get your key at https://dashboard.clerk.com/last-active?path=api-keys.", MissingSecretKeyErrorMessage: "Missing secretKey. You can get your key at https://dashboard.clerk.com/last-active?path=api-keys.", MissingClerkProvider: "{{source}} can only be used within the <ClerkProvider /> component. Learn more: https://clerk.com/docs/components/clerk-provider" });
-      function bw({ packageName: a10, customMessages: b10 }) {
-        let c10 = a10;
-        function d10(a11, b11) {
-          if (!b11) return `${c10}: ${a11}`;
-          let d11 = a11;
-          for (let c11 of a11.matchAll(/{{([a-zA-Z0-9-_]+)}}/g)) {
-            let a12 = (b11[c11[1]] || "").toString();
-            d11 = d11.replace(`{{${c11[1]}}}`, a12);
-          }
-          return `${c10}: ${d11}`;
-        }
-        let e10 = { ...bv, ...b10 };
-        return { setPackageName({ packageName: a11 }) {
-          return "string" == typeof a11 && (c10 = a11), this;
-        }, setMessages({ customMessages: a11 }) {
-          return Object.assign(e10, a11 || {}), this;
-        }, throwInvalidPublishableKeyError(a11) {
-          throw Error(d10(e10.InvalidPublishableKeyErrorMessage, a11));
-        }, throwInvalidProxyUrl(a11) {
-          throw Error(d10(e10.InvalidProxyUrlErrorMessage, a11));
-        }, throwMissingPublishableKeyError() {
-          throw Error(d10(e10.MissingPublishableKeyErrorMessage));
-        }, throwMissingSecretKeyError() {
-          throw Error(d10(e10.MissingSecretKeyErrorMessage));
-        }, throwMissingClerkProviderError(a11) {
-          throw Error(d10(e10.MissingClerkProvider, a11));
-        }, throw(a11) {
-          throw Error(d10(a11));
-        } };
-      }
-      bq(class a10 extends bt {
-        static kind = "ClerkRuntimeError";
-        clerkRuntimeError = true;
-        constructor(b10, c10) {
-          super({ ...c10, message: b10 }), Object.setPrototypeOf(this, a10.prototype);
-        }
-      });
-      var bx = bw({ packageName: "@clerk/backend" }), { isDevOrStagingUrl: by } = /* @__PURE__ */ function() {
-        let a10 = /* @__PURE__ */ new Map();
-        return { isDevOrStagingUrl: (b10) => {
-          if (!b10) return false;
-          let c10 = "string" == typeof b10 ? b10 : b10.hostname, d10 = a10.get(c10);
-          return void 0 === d10 && (d10 = bb.some((a11) => c10.endsWith(a11)), a10.set(c10, d10)), d10;
-        } };
-      }(), bz = { InvalidSecretKey: "clerk_key_invalid" }, bA = { TokenExpired: "token-expired", TokenInvalid: "token-invalid", TokenInvalidAlgorithm: "token-invalid-algorithm", TokenInvalidAuthorizedParties: "token-invalid-authorized-parties", TokenInvalidSignature: "token-invalid-signature", TokenNotActiveYet: "token-not-active-yet", TokenIatInTheFuture: "token-iat-in-the-future", TokenVerificationFailed: "token-verification-failed", InvalidSecretKey: "secret-key-invalid", LocalJWKMissing: "jwk-local-missing", RemoteJWKFailedToLoad: "jwk-remote-failed-to-load", JWKFailedToResolve: "jwk-failed-to-resolve", JWKKidMismatch: "jwk-kid-mismatch" }, bB = { ContactSupport: "Contact support@clerk.com", EnsureClerkJWT: "Make sure that this is a valid Clerk-generated JWT.", SetClerkJWTKey: "Set the CLERK_JWT_KEY environment variable.", SetClerkSecretKey: "Set the CLERK_SECRET_KEY environment variable." }, bC = class a10 extends Error {
-        constructor({ action: b10, message: c10, reason: d10 }) {
-          super(c10), Object.setPrototypeOf(this, a10.prototype), this.reason = d10, this.message = c10, this.action = b10;
-        }
-        getFullMessage() {
-          return `${[this.message, this.action].filter((a11) => a11).join(" ")} (reason=${this.reason}, token-carrier=${this.tokenCarrier})`;
-        }
-      }, bD = { TokenInvalid: "token-invalid", InvalidSecretKey: "secret-key-invalid", UnexpectedError: "unexpected-error" }, bE = class a10 extends Error {
-        constructor({ message: b10, code: c10, status: d10 }) {
-          super(b10), Object.setPrototypeOf(this, a10.prototype), this.code = c10, this.status = d10;
-        }
-        getFullMessage() {
-          return `${this.message} (code=${this.code}, status=${this.status})`;
-        }
-      };
-      let bF = crypto;
-      var bG = fetch.bind(globalThis), bH = { crypto: bF, get fetch() {
-        return bG;
-      }, AbortController: globalThis.AbortController, Blob: globalThis.Blob, FormData: globalThis.FormData, Headers: globalThis.Headers, Request: globalThis.Request, Response: globalThis.Response }, bI = { parse: (a10, b10) => function(a11, b11, c10 = {}) {
-        if (!b11.codes) {
-          b11.codes = {};
-          for (let a12 = 0; a12 < b11.chars.length; ++a12) b11.codes[b11.chars[a12]] = a12;
-        }
-        if (!c10.loose && a11.length * b11.bits & 7) throw SyntaxError("Invalid padding");
-        let d10 = a11.length;
-        for (; "=" === a11[d10 - 1]; ) if (--d10, !c10.loose && !((a11.length - d10) * b11.bits & 7)) throw SyntaxError("Invalid padding");
-        let e10 = new (c10.out ?? Uint8Array)(d10 * b11.bits / 8 | 0), f10 = 0, g10 = 0, h2 = 0;
-        for (let c11 = 0; c11 < d10; ++c11) {
-          let d11 = b11.codes[a11[c11]];
-          if (void 0 === d11) throw SyntaxError("Invalid character " + a11[c11]);
-          g10 = g10 << b11.bits | d11, (f10 += b11.bits) >= 8 && (f10 -= 8, e10[h2++] = 255 & g10 >> f10);
-        }
-        if (f10 >= b11.bits || 255 & g10 << 8 - f10) throw SyntaxError("Unexpected end of data");
-        return e10;
-      }(a10, bJ, b10) }, bJ = { chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_", bits: 6 }, bK = { RS256: "SHA-256", RS384: "SHA-384", RS512: "SHA-512" }, bL = "RSASSA-PKCS1-v1_5", bM = { RS256: bL, RS384: bL, RS512: bL }, bN = Object.keys(bK), bO = (a10) => {
-        if (void 0 !== a10 && "JWT" !== a10) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenInvalid, message: `Invalid JWT type ${JSON.stringify(a10)}. Expected "JWT".` });
-      }, bP = (a10) => {
-        if (!bN.includes(a10)) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenInvalidAlgorithm, message: `Invalid JWT algorithm ${JSON.stringify(a10)}. Supported: ${bN}.` });
-      };
-      async function bQ(a10, b10) {
-        let { header: c10, signature: d10, raw: e10 } = a10, f10 = new TextEncoder().encode([e10.header, e10.payload].join(".")), g10 = function(a11) {
-          let b11 = bK[a11], c11 = bM[a11];
-          if (!b11 || !c11) throw Error(`Unsupported algorithm ${a11}, expected one of ${bN.join(",")}.`);
-          return { hash: { name: bK[a11] }, name: bM[a11] };
-        }(c10.alg);
-        try {
-          let a11 = await function(a12, b11, c11) {
-            if ("object" == typeof a12) return bH.crypto.subtle.importKey("jwk", a12, b11, false, [c11]);
-            let d11 = function(a13) {
-              let b12 = bf(a13.replace(/-----BEGIN.*?-----/g, "").replace(/-----END.*?-----/g, "").replace(/\s/g, "")), c12 = new Uint8Array(new ArrayBuffer(b12.length));
-              for (let a14 = 0, d12 = b12.length; a14 < d12; a14++) c12[a14] = b12.charCodeAt(a14);
-              return c12;
-            }(a12), e11 = "sign" === c11 ? "pkcs8" : "spki";
-            return bH.crypto.subtle.importKey(e11, d11, b11, false, [c11]);
-          }(b10, g10, "verify");
-          return { data: await bH.crypto.subtle.verify(g10.name, a11, d10, f10) };
-        } catch (a11) {
-          return { errors: [new bC({ reason: bA.TokenInvalidSignature, message: a11?.message })] };
-        }
-      }
-      function bR(a10) {
-        let b10 = (a10 || "").toString().split(".");
-        if (3 !== b10.length) return { errors: [new bC({ reason: bA.TokenInvalid, message: "Invalid JWT form. A JWT consists of three parts separated by dots." })] };
-        let [c10, d10, e10] = b10, f10 = new TextDecoder(), g10 = JSON.parse(f10.decode(bI.parse(c10, { loose: true }))), h2 = JSON.parse(f10.decode(bI.parse(d10, { loose: true })));
-        return { data: { header: g10, payload: h2, signature: bI.parse(e10, { loose: true }), raw: { header: c10, payload: d10, signature: e10, text: a10 } } };
-      }
-      async function bS(a10, b10) {
-        let { audience: c10, authorizedParties: d10, clockSkewInMs: e10, key: f10 } = b10, g10 = e10 || 5e3, { data: h2, errors: i2 } = bR(a10);
-        if (i2) return { errors: i2 };
-        let { header: j2, payload: k2 } = h2;
-        try {
-          let { typ: a11, alg: b11 } = j2;
-          bO(a11), bP(b11);
-          let { azp: e11, sub: f11, aud: h3, iat: i3, exp: l3, nbf: m3 } = k2;
-          if ("string" != typeof f11) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenVerificationFailed, message: `Subject claim (sub) is required and must be a string. Received ${JSON.stringify(f11)}.` });
-          ((a12, b12) => {
-            let c11 = [b12].flat().filter((a13) => !!a13), d11 = [a12].flat().filter((a13) => !!a13);
-            if (c11.length > 0 && d11.length > 0) if ("string" == typeof a12) {
-              if (!c11.includes(a12)) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenVerificationFailed, message: `Invalid JWT audience claim (aud) ${JSON.stringify(a12)}. Is not included in "${JSON.stringify(c11)}".` });
-            } else {
-              let b13;
-              if (b13 = a12, Array.isArray(b13) && b13.length > 0 && b13.every((a13) => "string" == typeof a13) && !a12.some((a13) => c11.includes(a13))) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenVerificationFailed, message: `Invalid JWT audience claim array (aud) ${JSON.stringify(a12)}. Is not included in "${JSON.stringify(c11)}".` });
-            }
-          })([h3], [c10]);
-          if (e11 && d10 && 0 !== d10.length && !d10.includes(e11)) throw new bC({ reason: bA.TokenInvalidAuthorizedParties, message: `Invalid JWT Authorized party claim (azp) ${JSON.stringify(e11)}. Expected "${d10}".` });
-          if ("number" != typeof l3) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenVerificationFailed, message: `Invalid JWT expiry date claim (exp) ${JSON.stringify(l3)}. Expected number.` });
-          let n2 = new Date(Date.now()), o2 = /* @__PURE__ */ new Date(0);
-          if (o2.setUTCSeconds(l3), o2.getTime() <= n2.getTime() - g10) throw new bC({ reason: bA.TokenExpired, message: `JWT is expired. Expiry date: ${o2.toUTCString()}, Current date: ${n2.toUTCString()}.` });
-          ((a12, b12) => {
-            if (void 0 === a12) return;
-            if ("number" != typeof a12) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenVerificationFailed, message: `Invalid JWT not before date claim (nbf) ${JSON.stringify(a12)}. Expected number.` });
-            let c11 = new Date(Date.now()), d11 = /* @__PURE__ */ new Date(0);
-            if (d11.setUTCSeconds(a12), d11.getTime() > c11.getTime() + b12) throw new bC({ reason: bA.TokenNotActiveYet, message: `JWT cannot be used prior to not before date claim (nbf). Not before date: ${d11.toUTCString()}; Current date: ${c11.toUTCString()};` });
-          })(m3, g10), ((a12, b12) => {
-            if (void 0 === a12) return;
-            if ("number" != typeof a12) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenVerificationFailed, message: `Invalid JWT issued at date claim (iat) ${JSON.stringify(a12)}. Expected number.` });
-            let c11 = new Date(Date.now()), d11 = /* @__PURE__ */ new Date(0);
-            if (d11.setUTCSeconds(a12), d11.getTime() > c11.getTime() + b12) throw new bC({ reason: bA.TokenIatInTheFuture, message: `JWT issued at date claim (iat) is in the future. Issued at date: ${d11.toUTCString()}; Current date: ${c11.toUTCString()};` });
-          })(i3, g10);
-        } catch (a11) {
-          return { errors: [a11] };
-        }
-        let { data: l2, errors: m2 } = await bQ(h2, f10);
-        return m2 ? { errors: [new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenVerificationFailed, message: `Error verifying JWT signature. ${m2[0]}` })] } : l2 ? { data: k2 } : { errors: [new bC({ reason: bA.TokenInvalidSignature, message: "JWT signature is invalid." })] };
-      }
-      var bT = (a10) => {
-        throw TypeError(a10);
-      }, bU = (a10, b10, c10) => (b10.has(a10) || bT("Cannot access private method"), c10);
-      function bV(a10) {
-        if (!a10) return "";
-        let b10 = a10.replace(/clerk\.accountsstage\./, "accountsstage.").replace(/clerk\.accounts\.|clerk\./, "accounts.");
-        return `https://${b10}`;
-      }
-      let bW = { strict_mfa: { afterMinutes: 10, level: "multi_factor" }, strict: { afterMinutes: 10, level: "second_factor" }, moderate: { afterMinutes: 60, level: "second_factor" }, lax: { afterMinutes: 1440, level: "second_factor" } }, bX = /* @__PURE__ */ new Set(["first_factor", "second_factor", "multi_factor"]), bY = /* @__PURE__ */ new Set(["strict_mfa", "strict", "moderate", "lax"]), bZ = (a10) => a10.replace(/^(org:)*/, "org:"), b$ = (a10, b10) => {
-        let { org: c10, user: d10 } = b_(a10), [e10, f10] = b10.split(":"), g10 = f10 || e10;
-        return "org" === e10 ? c10.includes(g10) : "user" === e10 ? d10.includes(g10) : [...c10, ...d10].includes(g10);
-      }, b_ = (a10) => {
-        let b10 = a10 ? a10.split(",").map((a11) => a11.trim()) : [];
-        return { org: b10.filter((a11) => a11.split(":")[0].includes("o")).map((a11) => a11.split(":")[1]), user: b10.filter((a11) => a11.split(":")[0].includes("u")).map((a11) => a11.split(":")[1]) };
-      };
-      var b0 = c(19), b1 = "https://api.clerk.com", b2 = "@clerk/backend@2.22.0", b3 = "2025-11-10", b4 = { Session: "__session", Refresh: "__refresh", ClientUat: "__client_uat", Handshake: "__clerk_handshake", DevBrowser: "__clerk_db_jwt", RedirectCount: "__clerk_redirect_count", HandshakeNonce: "__clerk_handshake_nonce" }, b5 = { ClerkSynced: "__clerk_synced", SuffixedCookies: "suffixed_cookies", ClerkRedirectUrl: "__clerk_redirect_url", DevBrowser: b4.DevBrowser, Handshake: b4.Handshake, HandshakeHelp: "__clerk_help", LegacyDevBrowser: "__dev_session", HandshakeReason: "__clerk_hs_reason", HandshakeNonce: b4.HandshakeNonce, HandshakeFormat: "format" }, b6 = { Cookies: b4, Headers: { Accept: "accept", AuthMessage: "x-clerk-auth-message", Authorization: "authorization", AuthReason: "x-clerk-auth-reason", AuthSignature: "x-clerk-auth-signature", AuthStatus: "x-clerk-auth-status", AuthToken: "x-clerk-auth-token", CacheControl: "cache-control", ClerkRedirectTo: "x-clerk-redirect-to", ClerkRequestData: "x-clerk-request-data", ClerkUrl: "x-clerk-clerk-url", CloudFrontForwardedProto: "cloudfront-forwarded-proto", ContentType: "content-type", ContentSecurityPolicy: "content-security-policy", ContentSecurityPolicyReportOnly: "content-security-policy-report-only", EnableDebug: "x-clerk-debug", ForwardedHost: "x-forwarded-host", ForwardedPort: "x-forwarded-port", ForwardedProto: "x-forwarded-proto", Host: "host", Location: "location", Nonce: "x-nonce", Origin: "origin", Referrer: "referer", SecFetchDest: "sec-fetch-dest", SecFetchSite: "sec-fetch-site", UserAgent: "user-agent", ReportingEndpoints: "reporting-endpoints" }, ContentTypes: { Json: "application/json" }, QueryParameters: b5 }, b7 = (a10, b10, c10, d10) => {
-        if ("" === a10) return b8(b10.toString(), c10?.toString());
-        let e10 = new URL(a10), f10 = c10 ? new URL(c10, e10) : void 0, g10 = new URL(b10, e10), h2 = `${e10.hostname}:${e10.port}` != `${g10.hostname}:${g10.port}`;
-        return f10 && (h2 && f10.searchParams.delete(b6.QueryParameters.ClerkSynced), g10.searchParams.set("redirect_url", f10.toString())), h2 && d10 && g10.searchParams.set(b6.QueryParameters.DevBrowser, d10), g10.toString();
-      }, b8 = (a10, b10) => {
-        let c10;
-        if (a10.startsWith("http")) c10 = new URL(a10);
-        else {
-          if (!b10 || !b10.startsWith("http")) throw Error("destination url or return back url should be an absolute path url!");
-          let d10 = new URL(b10);
-          c10 = new URL(a10, d10.origin);
-        }
-        return b10 && c10.searchParams.set("redirect_url", b10), c10.toString();
-      };
-      function b9(a10, b10) {
-        return Object.keys(a10).reduce((a11, c10) => ({ ...a11, [c10]: b10[c10] || a11[c10] }), { ...a10 });
-      }
-      function ca(a10) {
-        if (!a10 || "string" != typeof a10) throw Error("Missing Clerk Secret Key. Go to https://dashboard.clerk.com and get your key for your instance.");
-      }
-      var cb = { SessionToken: "session_token", ApiKey: "api_key", M2MToken: "m2m_token", OAuthToken: "oauth_token" }, cc = class {
-        constructor(a10, b10, c10) {
-          this.cookieSuffix = a10, this.clerkRequest = b10, this.originalFrontendApi = "", c10.acceptsToken === cb.M2MToken || c10.acceptsToken === cb.ApiKey ? this.initHeaderValues() : (this.initPublishableKeyValues(c10), this.initHeaderValues(), this.initCookieValues(), this.initHandshakeValues()), Object.assign(this, c10), this.clerkUrl = this.clerkRequest.clerkUrl;
-        }
-        get sessionToken() {
-          return this.sessionTokenInCookie || this.tokenInHeader;
-        }
-        usesSuffixedCookies() {
-          let a10 = this.getSuffixedCookie(b6.Cookies.ClientUat), b10 = this.getCookie(b6.Cookies.ClientUat), c10 = this.getSuffixedCookie(b6.Cookies.Session) || "", d10 = this.getCookie(b6.Cookies.Session) || "";
-          if (d10 && !this.tokenHasIssuer(d10)) return false;
-          if (d10 && !this.tokenBelongsToInstance(d10)) return true;
-          if (!a10 && !c10) return false;
-          let { data: e10 } = bR(d10), f10 = e10?.payload.iat || 0, { data: g10 } = bR(c10), h2 = g10?.payload.iat || 0;
-          if ("0" !== a10 && "0" !== b10 && f10 > h2 || "0" === a10 && "0" !== b10) return false;
-          if ("production" !== this.instanceType) {
-            let c11 = this.sessionExpired(g10);
-            if ("0" !== a10 && "0" === b10 && c11) return false;
-          }
-          return !!a10 || !c10;
-        }
-        isCrossOriginReferrer() {
-          if (!this.referrer || !this.clerkUrl.origin) return false;
-          try {
-            return new URL(this.referrer).origin !== this.clerkUrl.origin;
-          } catch {
-            return false;
-          }
-        }
-        isKnownClerkReferrer() {
-          if (!this.referrer) return false;
-          try {
-            let a10 = new URL(this.referrer), b10 = a10.hostname;
-            if (this.frontendApi) {
-              let a11 = this.frontendApi.startsWith("http") ? new URL(this.frontendApi).hostname : this.frontendApi;
-              if (b10 === a11) return true;
-            }
-            if (a9.some((a11) => b10.startsWith("accounts.") && b10.endsWith(a11)) || ba.some((a11) => b10.endsWith(a11) && !b10.endsWith(".clerk" + a11))) return true;
-            let c10 = bV(this.frontendApi);
-            if (c10) {
-              let b11 = new URL(c10).origin;
-              if (a10.origin === b11) return true;
-            }
-            if (b10.startsWith("accounts.")) return true;
-            return false;
-          } catch {
-            return false;
-          }
-        }
-        initPublishableKeyValues(a10) {
-          bi(a10.publishableKey, { fatal: true }), this.publishableKey = a10.publishableKey;
-          let b10 = bi(this.publishableKey, { fatal: true, domain: a10.domain, isSatellite: a10.isSatellite });
-          this.originalFrontendApi = b10.frontendApi;
-          let c10 = bi(this.publishableKey, { fatal: true, proxyUrl: a10.proxyUrl, domain: a10.domain, isSatellite: a10.isSatellite });
-          this.instanceType = c10.instanceType, this.frontendApi = c10.frontendApi;
-        }
-        initHeaderValues() {
-          this.tokenInHeader = this.parseAuthorizationHeader(this.getHeader(b6.Headers.Authorization)), this.origin = this.getHeader(b6.Headers.Origin), this.host = this.getHeader(b6.Headers.Host), this.forwardedHost = this.getHeader(b6.Headers.ForwardedHost), this.forwardedProto = this.getHeader(b6.Headers.CloudFrontForwardedProto) || this.getHeader(b6.Headers.ForwardedProto), this.referrer = this.getHeader(b6.Headers.Referrer), this.userAgent = this.getHeader(b6.Headers.UserAgent), this.secFetchDest = this.getHeader(b6.Headers.SecFetchDest), this.accept = this.getHeader(b6.Headers.Accept);
-        }
-        initCookieValues() {
-          this.sessionTokenInCookie = this.getSuffixedOrUnSuffixedCookie(b6.Cookies.Session), this.refreshTokenInCookie = this.getSuffixedCookie(b6.Cookies.Refresh), this.clientUat = Number.parseInt(this.getSuffixedOrUnSuffixedCookie(b6.Cookies.ClientUat) || "") || 0;
-        }
-        initHandshakeValues() {
-          this.devBrowserToken = this.getQueryParam(b6.QueryParameters.DevBrowser) || this.getSuffixedOrUnSuffixedCookie(b6.Cookies.DevBrowser), this.handshakeToken = this.getQueryParam(b6.QueryParameters.Handshake) || this.getCookie(b6.Cookies.Handshake), this.handshakeRedirectLoopCounter = Number(this.getCookie(b6.Cookies.RedirectCount)) || 0, this.handshakeNonce = this.getQueryParam(b6.QueryParameters.HandshakeNonce) || this.getCookie(b6.Cookies.HandshakeNonce);
-        }
-        getQueryParam(a10) {
-          return this.clerkRequest.clerkUrl.searchParams.get(a10);
-        }
-        getHeader(a10) {
-          return this.clerkRequest.headers.get(a10) || void 0;
-        }
-        getCookie(a10) {
-          return this.clerkRequest.cookies.get(a10) || void 0;
-        }
-        getSuffixedCookie(a10) {
-          let b10;
-          return this.getCookie((b10 = this.cookieSuffix, `${a10}_${b10}`)) || void 0;
-        }
-        getSuffixedOrUnSuffixedCookie(a10) {
-          return this.usesSuffixedCookies() ? this.getSuffixedCookie(a10) : this.getCookie(a10);
-        }
-        parseAuthorizationHeader(a10) {
-          if (!a10) return;
-          let [b10, c10] = a10.split(" ", 2);
-          return c10 ? "Bearer" === b10 ? c10 : void 0 : b10;
-        }
-        tokenHasIssuer(a10) {
-          let { data: b10, errors: c10 } = bR(a10);
-          return !c10 && !!b10.payload.iss;
-        }
-        tokenBelongsToInstance(a10) {
-          if (!a10) return false;
-          let { data: b10, errors: c10 } = bR(a10);
-          if (c10) return false;
-          let d10 = b10.payload.iss.replace(/https?:\/\//gi, "");
-          return this.originalFrontendApi === d10;
-        }
-        sessionExpired(a10) {
-          return !!a10 && a10?.payload.exp <= (Date.now() / 1e3 | 0);
-        }
-      }, cd = async (a10, b10) => new cc(b10.publishableKey ? await bl(b10.publishableKey, bH.crypto.subtle) : "", a10, b10), ce = RegExp("(?<!:)/{1,}", "g");
-      function cf(...a10) {
-        return a10.filter((a11) => a11).join("/").replace(ce, "/");
-      }
-      var cg = class {
-        constructor(a10) {
-          this.request = a10;
-        }
-        requireId(a10) {
-          if (!a10) throw Error("A valid resource ID is required.");
-        }
-      }, ch = "/actor_tokens", ci = class extends cg {
-        async create(a10) {
-          return this.request({ method: "POST", path: ch, bodyParams: a10 });
-        }
-        async revoke(a10) {
-          return this.requireId(a10), this.request({ method: "POST", path: cf(ch, a10, "revoke") });
-        }
-      }, cj = "/accountless_applications", ck = class extends cg {
-        async createAccountlessApplication(a10) {
-          let b10 = a10?.requestHeaders ? Object.fromEntries(a10.requestHeaders.entries()) : void 0;
-          return this.request({ method: "POST", path: cj, headerParams: b10 });
-        }
-        async completeAccountlessApplicationOnboarding(a10) {
-          let b10 = a10?.requestHeaders ? Object.fromEntries(a10.requestHeaders.entries()) : void 0;
-          return this.request({ method: "POST", path: cf(cj, "complete"), headerParams: b10 });
-        }
-      }, cl = "/allowlist_identifiers", cm = class extends cg {
-        async getAllowlistIdentifierList(a10 = {}) {
-          return this.request({ method: "GET", path: cl, queryParams: { ...a10, paginated: true } });
-        }
-        async createAllowlistIdentifier(a10) {
-          return this.request({ method: "POST", path: cl, bodyParams: a10 });
-        }
-        async deleteAllowlistIdentifier(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cl, a10) });
-        }
-      }, cn = "/api_keys", co = class extends cg {
-        async list(a10) {
-          return this.request({ method: "GET", path: cn, queryParams: a10 });
-        }
-        async create(a10) {
-          return this.request({ method: "POST", path: cn, bodyParams: a10 });
-        }
-        async revoke(a10) {
-          let { apiKeyId: b10, ...c10 } = a10;
-          return this.requireId(b10), this.request({ method: "POST", path: cf(cn, b10, "revoke"), bodyParams: c10 });
-        }
-        async getSecret(a10) {
-          return this.requireId(a10), this.request({ method: "GET", path: cf(cn, a10, "secret") });
-        }
-        async verifySecret(a10) {
-          return this.request({ method: "POST", path: cf(cn, "verify"), bodyParams: { secret: a10 } });
-        }
-      }, cp = class extends cg {
-        async changeDomain(a10) {
-          return this.request({ method: "POST", path: cf("/beta_features", "change_domain"), bodyParams: a10 });
-        }
-      }, cq = "/blocklist_identifiers", cr = class extends cg {
-        async getBlocklistIdentifierList(a10 = {}) {
-          return this.request({ method: "GET", path: cq, queryParams: a10 });
-        }
-        async createBlocklistIdentifier(a10) {
-          return this.request({ method: "POST", path: cq, bodyParams: a10 });
-        }
-        async deleteBlocklistIdentifier(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cq, a10) });
-        }
-      }, cs = "/clients", ct = class extends cg {
-        async getClientList(a10 = {}) {
-          return this.request({ method: "GET", path: cs, queryParams: { ...a10, paginated: true } });
-        }
-        async getClient(a10) {
-          return this.requireId(a10), this.request({ method: "GET", path: cf(cs, a10) });
-        }
-        verifyClient(a10) {
-          return this.request({ method: "POST", path: cf(cs, "verify"), bodyParams: { token: a10 } });
-        }
-        async getHandshakePayload(a10) {
-          return this.request({ method: "GET", path: cf(cs, "handshake_payload"), queryParams: a10 });
-        }
-      }, cu = "/domains", cv = class extends cg {
-        async list() {
-          return this.request({ method: "GET", path: cu });
-        }
-        async add(a10) {
-          return this.request({ method: "POST", path: cu, bodyParams: a10 });
-        }
-        async update(a10) {
-          let { domainId: b10, ...c10 } = a10;
-          return this.requireId(b10), this.request({ method: "PATCH", path: cf(cu, b10), bodyParams: c10 });
-        }
-        async delete(a10) {
-          return this.deleteDomain(a10);
-        }
-        async deleteDomain(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cu, a10) });
-        }
-      }, cw = "/email_addresses", cx = class extends cg {
-        async getEmailAddress(a10) {
-          return this.requireId(a10), this.request({ method: "GET", path: cf(cw, a10) });
-        }
-        async createEmailAddress(a10) {
-          return this.request({ method: "POST", path: cw, bodyParams: a10 });
-        }
-        async updateEmailAddress(a10, b10 = {}) {
-          return this.requireId(a10), this.request({ method: "PATCH", path: cf(cw, a10), bodyParams: b10 });
-        }
-        async deleteEmailAddress(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cw, a10) });
-        }
-      }, cy = class extends cg {
-        async verifyAccessToken(a10) {
-          return this.request({ method: "POST", path: cf("/oauth_applications/access_tokens", "verify"), bodyParams: { access_token: a10 } });
-        }
-      }, cz = "/instance", cA = class extends cg {
-        async get() {
-          return this.request({ method: "GET", path: cz });
-        }
-        async update(a10) {
-          return this.request({ method: "PATCH", path: cz, bodyParams: a10 });
-        }
-        async updateRestrictions(a10) {
-          return this.request({ method: "PATCH", path: cf(cz, "restrictions"), bodyParams: a10 });
-        }
-        async updateOrganizationSettings(a10) {
-          return this.request({ method: "PATCH", path: cf(cz, "organization_settings"), bodyParams: a10 });
-        }
-      }, cB = "/invitations", cC = class extends cg {
-        async getInvitationList(a10 = {}) {
-          return this.request({ method: "GET", path: cB, queryParams: { ...a10, paginated: true } });
-        }
-        async createInvitation(a10) {
-          return this.request({ method: "POST", path: cB, bodyParams: a10 });
-        }
-        async createInvitationBulk(a10) {
-          return this.request({ method: "POST", path: cf(cB, "bulk"), bodyParams: a10 });
-        }
-        async revokeInvitation(a10) {
-          return this.requireId(a10), this.request({ method: "POST", path: cf(cB, a10, "revoke") });
-        }
-      }, cD = "/machines", cE = class extends cg {
-        async get(a10) {
-          return this.requireId(a10), this.request({ method: "GET", path: cf(cD, a10) });
-        }
-        async list(a10 = {}) {
-          return this.request({ method: "GET", path: cD, queryParams: a10 });
-        }
-        async create(a10) {
-          return this.request({ method: "POST", path: cD, bodyParams: a10 });
-        }
-        async update(a10) {
-          let { machineId: b10, ...c10 } = a10;
-          return this.requireId(b10), this.request({ method: "PATCH", path: cf(cD, b10), bodyParams: c10 });
-        }
-        async delete(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cD, a10) });
-        }
-        async getSecretKey(a10) {
-          return this.requireId(a10), this.request({ method: "GET", path: cf(cD, a10, "secret_key") });
-        }
-        async rotateSecretKey(a10) {
-          let { machineId: b10, previousTokenTtl: c10 } = a10;
-          return this.requireId(b10), this.request({ method: "POST", path: cf(cD, b10, "secret_key", "rotate"), bodyParams: { previousTokenTtl: c10 } });
-        }
-        async createScope(a10, b10) {
-          return this.requireId(a10), this.request({ method: "POST", path: cf(cD, a10, "scopes"), bodyParams: { toMachineId: b10 } });
-        }
-        async deleteScope(a10, b10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cD, a10, "scopes", b10) });
-        }
-      }, cF = "/m2m_tokens", cG = class extends cg {
-        constructor() {
-          super(...arguments), ((a10, b10, c10) => b10.has(a10) ? bT("Cannot add the same private member more than once") : b10 instanceof WeakSet ? b10.add(a10) : b10.set(a10, c10))(this, fV);
-        }
-        async createToken(a10) {
-          let { claims: b10 = null, machineSecretKey: c10, secondsUntilExpiration: d10 = null } = a10 || {}, e10 = bU(this, fV, fW).call(this, { method: "POST", path: cF, bodyParams: { secondsUntilExpiration: d10, claims: b10 } }, c10);
-          return this.request(e10);
-        }
-        async revokeToken(a10) {
-          let { m2mTokenId: b10, revocationReason: c10 = null, machineSecretKey: d10 } = a10;
-          this.requireId(b10);
-          let e10 = bU(this, fV, fW).call(this, { method: "POST", path: cf(cF, b10, "revoke"), bodyParams: { revocationReason: c10 } }, d10);
-          return this.request(e10);
-        }
-        async verifyToken(a10) {
-          let { token: b10, machineSecretKey: c10 } = a10, d10 = bU(this, fV, fW).call(this, { method: "POST", path: cf(cF, "verify"), bodyParams: { token: b10 } }, c10);
-          return this.request(d10);
-        }
-      };
-      fV = /* @__PURE__ */ new WeakSet(), fW = function(a10, b10) {
-        return b10 ? { ...a10, headerParams: { ...a10.headerParams, Authorization: `Bearer ${b10}` } } : a10;
-      };
-      var cH = class extends cg {
-        async getJwks() {
-          return this.request({ method: "GET", path: "/jwks" });
-        }
-      }, cI = "/jwt_templates", cJ = class extends cg {
-        async list(a10 = {}) {
-          return this.request({ method: "GET", path: cI, queryParams: { ...a10, paginated: true } });
-        }
-        async get(a10) {
-          return this.requireId(a10), this.request({ method: "GET", path: cf(cI, a10) });
-        }
-        async create(a10) {
-          return this.request({ method: "POST", path: cI, bodyParams: a10 });
-        }
-        async update(a10) {
-          let { templateId: b10, ...c10 } = a10;
-          return this.requireId(b10), this.request({ method: "PATCH", path: cf(cI, b10), bodyParams: c10 });
-        }
-        async delete(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cI, a10) });
-        }
-      }, cK = "/organizations", cL = class extends cg {
-        async getOrganizationList(a10) {
-          return this.request({ method: "GET", path: cK, queryParams: a10 });
-        }
-        async createOrganization(a10) {
-          return this.request({ method: "POST", path: cK, bodyParams: a10 });
-        }
-        async getOrganization(a10) {
-          let { includeMembersCount: b10 } = a10, c10 = "organizationId" in a10 ? a10.organizationId : a10.slug;
-          return this.requireId(c10), this.request({ method: "GET", path: cf(cK, c10), queryParams: { includeMembersCount: b10 } });
-        }
-        async updateOrganization(a10, b10) {
-          return this.requireId(a10), this.request({ method: "PATCH", path: cf(cK, a10), bodyParams: b10 });
-        }
-        async updateOrganizationLogo(a10, b10) {
-          this.requireId(a10);
-          let c10 = new bH.FormData();
-          return c10.append("file", b10?.file), b10?.uploaderUserId && c10.append("uploader_user_id", b10?.uploaderUserId), this.request({ method: "PUT", path: cf(cK, a10, "logo"), formData: c10 });
-        }
-        async deleteOrganizationLogo(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cK, a10, "logo") });
-        }
-        async updateOrganizationMetadata(a10, b10) {
-          return this.requireId(a10), this.request({ method: "PATCH", path: cf(cK, a10, "metadata"), bodyParams: b10 });
-        }
-        async deleteOrganization(a10) {
-          return this.request({ method: "DELETE", path: cf(cK, a10) });
-        }
-        async getOrganizationMembershipList(a10) {
-          let { organizationId: b10, ...c10 } = a10;
-          return this.requireId(b10), this.request({ method: "GET", path: cf(cK, b10, "memberships"), queryParams: c10 });
-        }
-        async getInstanceOrganizationMembershipList(a10) {
-          return this.request({ method: "GET", path: "/organization_memberships", queryParams: a10 });
-        }
-        async createOrganizationMembership(a10) {
-          let { organizationId: b10, ...c10 } = a10;
-          return this.requireId(b10), this.request({ method: "POST", path: cf(cK, b10, "memberships"), bodyParams: c10 });
-        }
-        async updateOrganizationMembership(a10) {
-          let { organizationId: b10, userId: c10, ...d10 } = a10;
-          return this.requireId(b10), this.request({ method: "PATCH", path: cf(cK, b10, "memberships", c10), bodyParams: d10 });
-        }
-        async updateOrganizationMembershipMetadata(a10) {
-          let { organizationId: b10, userId: c10, ...d10 } = a10;
-          return this.request({ method: "PATCH", path: cf(cK, b10, "memberships", c10, "metadata"), bodyParams: d10 });
-        }
-        async deleteOrganizationMembership(a10) {
-          let { organizationId: b10, userId: c10 } = a10;
-          return this.requireId(b10), this.request({ method: "DELETE", path: cf(cK, b10, "memberships", c10) });
-        }
-        async getOrganizationInvitationList(a10) {
-          let { organizationId: b10, ...c10 } = a10;
-          return this.requireId(b10), this.request({ method: "GET", path: cf(cK, b10, "invitations"), queryParams: c10 });
-        }
-        async createOrganizationInvitation(a10) {
-          let { organizationId: b10, ...c10 } = a10;
-          return this.requireId(b10), this.request({ method: "POST", path: cf(cK, b10, "invitations"), bodyParams: c10 });
-        }
-        async createOrganizationInvitationBulk(a10, b10) {
-          return this.requireId(a10), this.request({ method: "POST", path: cf(cK, a10, "invitations", "bulk"), bodyParams: b10 });
-        }
-        async getOrganizationInvitation(a10) {
-          let { organizationId: b10, invitationId: c10 } = a10;
-          return this.requireId(b10), this.requireId(c10), this.request({ method: "GET", path: cf(cK, b10, "invitations", c10) });
-        }
-        async revokeOrganizationInvitation(a10) {
-          let { organizationId: b10, invitationId: c10, ...d10 } = a10;
-          return this.requireId(b10), this.request({ method: "POST", path: cf(cK, b10, "invitations", c10, "revoke"), bodyParams: d10 });
-        }
-        async getOrganizationDomainList(a10) {
-          let { organizationId: b10, ...c10 } = a10;
-          return this.requireId(b10), this.request({ method: "GET", path: cf(cK, b10, "domains"), queryParams: c10 });
-        }
-        async createOrganizationDomain(a10) {
-          let { organizationId: b10, ...c10 } = a10;
-          return this.requireId(b10), this.request({ method: "POST", path: cf(cK, b10, "domains"), bodyParams: { ...c10, verified: c10.verified ?? true } });
-        }
-        async updateOrganizationDomain(a10) {
-          let { organizationId: b10, domainId: c10, ...d10 } = a10;
-          return this.requireId(b10), this.requireId(c10), this.request({ method: "PATCH", path: cf(cK, b10, "domains", c10), bodyParams: d10 });
-        }
-        async deleteOrganizationDomain(a10) {
-          let { organizationId: b10, domainId: c10 } = a10;
-          return this.requireId(b10), this.requireId(c10), this.request({ method: "DELETE", path: cf(cK, b10, "domains", c10) });
-        }
-      }, cM = "/oauth_applications", cN = class extends cg {
-        async list(a10 = {}) {
-          return this.request({ method: "GET", path: cM, queryParams: a10 });
-        }
-        async get(a10) {
-          return this.requireId(a10), this.request({ method: "GET", path: cf(cM, a10) });
-        }
-        async create(a10) {
-          return this.request({ method: "POST", path: cM, bodyParams: a10 });
-        }
-        async update(a10) {
-          let { oauthApplicationId: b10, ...c10 } = a10;
-          return this.requireId(b10), this.request({ method: "PATCH", path: cf(cM, b10), bodyParams: c10 });
-        }
-        async delete(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cM, a10) });
-        }
-        async rotateSecret(a10) {
-          return this.requireId(a10), this.request({ method: "POST", path: cf(cM, a10, "rotate_secret") });
-        }
-      }, cO = "/phone_numbers", cP = class extends cg {
-        async getPhoneNumber(a10) {
-          return this.requireId(a10), this.request({ method: "GET", path: cf(cO, a10) });
-        }
-        async createPhoneNumber(a10) {
-          return this.request({ method: "POST", path: cO, bodyParams: a10 });
-        }
-        async updatePhoneNumber(a10, b10 = {}) {
-          return this.requireId(a10), this.request({ method: "PATCH", path: cf(cO, a10), bodyParams: b10 });
-        }
-        async deletePhoneNumber(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cO, a10) });
-        }
-      }, cQ = class extends cg {
-        async verify(a10) {
-          return this.request({ method: "POST", path: "/proxy_checks", bodyParams: a10 });
-        }
-      }, cR = "/redirect_urls", cS = class extends cg {
-        async getRedirectUrlList() {
-          return this.request({ method: "GET", path: cR, queryParams: { paginated: true } });
-        }
-        async getRedirectUrl(a10) {
-          return this.requireId(a10), this.request({ method: "GET", path: cf(cR, a10) });
-        }
-        async createRedirectUrl(a10) {
-          return this.request({ method: "POST", path: cR, bodyParams: a10 });
-        }
-        async deleteRedirectUrl(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cR, a10) });
-        }
-      }, cT = "/saml_connections", cU = class extends cg {
-        async getSamlConnectionList(a10 = {}) {
-          return this.request({ method: "GET", path: cT, queryParams: a10 });
-        }
-        async createSamlConnection(a10) {
-          return this.request({ method: "POST", path: cT, bodyParams: a10, options: { deepSnakecaseBodyParamKeys: true } });
-        }
-        async getSamlConnection(a10) {
-          return this.requireId(a10), this.request({ method: "GET", path: cf(cT, a10) });
-        }
-        async updateSamlConnection(a10, b10 = {}) {
-          return this.requireId(a10), this.request({ method: "PATCH", path: cf(cT, a10), bodyParams: b10, options: { deepSnakecaseBodyParamKeys: true } });
-        }
-        async deleteSamlConnection(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cT, a10) });
-        }
-      }, cV = "/sessions", cW = class extends cg {
-        async getSessionList(a10 = {}) {
-          return this.request({ method: "GET", path: cV, queryParams: { ...a10, paginated: true } });
-        }
-        async getSession(a10) {
-          return this.requireId(a10), this.request({ method: "GET", path: cf(cV, a10) });
-        }
-        async createSession(a10) {
-          return this.request({ method: "POST", path: cV, bodyParams: a10 });
-        }
-        async revokeSession(a10) {
-          return this.requireId(a10), this.request({ method: "POST", path: cf(cV, a10, "revoke") });
-        }
-        async verifySession(a10, b10) {
-          return this.requireId(a10), this.request({ method: "POST", path: cf(cV, a10, "verify"), bodyParams: { token: b10 } });
-        }
-        async getToken(a10, b10, c10) {
-          this.requireId(a10);
-          let d10 = { method: "POST", path: b10 ? cf(cV, a10, "tokens", b10) : cf(cV, a10, "tokens") };
-          return void 0 !== c10 && (d10.bodyParams = { expires_in_seconds: c10 }), this.request(d10);
-        }
-        async refreshSession(a10, b10) {
-          this.requireId(a10);
-          let { suffixed_cookies: c10, ...d10 } = b10;
-          return this.request({ method: "POST", path: cf(cV, a10, "refresh"), bodyParams: d10, queryParams: { suffixed_cookies: c10 } });
-        }
-      }, cX = "/sign_in_tokens", cY = class extends cg {
-        async createSignInToken(a10) {
-          return this.request({ method: "POST", path: cX, bodyParams: a10 });
-        }
-        async revokeSignInToken(a10) {
-          return this.requireId(a10), this.request({ method: "POST", path: cf(cX, a10, "revoke") });
-        }
-      }, cZ = "/sign_ups", c$ = class extends cg {
-        async get(a10) {
-          return this.requireId(a10), this.request({ method: "GET", path: cf(cZ, a10) });
-        }
-        async update(a10) {
-          let { signUpAttemptId: b10, ...c10 } = a10;
-          return this.request({ method: "PATCH", path: cf(cZ, b10), bodyParams: c10 });
-        }
-      }, c_ = class extends cg {
-        async createTestingToken() {
-          return this.request({ method: "POST", path: "/testing_tokens" });
-        }
-      }, c0 = "/users", c1 = class extends cg {
-        async getUserList(a10 = {}) {
-          let { limit: b10, offset: c10, orderBy: d10, ...e10 } = a10, [f10, g10] = await Promise.all([this.request({ method: "GET", path: c0, queryParams: a10 }), this.getCount(e10)]);
-          return { data: f10, totalCount: g10 };
-        }
-        async getUser(a10) {
-          return this.requireId(a10), this.request({ method: "GET", path: cf(c0, a10) });
-        }
-        async createUser(a10) {
-          return this.request({ method: "POST", path: c0, bodyParams: a10 });
-        }
-        async updateUser(a10, b10 = {}) {
-          return this.requireId(a10), this.request({ method: "PATCH", path: cf(c0, a10), bodyParams: b10 });
-        }
-        async updateUserProfileImage(a10, b10) {
-          this.requireId(a10);
-          let c10 = new bH.FormData();
-          return c10.append("file", b10?.file), this.request({ method: "POST", path: cf(c0, a10, "profile_image"), formData: c10 });
-        }
-        async updateUserMetadata(a10, b10) {
-          return this.requireId(a10), this.request({ method: "PATCH", path: cf(c0, a10, "metadata"), bodyParams: b10 });
-        }
-        async deleteUser(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(c0, a10) });
-        }
-        async getCount(a10 = {}) {
-          return this.request({ method: "GET", path: cf(c0, "count"), queryParams: a10 });
-        }
-        async getUserOauthAccessToken(a10, b10) {
-          this.requireId(a10);
-          let c10 = b10.startsWith("oauth_"), d10 = c10 ? b10 : `oauth_${b10}`;
-          return c10 && ((a11, b11, c11) => {
-            let d11 = a7(), e10 = c11 ?? a11;
-            a8.has(e10) || d11 || (a8.add(e10), console.warn(`Clerk - DEPRECATION WARNING: "${a11}" is deprecated and will be removed in the next major release.
-${b11}`));
-          })("getUserOauthAccessToken(userId, provider)", "Remove the `oauth_` prefix from the `provider` argument."), this.request({ method: "GET", path: cf(c0, a10, "oauth_access_tokens", d10), queryParams: { paginated: true } });
-        }
-        async disableUserMFA(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(c0, a10, "mfa") });
-        }
-        async getOrganizationMembershipList(a10) {
-          let { userId: b10, limit: c10, offset: d10 } = a10;
-          return this.requireId(b10), this.request({ method: "GET", path: cf(c0, b10, "organization_memberships"), queryParams: { limit: c10, offset: d10 } });
-        }
-        async getOrganizationInvitationList(a10) {
-          let { userId: b10, ...c10 } = a10;
-          return this.requireId(b10), this.request({ method: "GET", path: cf(c0, b10, "organization_invitations"), queryParams: c10 });
-        }
-        async verifyPassword(a10) {
-          let { userId: b10, password: c10 } = a10;
-          return this.requireId(b10), this.request({ method: "POST", path: cf(c0, b10, "verify_password"), bodyParams: { password: c10 } });
-        }
-        async verifyTOTP(a10) {
-          let { userId: b10, code: c10 } = a10;
-          return this.requireId(b10), this.request({ method: "POST", path: cf(c0, b10, "verify_totp"), bodyParams: { code: c10 } });
-        }
-        async banUser(a10) {
-          return this.requireId(a10), this.request({ method: "POST", path: cf(c0, a10, "ban") });
-        }
-        async unbanUser(a10) {
-          return this.requireId(a10), this.request({ method: "POST", path: cf(c0, a10, "unban") });
-        }
-        async lockUser(a10) {
-          return this.requireId(a10), this.request({ method: "POST", path: cf(c0, a10, "lock") });
-        }
-        async unlockUser(a10) {
-          return this.requireId(a10), this.request({ method: "POST", path: cf(c0, a10, "unlock") });
-        }
-        async deleteUserProfileImage(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(c0, a10, "profile_image") });
-        }
-        async deleteUserPasskey(a10) {
-          return this.requireId(a10.userId), this.requireId(a10.passkeyIdentificationId), this.request({ method: "DELETE", path: cf(c0, a10.userId, "passkeys", a10.passkeyIdentificationId) });
-        }
-        async deleteUserWeb3Wallet(a10) {
-          return this.requireId(a10.userId), this.requireId(a10.web3WalletIdentificationId), this.request({ method: "DELETE", path: cf(c0, a10.userId, "web3_wallets", a10.web3WalletIdentificationId) });
-        }
-        async deleteUserExternalAccount(a10) {
-          return this.requireId(a10.userId), this.requireId(a10.externalAccountId), this.request({ method: "DELETE", path: cf(c0, a10.userId, "external_accounts", a10.externalAccountId) });
-        }
-        async deleteUserBackupCodes(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(c0, a10, "backup_code") });
-        }
-        async deleteUserTOTP(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(c0, a10, "totp") });
-        }
-      }, c2 = "/waitlist_entries", c3 = class extends cg {
-        async list(a10 = {}) {
-          return this.request({ method: "GET", path: c2, queryParams: a10 });
-        }
-        async create(a10) {
-          return this.request({ method: "POST", path: c2, bodyParams: a10 });
-        }
-        async invite(a10, b10 = {}) {
-          return this.requireId(a10), this.request({ method: "POST", path: cf(c2, a10, "invite"), bodyParams: b10 });
-        }
-        async reject(a10) {
-          return this.requireId(a10), this.request({ method: "POST", path: cf(c2, a10, "reject") });
-        }
-        async delete(a10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(c2, a10) });
-        }
-      }, c4 = "/webhooks", c5 = class extends cg {
-        async createSvixApp() {
-          return this.request({ method: "POST", path: cf(c4, "svix") });
-        }
-        async generateSvixAuthURL() {
-          return this.request({ method: "POST", path: cf(c4, "svix_url") });
-        }
-        async deleteSvixApp() {
-          return this.request({ method: "DELETE", path: cf(c4, "svix") });
-        }
-      }, c6 = "/billing", c7 = class extends cg {
-        async getPlanList(a10) {
-          return this.request({ method: "GET", path: cf(c6, "plans"), queryParams: a10 });
-        }
-        async cancelSubscriptionItem(a10, b10) {
-          return this.requireId(a10), this.request({ method: "DELETE", path: cf(c6, "subscription_items", a10), queryParams: b10 });
-        }
-        async extendSubscriptionItemFreeTrial(a10, b10) {
-          return this.requireId(a10), this.request({ method: "POST", path: cf("/billing", "subscription_items", a10, "extend_free_trial"), bodyParams: b10 });
-        }
-        async getOrganizationBillingSubscription(a10) {
-          return this.requireId(a10), this.request({ method: "GET", path: cf("/organizations", a10, "billing", "subscription") });
-        }
-        async getUserBillingSubscription(a10) {
-          return this.requireId(a10), this.request({ method: "GET", path: cf("/users", a10, "billing", "subscription") });
-        }
-      }, c8 = (a10) => "object" == typeof a10 && null !== a10, c9 = (a10) => c8(a10) && !(a10 instanceof RegExp) && !(a10 instanceof Error) && !(a10 instanceof Date) && !(globalThis.Blob && a10 instanceof globalThis.Blob), da = Symbol("mapObjectSkip"), db = (a10, b10, c10, d10 = /* @__PURE__ */ new WeakMap()) => {
-        if (c10 = { deep: false, target: {}, ...c10 }, d10.has(a10)) return d10.get(a10);
-        d10.set(a10, c10.target);
-        let { target: e10 } = c10;
-        delete c10.target;
-        let f10 = (a11) => a11.map((a12) => c9(a12) ? db(a12, b10, c10, d10) : a12);
-        if (Array.isArray(a10)) return f10(a10);
-        for (let [g10, h2] of Object.entries(a10)) {
-          let i2 = b10(g10, h2, a10);
-          if (i2 === da) continue;
-          let [j2, k2, { shouldRecurse: l2 = true } = {}] = i2;
-          "__proto__" !== j2 && (c10.deep && l2 && c9(k2) && (k2 = Array.isArray(k2) ? f10(k2) : db(k2, b10, c10, d10)), e10[j2] = k2);
-        }
-        return e10;
-      };
-      function dc(a10, b10, c10) {
-        if (!c8(a10)) throw TypeError(`Expected an object, got \`${a10}\` (${typeof a10})`);
-        if (Array.isArray(a10)) throw TypeError("Expected an object, got an array");
-        return db(a10, b10, c10);
-      }
-      var dd = /([\p{Ll}\d])(\p{Lu})/gu, de = /(\p{Lu})([\p{Lu}][\p{Ll}])/gu, df = /(\d)\p{Ll}|(\p{L})\d/u, dg = /[^\p{L}\d]+/giu, dh = "$1\0$2";
-      function di(a10) {
-        let b10 = a10.trim();
-        b10 = (b10 = b10.replace(dd, dh).replace(de, dh)).replace(dg, "\0");
-        let c10 = 0, d10 = b10.length;
-        for (; "\0" === b10.charAt(c10); ) c10++;
-        if (c10 === d10) return [];
-        for (; "\0" === b10.charAt(d10 - 1); ) d10--;
-        return b10.slice(c10, d10).split(/\0/g);
-      }
-      function dj(a10) {
-        let b10 = di(a10);
-        for (let a11 = 0; a11 < b10.length; a11++) {
-          let c10 = b10[a11], d10 = df.exec(c10);
-          if (d10) {
-            let e10 = d10.index + (d10[1] ?? d10[2]).length;
-            b10.splice(a11, 1, c10.slice(0, e10), c10.slice(e10));
-          }
-        }
-        return b10;
-      }
-      function dk(a10, b10) {
-        var c10, d10 = { delimiter: "_", ...b10 };
-        let [e10, f10, g10] = function(a11, b11 = {}) {
-          let c11 = b11.split ?? (b11.separateNumbers ? dj : di), d11 = b11.prefixCharacters ?? "", e11 = b11.suffixCharacters ?? "", f11 = 0, g11 = a11.length;
-          for (; f11 < a11.length; ) {
-            let b12 = a11.charAt(f11);
-            if (!d11.includes(b12)) break;
-            f11++;
-          }
-          for (; g11 > f11; ) {
-            let b12 = g11 - 1, c12 = a11.charAt(b12);
-            if (!e11.includes(c12)) break;
-            g11 = b12;
-          }
-          return [a11.slice(0, f11), c11(a11.slice(f11, g11)), a11.slice(g11)];
-        }(a10, d10);
-        return e10 + f10.map(false === (c10 = d10?.locale) ? (a11) => a11.toLowerCase() : (a11) => a11.toLocaleLowerCase(c10)).join(d10?.delimiter ?? " ") + g10;
-      }
-      var dl = {}.constructor;
-      function dm(a10, b10) {
-        return a10.some((a11) => "string" == typeof a11 ? a11 === b10 : a11.test(b10));
-      }
-      function dn(a10, b10, c10) {
-        return c10.shouldRecurse ? { shouldRecurse: c10.shouldRecurse(a10, b10) } : void 0;
-      }
-      var dp = function(a10, b10) {
-        if (Array.isArray(a10)) {
-          if (a10.some((a11) => a11.constructor !== dl)) throw Error("obj must be array of plain objects");
-          let c11 = (b10 = { deep: true, exclude: [], parsingOptions: {}, ...b10 }).snakeCase || ((a11) => dk(a11, b10.parsingOptions));
-          return a10.map((a11) => dc(a11, (a12, d10) => [dm(b10.exclude, a12) ? a12 : c11(a12), d10, dn(a12, d10, b10)], b10));
-        }
-        if (a10.constructor !== dl) throw Error("obj must be an plain object");
-        let c10 = (b10 = { deep: true, exclude: [], parsingOptions: {}, ...b10 }).snakeCase || ((a11) => dk(a11, b10.parsingOptions));
-        return dc(a10, (a11, d10) => [dm(b10.exclude, a11) ? a11 : c10(a11), d10, dn(a11, d10, b10)], b10);
-      }, dq = class a10 {
-        constructor(a11, b10, c10, d10) {
-          this.publishableKey = a11, this.secretKey = b10, this.claimUrl = c10, this.apiKeysUrl = d10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.publishable_key, b10.secret_key, b10.claim_url, b10.api_keys_url);
-        }
-      }, dr = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2) {
-          this.id = a11, this.status = b10, this.userId = c10, this.actor = d10, this.token = e10, this.url = f10, this.createdAt = g10, this.updatedAt = h2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.status, b10.user_id, b10.actor, b10.token, b10.url, b10.created_at, b10.updated_at);
-        }
-      }, ds = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10) {
-          this.id = a11, this.identifier = b10, this.identifierType = c10, this.createdAt = d10, this.updatedAt = e10, this.instanceId = f10, this.invitationId = g10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.identifier, b10.identifier_type, b10.created_at, b10.updated_at, b10.instance_id, b10.invitation_id);
-        }
-      }, dt = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2, n2, o2, p2) {
-          this.id = a11, this.type = b10, this.name = c10, this.subject = d10, this.scopes = e10, this.claims = f10, this.revoked = g10, this.revocationReason = h2, this.expired = i2, this.expiration = j2, this.createdBy = k2, this.description = l2, this.lastUsedAt = m2, this.createdAt = n2, this.updatedAt = o2, this.secret = p2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.type, b10.name, b10.subject, b10.scopes, b10.claims, b10.revoked, b10.revocation_reason, b10.expired, b10.expiration, b10.created_by, b10.description, b10.last_used_at, b10.created_at, b10.updated_at, b10.secret);
-        }
-      }, du = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10) {
-          this.id = a11, this.identifier = b10, this.identifierType = c10, this.createdAt = d10, this.updatedAt = e10, this.instanceId = f10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.identifier, b10.identifier_type, b10.created_at, b10.updated_at, b10.instance_id);
-        }
-      }, dv = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2) {
-          this.id = a11, this.isMobile = b10, this.ipAddress = c10, this.city = d10, this.country = e10, this.browserVersion = f10, this.browserName = g10, this.deviceType = h2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.is_mobile, b10.ip_address, b10.city, b10.country, b10.browser_version, b10.browser_name, b10.device_type);
-        }
-      }, dw = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2 = null) {
-          this.id = a11, this.clientId = b10, this.userId = c10, this.status = d10, this.lastActiveAt = e10, this.expireAt = f10, this.abandonAt = g10, this.createdAt = h2, this.updatedAt = i2, this.lastActiveOrganizationId = j2, this.latestActivity = k2, this.actor = l2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.client_id, b10.user_id, b10.status, b10.last_active_at, b10.expire_at, b10.abandon_at, b10.created_at, b10.updated_at, b10.last_active_organization_id, b10.latest_activity && dv.fromJSON(b10.latest_activity), b10.actor);
-        }
-      }, dx = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2) {
-          this.id = a11, this.sessionIds = b10, this.sessions = c10, this.signInId = d10, this.signUpId = e10, this.lastActiveSessionId = f10, this.lastAuthenticationStrategy = g10, this.createdAt = h2, this.updatedAt = i2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.session_ids, b10.sessions.map((a11) => dw.fromJSON(a11)), b10.sign_in_id, b10.sign_up_id, b10.last_active_session_id, b10.last_authentication_strategy, b10.created_at, b10.updated_at);
-        }
-      }, dy = class a10 {
-        constructor(a11, b10, c10) {
-          this.host = a11, this.value = b10, this.required = c10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.host, b10.value, b10.required);
-        }
-      }, dz = class a10 {
-        constructor(a11) {
-          this.cookies = a11;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.cookies);
-        }
-      }, dA = class a10 {
-        constructor(a11, b10, c10, d10) {
-          this.object = a11, this.id = b10, this.slug = c10, this.deleted = d10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.object, b10.id || null, b10.slug || null, b10.deleted);
-        }
-      }, dB = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2) {
-          this.id = a11, this.name = b10, this.isSatellite = c10, this.frontendApiUrl = d10, this.developmentOrigin = e10, this.cnameTargets = f10, this.accountsPortalUrl = g10, this.proxyUrl = h2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.name, b10.is_satellite, b10.frontend_api_url, b10.development_origin, b10.cname_targets && b10.cname_targets.map((a11) => dy.fromJSON(a11)), b10.accounts_portal_url, b10.proxy_url);
-        }
-      }, dC = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2) {
-          this.id = a11, this.fromEmailName = b10, this.emailAddressId = c10, this.toEmailAddress = d10, this.subject = e10, this.body = f10, this.bodyPlain = g10, this.status = h2, this.slug = i2, this.data = j2, this.deliveredByClerk = k2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.from_email_name, b10.email_address_id, b10.to_email_address, b10.subject, b10.body, b10.body_plain, b10.status, b10.slug, b10.data, b10.delivered_by_clerk);
-        }
-      }, dD = class a10 {
-        constructor(a11, b10) {
-          this.id = a11, this.type = b10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.type);
-        }
-      }, dE = class a10 {
-        constructor(a11, b10, c10 = null, d10 = null, e10 = null, f10 = null, g10 = null) {
-          this.status = a11, this.strategy = b10, this.externalVerificationRedirectURL = c10, this.attempts = d10, this.expireAt = e10, this.nonce = f10, this.message = g10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.status, b10.strategy, b10.external_verification_redirect_url ? new URL(b10.external_verification_redirect_url) : null, b10.attempts, b10.expire_at, b10.nonce);
-        }
-      }, dF = class a10 {
-        constructor(a11, b10, c10, d10) {
-          this.id = a11, this.emailAddress = b10, this.verification = c10, this.linkedTo = d10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.email_address, b10.verification && dE.fromJSON(b10.verification), b10.linked_to.map((a11) => dD.fromJSON(a11)));
-        }
-      }, dG = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2 = {}, m2, n2) {
-          this.id = a11, this.provider = b10, this.identificationId = c10, this.externalId = d10, this.approvedScopes = e10, this.emailAddress = f10, this.firstName = g10, this.lastName = h2, this.imageUrl = i2, this.username = j2, this.phoneNumber = k2, this.publicMetadata = l2, this.label = m2, this.verification = n2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.provider, b10.identification_id, b10.provider_user_id, b10.approved_scopes, b10.email_address, b10.first_name, b10.last_name, b10.image_url || "", b10.username, b10.phone_number, b10.public_metadata, b10.label, b10.verification && dE.fromJSON(b10.verification));
-        }
-      }, dH = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2) {
-          this.id = a11, this.clientId = b10, this.type = c10, this.subject = d10, this.scopes = e10, this.revoked = f10, this.revocationReason = g10, this.expired = h2, this.expiration = i2, this.createdAt = j2, this.updatedAt = k2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.client_id, b10.type, b10.subject, b10.scopes, b10.revoked, b10.revocation_reason, b10.expired, b10.expiration, b10.created_at, b10.updated_at);
-        }
-      }, dI = class a10 {
-        constructor(a11, b10, c10) {
-          this.id = a11, this.environmentType = b10, this.allowedOrigins = c10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.environment_type, b10.allowed_origins);
-        }
-      }, dJ = class a10 {
-        constructor(a11, b10, c10, d10, e10) {
-          this.allowlist = a11, this.blocklist = b10, this.blockEmailSubaddresses = c10, this.blockDisposableEmailDomains = d10, this.ignoreDotsForGmailAddresses = e10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.allowlist, b10.blocklist, b10.block_email_subaddresses, b10.block_disposable_email_domains, b10.ignore_dots_for_gmail_addresses);
-        }
-      }, dK = class a10 {
-        constructor(a11, b10, c10, d10, e10) {
-          this.id = a11, this.restrictedToAllowlist = b10, this.fromEmailAddress = c10, this.progressiveSignUp = d10, this.enhancedEmailDeliverability = e10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.restricted_to_allowlist, b10.from_email_address, b10.progressive_sign_up, b10.enhanced_email_deliverability);
-        }
-      }, dL = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2) {
-          this.id = a11, this.emailAddress = b10, this.publicMetadata = c10, this.createdAt = d10, this.updatedAt = e10, this.status = f10, this.url = g10, this.revoked = h2, this._raw = null;
-        }
-        get raw() {
-          return this._raw;
-        }
-        static fromJSON(b10) {
-          let c10 = new a10(b10.id, b10.email_address, b10.public_metadata, b10.created_at, b10.updated_at, b10.status, b10.url, b10.revoked);
-          return c10._raw = b10, c10;
-        }
-      }, dM = { AccountlessApplication: "accountless_application", ActorToken: "actor_token", AllowlistIdentifier: "allowlist_identifier", ApiKey: "api_key", BlocklistIdentifier: "blocklist_identifier", Client: "client", Cookies: "cookies", Domain: "domain", Email: "email", EmailAddress: "email_address", Instance: "instance", InstanceRestrictions: "instance_restrictions", InstanceSettings: "instance_settings", Invitation: "invitation", Machine: "machine", MachineScope: "machine_scope", MachineSecretKey: "machine_secret_key", M2MToken: "machine_to_machine_token", JwtTemplate: "jwt_template", OauthAccessToken: "oauth_access_token", IdpOAuthAccessToken: "clerk_idp_oauth_access_token", OAuthApplication: "oauth_application", Organization: "organization", OrganizationInvitation: "organization_invitation", OrganizationMembership: "organization_membership", OrganizationSettings: "organization_settings", PhoneNumber: "phone_number", ProxyCheck: "proxy_check", RedirectUrl: "redirect_url", SamlConnection: "saml_connection", Session: "session", SignInToken: "sign_in_token", SignUpAttempt: "sign_up_attempt", SmsMessage: "sms_message", User: "user", WaitlistEntry: "waitlist_entry", Token: "token", TotalCount: "total_count", BillingSubscription: "commerce_subscription", BillingSubscriptionItem: "commerce_subscription_item", BillingPlan: "commerce_plan", Feature: "feature" }, dN = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2) {
-          this.id = a11, this.name = b10, this.instanceId = c10, this.createdAt = d10, this.updatedAt = e10, this.scopedMachines = f10, this.defaultTokenTtl = g10, this.secretKey = h2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.name, b10.instance_id, b10.created_at, b10.updated_at, b10.scoped_machines.map((b11) => new a10(b11.id, b11.name, b11.instance_id, b11.created_at, b11.updated_at, [], b11.default_token_ttl)), b10.default_token_ttl, b10.secret_key);
-        }
-      }, dO = class a10 {
-        constructor(a11, b10, c10, d10) {
-          this.fromMachineId = a11, this.toMachineId = b10, this.createdAt = c10, this.deleted = d10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.from_machine_id, b10.to_machine_id, b10.created_at, b10.deleted);
-        }
-      }, dP = class a10 {
-        constructor(a11) {
-          this.secret = a11;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.secret);
-        }
-      }, dQ = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2) {
-          this.id = a11, this.subject = b10, this.scopes = c10, this.claims = d10, this.revoked = e10, this.revocationReason = f10, this.expired = g10, this.expiration = h2, this.createdAt = i2, this.updatedAt = j2, this.token = k2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.subject, b10.scopes, b10.claims, b10.revoked, b10.revocation_reason, b10.expired, b10.expiration, b10.created_at, b10.updated_at, b10.token);
-        }
-      }, dR = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2) {
-          this.id = a11, this.name = b10, this.claims = c10, this.lifetime = d10, this.allowedClockSkew = e10, this.customSigningKey = f10, this.signingAlgorithm = g10, this.createdAt = h2, this.updatedAt = i2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.name, b10.claims, b10.lifetime, b10.allowed_clock_skew, b10.custom_signing_key, b10.signing_algorithm, b10.created_at, b10.updated_at);
-        }
-      }, dS = class a10 {
-        constructor(a11, b10, c10, d10 = {}, e10, f10, g10, h2) {
-          this.externalAccountId = a11, this.provider = b10, this.token = c10, this.publicMetadata = d10, this.label = e10, this.scopes = f10, this.tokenSecret = g10, this.expiresAt = h2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.external_account_id, b10.provider, b10.token, b10.public_metadata, b10.label || "", b10.scopes, b10.token_secret, b10.expires_at);
-        }
-      }, dT = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2, n2, o2, p2, q2, r2, s2, t2) {
-          this.id = a11, this.instanceId = b10, this.name = c10, this.clientId = d10, this.clientUri = e10, this.clientImageUrl = f10, this.dynamicallyRegistered = g10, this.consentScreenEnabled = h2, this.pkceRequired = i2, this.isPublic = j2, this.scopes = k2, this.redirectUris = l2, this.authorizeUrl = m2, this.tokenFetchUrl = n2, this.userInfoUrl = o2, this.discoveryUrl = p2, this.tokenIntrospectionUrl = q2, this.createdAt = r2, this.updatedAt = s2, this.clientSecret = t2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.instance_id, b10.name, b10.client_id, b10.client_uri, b10.client_image_url, b10.dynamically_registered, b10.consent_screen_enabled, b10.pkce_required, b10.public, b10.scopes, b10.redirect_uris, b10.authorize_url, b10.token_fetch_url, b10.user_info_url, b10.discovery_url, b10.token_introspection_url, b10.created_at, b10.updated_at, b10.client_secret);
-        }
-      }, dU = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2 = {}, i2 = {}, j2, k2, l2, m2) {
-          this.id = a11, this.name = b10, this.slug = c10, this.imageUrl = d10, this.hasImage = e10, this.createdAt = f10, this.updatedAt = g10, this.publicMetadata = h2, this.privateMetadata = i2, this.maxAllowedMemberships = j2, this.adminDeleteEnabled = k2, this.membersCount = l2, this.createdBy = m2, this._raw = null;
-        }
-        get raw() {
-          return this._raw;
-        }
-        static fromJSON(b10) {
-          let c10 = new a10(b10.id, b10.name, b10.slug, b10.image_url || "", b10.has_image, b10.created_at, b10.updated_at, b10.public_metadata, b10.private_metadata, b10.max_allowed_memberships, b10.admin_delete_enabled, b10.members_count, b10.created_by);
-          return c10._raw = b10, c10;
-        }
-      }, dV = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2 = {}, l2 = {}, m2) {
-          this.id = a11, this.emailAddress = b10, this.role = c10, this.roleName = d10, this.organizationId = e10, this.createdAt = f10, this.updatedAt = g10, this.expiresAt = h2, this.url = i2, this.status = j2, this.publicMetadata = k2, this.privateMetadata = l2, this.publicOrganizationData = m2, this._raw = null;
-        }
-        get raw() {
-          return this._raw;
-        }
-        static fromJSON(b10) {
-          let c10 = new a10(b10.id, b10.email_address, b10.role, b10.role_name, b10.organization_id, b10.created_at, b10.updated_at, b10.expires_at, b10.url, b10.status, b10.public_metadata, b10.private_metadata, b10.public_organization_data);
-          return c10._raw = b10, c10;
-        }
-      }, dW = class a10 {
-        constructor(a11, b10, c10, d10 = {}, e10 = {}, f10, g10, h2, i2) {
-          this.id = a11, this.role = b10, this.permissions = c10, this.publicMetadata = d10, this.privateMetadata = e10, this.createdAt = f10, this.updatedAt = g10, this.organization = h2, this.publicUserData = i2, this._raw = null;
-        }
-        get raw() {
-          return this._raw;
-        }
-        static fromJSON(b10) {
-          let c10 = new a10(b10.id, b10.role, b10.permissions, b10.public_metadata, b10.private_metadata, b10.created_at, b10.updated_at, dU.fromJSON(b10.organization), dX.fromJSON(b10.public_user_data));
-          return c10._raw = b10, c10;
-        }
-      }, dX = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10) {
-          this.identifier = a11, this.firstName = b10, this.lastName = c10, this.imageUrl = d10, this.hasImage = e10, this.userId = f10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.identifier, b10.first_name, b10.last_name, b10.image_url, b10.has_image, b10.user_id);
-        }
-      }, dY = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2) {
-          this.enabled = a11, this.maxAllowedMemberships = b10, this.maxAllowedRoles = c10, this.maxAllowedPermissions = d10, this.creatorRole = e10, this.adminDeleteEnabled = f10, this.domainsEnabled = g10, this.slugDisabled = h2, this.domainsEnrollmentModes = i2, this.domainsDefaultRole = j2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.enabled, b10.max_allowed_memberships, b10.max_allowed_roles, b10.max_allowed_permissions, b10.creator_role, b10.admin_delete_enabled, b10.domains_enabled, b10.slug_disabled, b10.domains_enrollment_modes, b10.domains_default_role);
-        }
-      }, dZ = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10) {
-          this.id = a11, this.phoneNumber = b10, this.reservedForSecondFactor = c10, this.defaultSecondFactor = d10, this.verification = e10, this.linkedTo = f10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.phone_number, b10.reserved_for_second_factor, b10.default_second_factor, b10.verification && dE.fromJSON(b10.verification), b10.linked_to.map((a11) => dD.fromJSON(a11)));
-        }
-      }, d$ = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10) {
-          this.id = a11, this.domainId = b10, this.lastRunAt = c10, this.proxyUrl = d10, this.successful = e10, this.createdAt = f10, this.updatedAt = g10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.domain_id, b10.last_run_at, b10.proxy_url, b10.successful, b10.created_at, b10.updated_at);
-        }
-      }, d_ = class a10 {
-        constructor(a11, b10, c10, d10) {
-          this.id = a11, this.url = b10, this.createdAt = c10, this.updatedAt = d10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.url, b10.created_at, b10.updated_at);
-        }
-      }, d0 = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2, n2, o2, p2, q2, r2, s2, t2, u2) {
-          this.id = a11, this.name = b10, this.domain = c10, this.organizationId = d10, this.idpEntityId = e10, this.idpSsoUrl = f10, this.idpCertificate = g10, this.idpMetadataUrl = h2, this.idpMetadata = i2, this.acsUrl = j2, this.spEntityId = k2, this.spMetadataUrl = l2, this.active = m2, this.provider = n2, this.userCount = o2, this.syncUserAttributes = p2, this.allowSubdomains = q2, this.allowIdpInitiated = r2, this.createdAt = s2, this.updatedAt = t2, this.attributeMapping = u2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.name, b10.domain, b10.organization_id, b10.idp_entity_id, b10.idp_sso_url, b10.idp_certificate, b10.idp_metadata_url, b10.idp_metadata, b10.acs_url, b10.sp_entity_id, b10.sp_metadata_url, b10.active, b10.provider, b10.user_count, b10.sync_user_attributes, b10.allow_subdomains, b10.allow_idp_initiated, b10.created_at, b10.updated_at, b10.attribute_mapping && d2.fromJSON(b10.attribute_mapping));
-        }
-      }, d1 = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2) {
-          this.id = a11, this.name = b10, this.domain = c10, this.active = d10, this.provider = e10, this.syncUserAttributes = f10, this.allowSubdomains = g10, this.allowIdpInitiated = h2, this.createdAt = i2, this.updatedAt = j2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.name, b10.domain, b10.active, b10.provider, b10.sync_user_attributes, b10.allow_subdomains, b10.allow_idp_initiated, b10.created_at, b10.updated_at);
-        }
-      }, d2 = class a10 {
-        constructor(a11, b10, c10, d10) {
-          this.userId = a11, this.emailAddress = b10, this.firstName = c10, this.lastName = d10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.user_id, b10.email_address, b10.first_name, b10.last_name);
-        }
-      }, d3 = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2) {
-          this.id = a11, this.provider = b10, this.providerUserId = c10, this.active = d10, this.emailAddress = e10, this.firstName = f10, this.lastName = g10, this.verification = h2, this.samlConnection = i2, this.lastAuthenticatedAt = j2, this.enterpriseConnectionId = k2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.provider, b10.provider_user_id, b10.active, b10.email_address, b10.first_name, b10.last_name, b10.verification && dE.fromJSON(b10.verification), b10.saml_connection && d1.fromJSON(b10.saml_connection), b10.last_authenticated_at ?? null, b10.enterprise_connection_id);
-        }
-      }, d4 = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10) {
-          this.id = a11, this.userId = b10, this.token = c10, this.status = d10, this.url = e10, this.createdAt = f10, this.updatedAt = g10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.user_id, b10.token, b10.status, b10.url, b10.created_at, b10.updated_at);
-        }
-      }, d5 = class a10 {
-        constructor(a11, b10) {
-          this.nextAction = a11, this.supportedStrategies = b10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.next_action, b10.supported_strategies);
-        }
-      }, d6 = class a10 {
-        constructor(a11, b10, c10, d10) {
-          this.emailAddress = a11, this.phoneNumber = b10, this.web3Wallet = c10, this.externalAccount = d10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.email_address && d5.fromJSON(b10.email_address), b10.phone_number && d5.fromJSON(b10.phone_number), b10.web3_wallet && d5.fromJSON(b10.web3_wallet), b10.external_account);
-        }
-      }, d7 = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2, n2, o2, p2, q2, r2, s2, t2, u2, v2) {
-          this.id = a11, this.status = b10, this.requiredFields = c10, this.optionalFields = d10, this.missingFields = e10, this.unverifiedFields = f10, this.verifications = g10, this.username = h2, this.emailAddress = i2, this.phoneNumber = j2, this.web3Wallet = k2, this.passwordEnabled = l2, this.firstName = m2, this.lastName = n2, this.customAction = o2, this.externalId = p2, this.createdSessionId = q2, this.createdUserId = r2, this.abandonAt = s2, this.legalAcceptedAt = t2, this.publicMetadata = u2, this.unsafeMetadata = v2;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.status, b10.required_fields, b10.optional_fields, b10.missing_fields, b10.unverified_fields, b10.verifications ? d6.fromJSON(b10.verifications) : null, b10.username, b10.email_address, b10.phone_number, b10.web3_wallet, b10.password_enabled, b10.first_name, b10.last_name, b10.custom_action, b10.external_id, b10.created_session_id, b10.created_user_id, b10.abandon_at, b10.legal_accepted_at, b10.public_metadata, b10.unsafe_metadata);
-        }
-      }, d8 = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10) {
-          this.id = a11, this.fromPhoneNumber = b10, this.toPhoneNumber = c10, this.message = d10, this.status = e10, this.phoneNumberId = f10, this.data = g10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.from_phone_number, b10.to_phone_number, b10.message, b10.status, b10.phone_number_id, b10.data);
-        }
-      }, d9 = class a10 {
-        constructor(a11) {
-          this.jwt = a11;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.jwt);
-        }
-      }, ea = class a10 {
-        constructor(a11, b10, c10) {
-          this.id = a11, this.web3Wallet = b10, this.verification = c10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.web3_wallet, b10.verification && dE.fromJSON(b10.verification));
-        }
-      }, eb = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2, n2, o2, p2, q2, r2, s2, t2 = {}, u2 = {}, v2 = {}, w2 = [], x2 = [], y2 = [], z2 = [], A2 = [], B2, C2, D2 = null, E2, F2, G2) {
-          this.id = a11, this.passwordEnabled = b10, this.totpEnabled = c10, this.backupCodeEnabled = d10, this.twoFactorEnabled = e10, this.banned = f10, this.locked = g10, this.createdAt = h2, this.updatedAt = i2, this.imageUrl = j2, this.hasImage = k2, this.primaryEmailAddressId = l2, this.primaryPhoneNumberId = m2, this.primaryWeb3WalletId = n2, this.lastSignInAt = o2, this.externalId = p2, this.username = q2, this.firstName = r2, this.lastName = s2, this.publicMetadata = t2, this.privateMetadata = u2, this.unsafeMetadata = v2, this.emailAddresses = w2, this.phoneNumbers = x2, this.web3Wallets = y2, this.externalAccounts = z2, this.samlAccounts = A2, this.lastActiveAt = B2, this.createOrganizationEnabled = C2, this.createOrganizationsLimit = D2, this.deleteSelfEnabled = E2, this.legalAcceptedAt = F2, this.locale = G2, this._raw = null;
-        }
-        get raw() {
-          return this._raw;
-        }
-        static fromJSON(b10) {
-          let c10 = new a10(b10.id, b10.password_enabled, b10.totp_enabled, b10.backup_code_enabled, b10.two_factor_enabled, b10.banned, b10.locked, b10.created_at, b10.updated_at, b10.image_url, b10.has_image, b10.primary_email_address_id, b10.primary_phone_number_id, b10.primary_web3_wallet_id, b10.last_sign_in_at, b10.external_id, b10.username, b10.first_name, b10.last_name, b10.public_metadata, b10.private_metadata, b10.unsafe_metadata, (b10.email_addresses || []).map((a11) => dF.fromJSON(a11)), (b10.phone_numbers || []).map((a11) => dZ.fromJSON(a11)), (b10.web3_wallets || []).map((a11) => ea.fromJSON(a11)), (b10.external_accounts || []).map((a11) => dG.fromJSON(a11)), (b10.saml_accounts || []).map((a11) => d3.fromJSON(a11)), b10.last_active_at, b10.create_organization_enabled, b10.create_organizations_limit, b10.delete_self_enabled, b10.legal_accepted_at, b10.locale);
-          return c10._raw = b10, c10;
-        }
-        get primaryEmailAddress() {
-          return this.emailAddresses.find(({ id: a11 }) => a11 === this.primaryEmailAddressId) ?? null;
-        }
-        get primaryPhoneNumber() {
-          return this.phoneNumbers.find(({ id: a11 }) => a11 === this.primaryPhoneNumberId) ?? null;
-        }
-        get primaryWeb3Wallet() {
-          return this.web3Wallets.find(({ id: a11 }) => a11 === this.primaryWeb3WalletId) ?? null;
-        }
-        get fullName() {
-          return [this.firstName, this.lastName].join(" ").trim() || null;
-        }
-      }, ec = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10) {
-          this.id = a11, this.emailAddress = b10, this.status = c10, this.invitation = d10, this.createdAt = e10, this.updatedAt = f10, this.isLocked = g10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.email_address, b10.status, b10.invitation && dL.fromJSON(b10.invitation), b10.created_at, b10.updated_at, b10.is_locked);
-        }
-      }, ed = class a10 {
-        constructor(a11, b10, c10, d10, e10) {
-          this.id = a11, this.name = b10, this.description = c10, this.slug = d10, this.avatarUrl = e10;
-        }
-        static fromJSON(b10) {
-          return new a10(b10.id, b10.name, b10.description ?? null, b10.slug, b10.avatar_url ?? null);
-        }
-      }, ee = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2) {
-          this.id = a11, this.name = b10, this.slug = c10, this.description = d10, this.isDefault = e10, this.isRecurring = f10, this.hasBaseFee = g10, this.publiclyVisible = h2, this.fee = i2, this.annualFee = j2, this.annualMonthlyFee = k2, this.forPayerType = l2, this.features = m2;
-        }
-        static fromJSON(b10) {
-          let c10 = (a11) => a11 ? { amount: a11.amount, amountFormatted: a11.amount_formatted, currency: a11.currency, currencySymbol: a11.currency_symbol } : null;
-          return new a10(b10.id, b10.name, b10.slug, b10.description ?? null, b10.is_default, b10.is_recurring, b10.has_base_fee, b10.publicly_visible, c10(b10.fee), c10(b10.annual_fee), c10(b10.annual_monthly_fee), b10.for_payer_type, (b10.features ?? []).map((a11) => ed.fromJSON(a11)));
-        }
-      }, ef = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2, n2, o2, p2, q2) {
-          this.id = a11, this.status = b10, this.planPeriod = c10, this.periodStart = d10, this.nextPayment = e10, this.amount = f10, this.plan = g10, this.planId = h2, this.createdAt = i2, this.updatedAt = j2, this.periodEnd = k2, this.canceledAt = l2, this.pastDueAt = m2, this.endedAt = n2, this.payerId = o2, this.isFreeTrial = p2, this.lifetimePaid = q2;
-        }
-        static fromJSON(b10) {
-          function c10(a11) {
-            return a11 ? { amount: a11.amount, amountFormatted: a11.amount_formatted, currency: a11.currency, currencySymbol: a11.currency_symbol } : a11;
-          }
-          return new a10(b10.id, b10.status, b10.plan_period, b10.period_start, b10.next_payment, c10(b10.amount) ?? void 0, b10.plan ? ee.fromJSON(b10.plan) : null, b10.plan_id ?? null, b10.created_at, b10.updated_at, b10.period_end, b10.canceled_at, b10.past_due_at, b10.ended_at, b10.payer_id, b10.is_free_trial, c10(b10.lifetime_paid) ?? void 0);
-        }
-      }, eg = class a10 {
-        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2) {
-          this.id = a11, this.status = b10, this.payerId = c10, this.createdAt = d10, this.updatedAt = e10, this.activeAt = f10, this.pastDueAt = g10, this.subscriptionItems = h2, this.nextPayment = i2, this.eligibleForFreeTrial = j2;
-        }
-        static fromJSON(b10) {
-          let c10 = b10.next_payment ? { date: b10.next_payment.date, amount: { amount: b10.next_payment.amount.amount, amountFormatted: b10.next_payment.amount.amount_formatted, currency: b10.next_payment.amount.currency, currencySymbol: b10.next_payment.amount.currency_symbol } } : null;
-          return new a10(b10.id, b10.status, b10.payer_id, b10.created_at, b10.updated_at, b10.active_at ?? null, b10.past_due_at ?? null, (b10.subscription_items ?? []).map((a11) => ef.fromJSON(a11)), c10, b10.eligible_for_free_trial ?? false);
-        }
-      };
-      function eh(a10) {
-        if ("string" != typeof a10 && "object" in a10 && "deleted" in a10) return dA.fromJSON(a10);
-        switch (a10.object) {
-          case dM.AccountlessApplication:
-            return dq.fromJSON(a10);
-          case dM.ActorToken:
-            return dr.fromJSON(a10);
-          case dM.AllowlistIdentifier:
-            return ds.fromJSON(a10);
-          case dM.ApiKey:
-            return dt.fromJSON(a10);
-          case dM.BlocklistIdentifier:
-            return du.fromJSON(a10);
-          case dM.Client:
-            return dx.fromJSON(a10);
-          case dM.Cookies:
-            return dz.fromJSON(a10);
-          case dM.Domain:
-            return dB.fromJSON(a10);
-          case dM.EmailAddress:
-            return dF.fromJSON(a10);
-          case dM.Email:
-            return dC.fromJSON(a10);
-          case dM.IdpOAuthAccessToken:
-            return dH.fromJSON(a10);
-          case dM.Instance:
-            return dI.fromJSON(a10);
-          case dM.InstanceRestrictions:
-            return dJ.fromJSON(a10);
-          case dM.InstanceSettings:
-            return dK.fromJSON(a10);
-          case dM.Invitation:
-            return dL.fromJSON(a10);
-          case dM.JwtTemplate:
-            return dR.fromJSON(a10);
-          case dM.Machine:
-            return dN.fromJSON(a10);
-          case dM.MachineScope:
-            return dO.fromJSON(a10);
-          case dM.MachineSecretKey:
-            return dP.fromJSON(a10);
-          case dM.M2MToken:
-            return dQ.fromJSON(a10);
-          case dM.OauthAccessToken:
-            return dS.fromJSON(a10);
-          case dM.OAuthApplication:
-            return dT.fromJSON(a10);
-          case dM.Organization:
-            return dU.fromJSON(a10);
-          case dM.OrganizationInvitation:
-            return dV.fromJSON(a10);
-          case dM.OrganizationMembership:
-            return dW.fromJSON(a10);
-          case dM.OrganizationSettings:
-            return dY.fromJSON(a10);
-          case dM.PhoneNumber:
-            return dZ.fromJSON(a10);
-          case dM.ProxyCheck:
-            return d$.fromJSON(a10);
-          case dM.RedirectUrl:
-            return d_.fromJSON(a10);
-          case dM.SamlConnection:
-            return d0.fromJSON(a10);
-          case dM.SignInToken:
-            return d4.fromJSON(a10);
-          case dM.SignUpAttempt:
-            return d7.fromJSON(a10);
-          case dM.Session:
-            return dw.fromJSON(a10);
-          case dM.SmsMessage:
-            return d8.fromJSON(a10);
-          case dM.Token:
-            return d9.fromJSON(a10);
-          case dM.TotalCount:
-            return a10.total_count;
-          case dM.User:
-            return eb.fromJSON(a10);
-          case dM.WaitlistEntry:
-            return ec.fromJSON(a10);
-          case dM.BillingPlan:
-            return ee.fromJSON(a10);
-          case dM.BillingSubscription:
-            return eg.fromJSON(a10);
-          case dM.BillingSubscriptionItem:
-            return ef.fromJSON(a10);
-          case dM.Feature:
-            return ed.fromJSON(a10);
-          default:
-            return a10;
-        }
-      }
-      function ei(a10) {
-        var b10;
-        return b10 = async (b11) => {
-          let c10, { secretKey: d10, machineSecretKey: e10, useMachineSecretKey: f10 = false, requireSecretKey: g10 = true, apiUrl: h2 = b1, apiVersion: i2 = "v1", userAgent: j2 = b2, skipApiVersionInUrl: k2 = false } = a10, { path: l2, method: m2, queryParams: n2, headerParams: o2, bodyParams: p2, formData: q2, options: r2 } = b11, { deepSnakecaseBodyParamKeys: s2 = false } = r2 || {};
-          g10 && ca(d10);
-          let t2 = new URL(k2 ? cf(h2, l2) : cf(h2, i2, l2));
-          if (n2) for (let [a11, b12] of Object.entries(dp({ ...n2 }))) b12 && [b12].flat().forEach((b13) => t2.searchParams.append(a11, b13));
-          let u2 = new Headers({ "Clerk-API-Version": b3, [b6.Headers.UserAgent]: j2, ...o2 }), v2 = b6.Headers.Authorization;
-          !u2.has(v2) && (f10 && e10 ? u2.set(v2, `Bearer ${e10}`) : d10 && u2.set(v2, `Bearer ${d10}`));
-          try {
-            var w2;
-            q2 ? c10 = await bH.fetch(t2.href, { method: m2, headers: u2, body: q2 }) : (u2.set("Content-Type", "application/json"), c10 = await bH.fetch(t2.href, { method: m2, headers: u2, ...(() => {
-              if (!("GET" !== m2 && p2 && Object.keys(p2).length > 0)) return null;
-              let a12 = (a13) => dp(a13, { deep: s2 });
-              return { body: JSON.stringify(Array.isArray(p2) ? p2.map(a12) : a12(p2)) };
-            })() }));
-            let a11 = c10?.headers && c10.headers?.get(b6.Headers.ContentType) === b6.ContentTypes.Json, b12 = await (a11 ? c10.json() : c10.text());
-            if (!c10.ok) return { data: null, errors: el(b12), status: c10?.status, statusText: c10?.statusText, clerkTraceId: ej(b12, c10?.headers), retryAfter: ek(c10?.headers) };
-            return { ...Array.isArray(b12) ? { data: b12.map((a12) => eh(a12)) } : (w2 = b12) && "object" == typeof w2 && "data" in w2 && Array.isArray(w2.data) && void 0 !== w2.data ? { data: b12.data.map((a12) => eh(a12)), totalCount: b12.total_count } : { data: eh(b12) }, errors: null };
-          } catch (a11) {
-            if (a11 instanceof Error) return { data: null, errors: [{ code: "unexpected_error", message: a11.message || "Unexpected error" }], clerkTraceId: ej(a11, c10?.headers) };
-            return { data: null, errors: el(a11), status: c10?.status, statusText: c10?.statusText, clerkTraceId: ej(a11, c10?.headers), retryAfter: ek(c10?.headers) };
-          }
-        }, async (...a11) => {
-          let { data: c10, errors: d10, totalCount: e10, status: f10, statusText: g10, clerkTraceId: h2, retryAfter: i2 } = await b10(...a11);
-          if (d10) {
-            let a12 = new bu(g10 || "", { data: [], status: f10, clerkTraceId: h2, retryAfter: i2 });
-            throw a12.errors = d10, a12;
-          }
-          return void 0 !== e10 ? { data: c10, totalCount: e10 } : c10;
-        };
-      }
-      function ej(a10, b10) {
-        return a10 && "object" == typeof a10 && "clerk_trace_id" in a10 && "string" == typeof a10.clerk_trace_id ? a10.clerk_trace_id : b10?.get("cf-ray") || "";
-      }
-      function ek(a10) {
-        let b10 = a10?.get("Retry-After");
-        if (!b10) return;
-        let c10 = parseInt(b10, 10);
-        if (!isNaN(c10)) return c10;
-      }
-      function el(a10) {
-        if (a10 && "object" == typeof a10 && "errors" in a10) {
-          let b10 = a10.errors;
-          return b10.length > 0 ? b10.map(bs) : [];
-        }
-        return [];
-      }
-      function em(a10) {
-        let b10 = ei(a10);
-        return { __experimental_accountlessApplications: new ck(ei({ ...a10, requireSecretKey: false })), actorTokens: new ci(b10), allowlistIdentifiers: new cm(b10), apiKeys: new co(ei({ ...a10, skipApiVersionInUrl: true })), betaFeatures: new cp(b10), blocklistIdentifiers: new cr(b10), billing: new c7(b10), clients: new ct(b10), domains: new cv(b10), emailAddresses: new cx(b10), idPOAuthAccessToken: new cy(ei({ ...a10, skipApiVersionInUrl: true })), instance: new cA(b10), invitations: new cC(b10), jwks: new cH(b10), jwtTemplates: new cJ(b10), machines: new cE(b10), m2m: new cG(ei({ ...a10, skipApiVersionInUrl: true, requireSecretKey: false, useMachineSecretKey: true })), oauthApplications: new cN(b10), organizations: new cL(b10), phoneNumbers: new cP(b10), proxyChecks: new cQ(b10), redirectUrls: new cS(b10), samlConnections: new cU(b10), sessions: new cW(b10), signInTokens: new cY(b10), signUps: new c$(b10), testingTokens: new c_(b10), users: new c1(b10), waitlistEntries: new c3(b10), webhooks: new c5(b10) };
-      }
-      var en = "oat_", eo = ["mt_", en, "ak_"];
-      function ep(a10) {
-        return eo.some((b10) => a10.startsWith(b10));
-      }
-      function eq(a10) {
-        if (a10.startsWith("mt_")) return cb.M2MToken;
-        if (a10.startsWith(en)) return cb.OAuthToken;
-        if (a10.startsWith("ak_")) return cb.ApiKey;
-        throw Error("Unknown machine token type");
-      }
-      var er = (a10, b10) => !!a10 && ("any" === b10 || (Array.isArray(b10) ? b10 : [b10]).includes(a10)), es = (a10) => () => {
-        let b10 = { ...a10 };
-        return b10.secretKey = (b10.secretKey || "").substring(0, 7), b10.jwtKey = (b10.jwtKey || "").substring(0, 7), { ...b10 };
-      };
-      function et(a10, b10) {
-        return { tokenType: cb.SessionToken, sessionClaims: null, sessionId: null, sessionStatus: b10 ?? null, userId: null, actor: null, orgId: null, orgRole: null, orgSlug: null, orgPermissions: null, factorVerificationAge: null, getToken: () => Promise.resolve(null), has: () => false, debug: es(a10), isAuthenticated: false };
-      }
-      function eu(a10, b10) {
-        let c10 = { id: null, subject: null, scopes: null, has: () => false, getToken: () => Promise.resolve(null), debug: es(b10), isAuthenticated: false };
-        switch (a10) {
-          case cb.ApiKey:
-            return { ...c10, tokenType: a10, name: null, claims: null, scopes: null, userId: null, orgId: null };
-          case cb.M2MToken:
-            return { ...c10, tokenType: a10, claims: null, scopes: null, machineId: null };
-          case cb.OAuthToken:
-            return { ...c10, tokenType: a10, scopes: null, userId: null, clientId: null };
-          default:
-            throw Error(`Invalid token type: ${a10}`);
-        }
-      }
-      function ev() {
-        return { isAuthenticated: false, tokenType: null, getToken: () => Promise.resolve(null), has: () => false, debug: () => ({}) };
-      }
-      var ew = ({ authObject: a10, acceptsToken: b10 = cb.SessionToken }) => "any" === b10 ? a10 : Array.isArray(b10) ? er(a10.tokenType, b10) ? a10 : ev() : er(a10.tokenType, b10) ? a10 : !function(a11) {
-        return a11 === cb.ApiKey || a11 === cb.M2MToken || a11 === cb.OAuthToken;
-      }(b10) ? et(a10.debug) : eu(b10, a10.debug), ex = { SignedIn: "signed-in", SignedOut: "signed-out", Handshake: "handshake" }, ey = { ClientUATWithoutSessionToken: "client-uat-but-no-session-token", DevBrowserMissing: "dev-browser-missing", DevBrowserSync: "dev-browser-sync", PrimaryRespondsToSyncing: "primary-responds-to-syncing", PrimaryDomainCrossOriginSync: "primary-domain-cross-origin-sync", SatelliteCookieNeedsSyncing: "satellite-needs-syncing", SessionTokenAndUATMissing: "session-token-and-uat-missing", SessionTokenMissing: "session-token-missing", SessionTokenExpired: "session-token-expired", SessionTokenIATBeforeClientUAT: "session-token-iat-before-client-uat", SessionTokenNBF: "session-token-nbf", SessionTokenIatInTheFuture: "session-token-iat-in-the-future", SessionTokenWithoutClientUAT: "session-token-but-no-client-uat", ActiveOrganizationMismatch: "active-organization-mismatch", TokenTypeMismatch: "token-type-mismatch", UnexpectedError: "unexpected-error" };
-      function ez(a10) {
-        let { authenticateContext: b10, headers: c10 = new Headers(), token: d10 } = a10;
-        return { status: ex.SignedIn, reason: null, message: null, proxyUrl: b10.proxyUrl || "", publishableKey: b10.publishableKey || "", isSatellite: b10.isSatellite || false, domain: b10.domain || "", signInUrl: b10.signInUrl || "", signUpUrl: b10.signUpUrl || "", afterSignInUrl: b10.afterSignInUrl || "", afterSignUpUrl: b10.afterSignUpUrl || "", isSignedIn: true, isAuthenticated: true, tokenType: a10.tokenType, toAuth: ({ treatPendingAsSignedOut: c11 = true } = {}) => {
-          if (a10.tokenType === cb.SessionToken) {
-            let { sessionClaims: e11 } = a10, f11 = function(a11, b11, c12) {
-              let d11, { actor: e12, sessionId: f12, sessionStatus: g11, userId: h2, orgId: i2, orgRole: j2, orgSlug: k2, orgPermissions: l2, factorVerificationAge: m2 } = ((a12) => {
-                let b12, c13, d12, e13, f13 = a12.fva ?? null, g12 = a12.sts ?? null;
-                if (2 === a12.v) {
-                  if (a12.o) {
-                    b12 = a12.o?.id, d12 = a12.o?.slg, a12.o?.rol && (c13 = `org:${a12.o?.rol}`);
-                    let { org: f14 } = b_(a12.fea), { permissions: g13, featurePermissionMap: h3 } = (({ per: a13, fpm: b13 }) => {
-                      if (!a13 || !b13) return { permissions: [], featurePermissionMap: [] };
-                      let c14 = a13.split(",").map((a14) => a14.trim()), d13 = b13.split(",").map((a14) => Number.parseInt(a14.trim(), 10)).map((a14) => a14.toString(2).padStart(c14.length, "0").split("").map((a15) => Number.parseInt(a15, 10)).reverse()).filter(Boolean);
-                      return { permissions: c14, featurePermissionMap: d13 };
-                    })({ per: a12.o?.per, fpm: a12.o?.fpm });
-                    e13 = function({ features: a13, permissions: b13, featurePermissionMap: c14 }) {
-                      if (!a13 || !b13 || !c14) return [];
-                      let d13 = [];
-                      for (let e14 = 0; e14 < a13.length; e14++) {
-                        let f15 = a13[e14];
-                        if (e14 >= c14.length) continue;
-                        let g14 = c14[e14];
-                        if (g14) for (let a14 = 0; a14 < g14.length; a14++) 1 === g14[a14] && d13.push(`org:${f15}:${b13[a14]}`);
-                      }
-                      return d13;
-                    }({ features: f14, featurePermissionMap: h3, permissions: g13 });
-                  }
-                } else b12 = a12.org_id, c13 = a12.org_role, d12 = a12.org_slug, e13 = a12.org_permissions;
-                return { sessionClaims: a12, sessionId: a12.sid, sessionStatus: g12, actor: a12.act, userId: a12.sub, orgId: b12, orgRole: c13, orgSlug: d12, orgPermissions: e13, factorVerificationAge: f13 };
-              })(c12), n2 = em(a11), o2 = ((a12) => {
-                let { fetcher: b12, sessionToken: c13, sessionId: d12 } = a12 || {};
-                return async (a13 = {}) => d12 ? a13.template || void 0 !== a13.expiresInSeconds ? b12(d12, a13.template, a13.expiresInSeconds) : c13 : null;
-              })({ sessionId: f12, sessionToken: b11, fetcher: async (a12, b12, c13) => (await n2.sessions.getToken(a12, b12 || "", c13)).jwt });
-              return { tokenType: cb.SessionToken, actor: e12, sessionClaims: c12, sessionId: f12, sessionStatus: g11, userId: h2, orgId: i2, orgRole: j2, orgSlug: k2, orgPermissions: l2, factorVerificationAge: m2, getToken: o2, has: (d11 = { orgId: i2, orgRole: j2, orgPermissions: l2, userId: h2, factorVerificationAge: m2, features: c12.fea || "", plans: c12.pla || "" }, (a12) => {
-                if (!d11.userId) return false;
-                let b12 = ((a13, b13) => {
-                  let { features: c14, plans: d12 } = b13;
-                  return a13.feature && c14 ? b$(c14, a13.feature) : a13.plan && d12 ? b$(d12, a13.plan) : null;
-                })(a12, d11), c13 = ((a13, b13) => {
-                  let { orgId: c14, orgRole: d12, orgPermissions: e14 } = b13;
-                  return (a13.role || a13.permission) && c14 && d12 && e14 ? a13.permission ? e14.includes(bZ(a13.permission)) : a13.role ? bZ(d12) === bZ(a13.role) : null : null;
-                })(a12, d11), e13 = ((a13, { factorVerificationAge: b13 }) => {
-                  if (!a13.reverification || !b13) return null;
-                  let c14 = ((a14) => {
-                    let b14, c15;
-                    if (!a14) return false;
-                    let d13 = "string" == typeof a14 && bY.has(a14), e15 = "object" == typeof a14 && (b14 = a14.level, bX.has(b14)) && "number" == typeof (c15 = a14.afterMinutes) && c15 > 0;
-                    return (!!d13 || !!e15) && ((a15) => "string" == typeof a15 ? bW[a15] : a15).bind(null, a14);
-                  })(a13.reverification);
-                  if (!c14) return null;
-                  let { level: d12, afterMinutes: e14 } = c14(), [f13, g12] = b13, h3 = -1 !== f13 ? e14 > f13 : null, i3 = -1 !== g12 ? e14 > g12 : null;
-                  switch (d12) {
-                    case "first_factor":
-                      return h3;
-                    case "second_factor":
-                      return -1 !== g12 ? i3 : h3;
-                    case "multi_factor":
-                      return -1 === g12 ? h3 : h3 && i3;
-                  }
-                })(a12, d11);
-                return [b12 || c13, e13].some((a13) => null === a13) ? [b12 || c13, e13].some((a13) => true === a13) : [b12 || c13, e13].every((a13) => true === a13);
-              }), debug: es({ ...a11, sessionToken: b11 }), isAuthenticated: true };
-            }(b10, d10, e11);
-            return c11 && "pending" === f11.sessionStatus ? et(void 0, f11.sessionStatus) : f11;
-          }
-          let { machineData: e10 } = a10;
-          var f10 = a10.tokenType;
-          let g10 = { id: e10.id, subject: e10.subject, getToken: () => Promise.resolve(d10), has: () => false, debug: es(b10), isAuthenticated: true };
-          switch (f10) {
-            case cb.ApiKey:
-              return { ...g10, tokenType: f10, name: e10.name, claims: e10.claims, scopes: e10.scopes, userId: e10.subject.startsWith("user_") ? e10.subject : null, orgId: e10.subject.startsWith("org_") ? e10.subject : null };
-            case cb.M2MToken:
-              return { ...g10, tokenType: f10, claims: e10.claims, scopes: e10.scopes, machineId: e10.subject };
-            case cb.OAuthToken:
-              return { ...g10, tokenType: f10, scopes: e10.scopes, userId: e10.subject, clientId: e10.clientId };
-            default:
-              throw Error(`Invalid token type: ${f10}`);
-          }
-        }, headers: c10, token: d10 };
-      }
-      function eA(a10) {
-        let { authenticateContext: b10, headers: c10 = new Headers(), reason: d10, message: e10 = "", tokenType: f10 } = a10;
-        return eB({ status: ex.SignedOut, reason: d10, message: e10, proxyUrl: b10.proxyUrl || "", publishableKey: b10.publishableKey || "", isSatellite: b10.isSatellite || false, domain: b10.domain || "", signInUrl: b10.signInUrl || "", signUpUrl: b10.signUpUrl || "", afterSignInUrl: b10.afterSignInUrl || "", afterSignUpUrl: b10.afterSignUpUrl || "", isSignedIn: false, isAuthenticated: false, tokenType: f10, toAuth: () => f10 === cb.SessionToken ? et({ ...b10, status: ex.SignedOut, reason: d10, message: e10 }) : eu(f10, { reason: d10, message: e10, headers: c10 }), headers: c10, token: null });
-      }
-      var eB = (a10) => {
-        let b10 = new Headers(a10.headers || {});
-        if (a10.message) try {
-          b10.set(b6.Headers.AuthMessage, a10.message);
-        } catch {
-        }
-        if (a10.reason) try {
-          b10.set(b6.Headers.AuthReason, a10.reason);
-        } catch {
-        }
-        if (a10.status) try {
-          b10.set(b6.Headers.AuthStatus, a10.status);
-        } catch {
-        }
-        return a10.headers = b10, a10;
-      }, eC = class extends URL {
-        isCrossOrigin(a10) {
-          return this.origin !== new URL(a10.toString()).origin;
-        }
-      }, eD = (...a10) => new eC(...a10), eE = class extends Request {
-        constructor(a10, b10) {
-          super("string" != typeof a10 && "url" in a10 ? a10.url : String(a10), b10 || "string" == typeof a10 ? void 0 : a10), this.clerkUrl = this.deriveUrlFromHeaders(this), this.cookies = this.parseCookies(this);
-        }
-        toJSON() {
-          return { url: this.clerkUrl.href, method: this.method, headers: JSON.stringify(Object.fromEntries(this.headers)), clerkUrl: this.clerkUrl.toString(), cookies: JSON.stringify(Object.fromEntries(this.cookies)) };
-        }
-        deriveUrlFromHeaders(a10) {
-          let b10 = new URL(a10.url), c10 = a10.headers.get(b6.Headers.ForwardedProto), d10 = a10.headers.get(b6.Headers.ForwardedHost), e10 = a10.headers.get(b6.Headers.Host), f10 = b10.protocol, g10 = this.getFirstValueFromHeader(d10) ?? e10, h2 = this.getFirstValueFromHeader(c10) ?? f10?.replace(/[:/]/, ""), i2 = g10 && h2 ? `${h2}://${g10}` : b10.origin;
-          return i2 === b10.origin ? eD(b10) : eD(b10.pathname + b10.search, i2);
-        }
-        getFirstValueFromHeader(a10) {
-          return a10?.split(",")[0];
-        }
-        parseCookies(a10) {
-          return new Map(Object.entries((0, b0.qg)(this.decodeCookieValue(a10.headers.get("cookie") || ""))));
-        }
-        decodeCookieValue(a10) {
-          return a10 ? a10.replace(/(%[0-9A-Z]{2})+/g, decodeURIComponent) : a10;
-        }
-      }, eF = (...a10) => a10[0] instanceof eE ? a10[0] : new eE(...a10), eG = (a10) => a10.split(";")[0]?.split("=")[0], eH = (a10) => a10.split(";")[0]?.split("=")[1], eI = {}, eJ = 0;
-      function eK(a10, b10, c10 = true) {
-        eI[a10] = b10, eJ = c10 ? Date.now() : -1;
-      }
-      function eL(a10) {
-        let { kid: b10, pem: c10 } = a10, d10 = `local-${b10}`, e10 = eI[d10];
-        if (e10) return e10;
-        if (!c10) throw new bC({ action: bB.SetClerkJWTKey, message: "Missing local JWK.", reason: bA.LocalJWKMissing });
-        let f10 = { kid: d10, kty: "RSA", alg: "RS256", n: c10.replace(/\r\n|\n|\r/g, "").replace("-----BEGIN PUBLIC KEY-----", "").replace("-----END PUBLIC KEY-----", "").replace("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA", "").replace("IDAQAB", "").replace(/\+/g, "-").replace(/\//g, "_"), e: "AQAB" };
-        return eK(d10, f10, false), f10;
-      }
-      async function eM(a10) {
-        let { secretKey: b10, apiUrl: c10 = b1, apiVersion: d10 = "v1", kid: e10, skipJwksCache: f10 } = a10;
-        if (f10 || function() {
-          if (-1 === eJ) return false;
-          let a11 = Date.now() - eJ >= 3e5;
-          return a11 && (eI = {}), a11;
-        }() || !eI[e10]) {
-          if (!b10) throw new bC({ action: bB.ContactSupport, message: "Failed to load JWKS from Clerk Backend or Frontend API.", reason: bA.RemoteJWKFailedToLoad });
-          let { keys: a11 } = await bp(() => eN(c10, b10, d10));
-          if (!a11 || !a11.length) throw new bC({ action: bB.ContactSupport, message: "The JWKS endpoint did not contain any signing keys. Contact support@clerk.com.", reason: bA.RemoteJWKFailedToLoad });
-          a11.forEach((a12) => eK(a12.kid, a12));
-        }
-        let g10 = eI[e10];
-        if (!g10) {
-          let a11 = Object.values(eI).map((a12) => a12.kid).sort().join(", ");
-          throw new bC({ action: `Go to your Dashboard and validate your secret and public keys are correct. ${bB.ContactSupport} if the issue persists.`, message: `Unable to find a signing key in JWKS that matches the kid='${e10}' of the provided session token. Please make sure that the __session cookie or the HTTP authorization header contain a Clerk-generated session JWT. The following kid is available: ${a11}`, reason: bA.JWKKidMismatch });
-        }
-        return g10;
-      }
-      async function eN(a10, b10, c10) {
-        if (!b10) throw new bC({ action: bB.SetClerkSecretKey, message: "Missing Clerk Secret Key or API Key. Go to https://dashboard.clerk.com and get your key for your instance.", reason: bA.RemoteJWKFailedToLoad });
-        let d10 = new URL(a10);
-        d10.pathname = cf(d10.pathname, c10, "/jwks");
-        let e10 = await bH.fetch(d10.href, { headers: { Authorization: `Bearer ${b10}`, "Clerk-API-Version": b3, "Content-Type": "application/json", "User-Agent": b2 } });
-        if (!e10.ok) {
-          let a11 = await e10.json(), b11 = eO(a11?.errors, bz.InvalidSecretKey);
-          if (b11) {
-            let a12 = bA.InvalidSecretKey;
-            throw new bC({ action: bB.ContactSupport, message: b11.message, reason: a12 });
-          }
-          throw new bC({ action: bB.ContactSupport, message: `Error loading Clerk JWKS from ${d10.href} with code=${e10.status}`, reason: bA.RemoteJWKFailedToLoad });
-        }
-        return e10.json();
-      }
-      var eO = (a10, b10) => a10 ? a10.find((a11) => a11.code === b10) : null;
-      async function eP(a10, b10) {
-        let { data: c10, errors: d10 } = bR(a10);
-        if (d10) return { errors: d10 };
-        let { header: e10 } = c10, { kid: f10 } = e10;
-        try {
-          let c11;
-          if (b10.jwtKey) c11 = eL({ kid: f10, pem: b10.jwtKey });
-          else {
-            if (!b10.secretKey) return { errors: [new bC({ action: bB.SetClerkJWTKey, message: "Failed to resolve JWK during verification.", reason: bA.JWKFailedToResolve })] };
-            c11 = await eM({ ...b10, kid: f10 });
-          }
-          return await bS(a10, { ...b10, key: c11 });
-        } catch (a11) {
-          return { errors: [a11] };
-        }
-      }
-      function eQ(a10, b10, c10) {
-        if (b10 && "clerkError" in b10) {
-          let d10, e10;
-          switch (b10.status) {
-            case 401:
-              d10 = bD.InvalidSecretKey, e10 = b10.errors[0]?.message || "Invalid secret key";
-              break;
-            case 404:
-              d10 = bD.TokenInvalid, e10 = c10;
-              break;
-            default:
-              d10 = bD.UnexpectedError, e10 = "Unexpected error";
-          }
-          return { data: void 0, tokenType: a10, errors: [new bE({ message: e10, code: d10, status: b10.status })] };
-        }
-        return { data: void 0, tokenType: a10, errors: [new bE({ message: "Unexpected error", code: bD.UnexpectedError, status: b10.status })] };
-      }
-      async function eR(a10, b10) {
-        try {
-          let c10 = em(b10);
-          return { data: await c10.m2m.verifyToken({ token: a10 }), tokenType: cb.M2MToken, errors: void 0 };
-        } catch (a11) {
-          return eQ(cb.M2MToken, a11, "Machine token not found");
-        }
-      }
-      async function eS(a10, b10) {
-        try {
-          let c10 = em(b10);
-          return { data: await c10.idPOAuthAccessToken.verifyAccessToken(a10), tokenType: cb.OAuthToken, errors: void 0 };
-        } catch (a11) {
-          return eQ(cb.OAuthToken, a11, "OAuth token not found");
-        }
-      }
-      async function eT(a10, b10) {
-        try {
-          let c10 = em(b10);
-          return { data: await c10.apiKeys.verifySecret(a10), tokenType: cb.ApiKey, errors: void 0 };
-        } catch (a11) {
-          return eQ(cb.ApiKey, a11, "API key not found");
-        }
-      }
-      async function eU(a10, b10) {
-        if (a10.startsWith("mt_")) return eR(a10, b10);
-        if (a10.startsWith(en)) return eS(a10, b10);
-        if (a10.startsWith("ak_")) return eT(a10, b10);
-        throw Error("Unknown machine token type");
-      }
-      async function eV(a10, { key: b10 }) {
-        let { data: c10, errors: d10 } = bR(a10);
-        if (d10) throw d10[0];
-        let { header: e10, payload: f10 } = c10, { typ: g10, alg: h2 } = e10;
-        bO(g10), bP(h2);
-        let { data: i2, errors: j2 } = await bQ(c10, b10);
-        if (j2) throw new bC({ reason: bA.TokenVerificationFailed, message: `Error verifying handshake token. ${j2[0]}` });
-        if (!i2) throw new bC({ reason: bA.TokenInvalidSignature, message: "Handshake signature is invalid." });
-        return f10;
-      }
-      async function eW(a10, b10) {
-        let c10, { secretKey: d10, apiUrl: e10, apiVersion: f10, jwksCacheTtlInMs: g10, jwtKey: h2, skipJwksCache: i2 } = b10, { data: j2, errors: k2 } = bR(a10);
-        if (k2) throw k2[0];
-        let { kid: l2 } = j2.header;
-        if (h2) c10 = eL({ kid: l2, pem: h2 });
-        else if (d10) c10 = await eM({ secretKey: d10, apiUrl: e10, apiVersion: f10, kid: l2, jwksCacheTtlInMs: g10, skipJwksCache: i2 });
-        else throw new bC({ action: bB.SetClerkJWTKey, message: "Failed to resolve JWK during handshake verification.", reason: bA.JWKFailedToResolve });
-        return eV(a10, { key: c10 });
-      }
-      var eX = class {
-        constructor(a10, b10, c10) {
-          this.authenticateContext = a10, this.options = b10, this.organizationMatcher = c10;
-        }
-        isRequestEligibleForHandshake() {
-          let { accept: a10, secFetchDest: b10 } = this.authenticateContext;
-          return !!("document" === b10 || "iframe" === b10 || !b10 && a10?.startsWith("text/html"));
-        }
-        buildRedirectToHandshake(a10) {
-          if (!this.authenticateContext?.clerkUrl) throw Error("Missing clerkUrl in authenticateContext");
-          let b10 = this.removeDevBrowserFromURL(this.authenticateContext.clerkUrl), c10 = this.authenticateContext.frontendApi.startsWith("http") ? this.authenticateContext.frontendApi : `https://${this.authenticateContext.frontendApi}`, d10 = new URL("v1/client/handshake", c10 = c10.replace(/\/+$/, "") + "/");
-          d10.searchParams.append("redirect_url", b10?.href || ""), d10.searchParams.append("__clerk_api_version", b3), d10.searchParams.append(b6.QueryParameters.SuffixedCookies, this.authenticateContext.usesSuffixedCookies().toString()), d10.searchParams.append(b6.QueryParameters.HandshakeReason, a10), d10.searchParams.append(b6.QueryParameters.HandshakeFormat, "nonce"), "development" === this.authenticateContext.instanceType && this.authenticateContext.devBrowserToken && d10.searchParams.append(b6.QueryParameters.DevBrowser, this.authenticateContext.devBrowserToken);
-          let e10 = this.getOrganizationSyncTarget(this.authenticateContext.clerkUrl, this.organizationMatcher);
-          return e10 && this.getOrganizationSyncQueryParams(e10).forEach((a11, b11) => {
-            d10.searchParams.append(b11, a11);
-          }), new Headers({ [b6.Headers.Location]: d10.href });
-        }
-        async getCookiesFromHandshake() {
-          let a10 = [];
-          if (this.authenticateContext.handshakeNonce) try {
-            let b10 = await this.authenticateContext.apiClient?.clients.getHandshakePayload({ nonce: this.authenticateContext.handshakeNonce });
-            b10 && a10.push(...b10.directives);
-          } catch (a11) {
-            console.error("Clerk: HandshakeService: error getting handshake payload:", a11);
-          }
-          else if (this.authenticateContext.handshakeToken) {
-            let b10 = await eW(this.authenticateContext.handshakeToken, this.authenticateContext);
-            b10 && Array.isArray(b10.handshake) && a10.push(...b10.handshake);
-          }
-          return a10;
-        }
-        async resolveHandshake() {
-          let a10 = new Headers({ "Access-Control-Allow-Origin": "null", "Access-Control-Allow-Credentials": "true" }), b10 = await this.getCookiesFromHandshake(), c10 = "";
-          if (b10.forEach((b11) => {
-            a10.append("Set-Cookie", b11), eG(b11).startsWith(b6.Cookies.Session) && (c10 = eH(b11));
-          }), "development" === this.authenticateContext.instanceType) {
-            let b11 = new URL(this.authenticateContext.clerkUrl);
-            b11.searchParams.delete(b6.QueryParameters.Handshake), b11.searchParams.delete(b6.QueryParameters.HandshakeHelp), b11.searchParams.delete(b6.QueryParameters.DevBrowser), b11.searchParams.delete(b6.QueryParameters.HandshakeNonce), a10.append(b6.Headers.Location, b11.toString()), a10.set(b6.Headers.CacheControl, "no-store");
-          }
-          if ("" === c10) return eA({ tokenType: cb.SessionToken, authenticateContext: this.authenticateContext, reason: ey.SessionTokenMissing, message: "", headers: a10 });
-          let { data: d10, errors: [e10] = [] } = await eP(c10, this.authenticateContext);
-          if (d10) return ez({ tokenType: cb.SessionToken, authenticateContext: this.authenticateContext, sessionClaims: d10, headers: a10, token: c10 });
-          if ("development" === this.authenticateContext.instanceType && (e10?.reason === bA.TokenExpired || e10?.reason === bA.TokenNotActiveYet || e10?.reason === bA.TokenIatInTheFuture)) {
-            let b11 = new bC({ action: e10.action, message: e10.message, reason: e10.reason });
-            b11.tokenCarrier = "cookie", console.error(`Clerk: Clock skew detected. This usually means that your system clock is inaccurate. Clerk will attempt to account for the clock skew in development.
-
-To resolve this issue, make sure your system's clock is set to the correct time (e.g. turn off and on automatic time synchronization).
-
----
-
-${b11.getFullMessage()}`);
-            let { data: d11, errors: [f10] = [] } = await eP(c10, { ...this.authenticateContext, clockSkewInMs: 864e5 });
-            if (d11) return ez({ tokenType: cb.SessionToken, authenticateContext: this.authenticateContext, sessionClaims: d11, headers: a10, token: c10 });
-            throw Error(f10?.message || "Clerk: Handshake retry failed.");
-          }
-          throw Error(e10?.message || "Clerk: Handshake failed.");
-        }
-        handleTokenVerificationErrorInDevelopment(a10) {
-          if (a10.reason === bA.TokenInvalidSignature) throw Error("Clerk: Handshake token verification failed due to an invalid signature. If you have switched Clerk keys locally, clear your cookies and try again.");
-          throw Error(`Clerk: Handshake token verification failed: ${a10.getFullMessage()}.`);
-        }
-        checkAndTrackRedirectLoop(a10) {
-          if (3 === this.authenticateContext.handshakeRedirectLoopCounter) return true;
-          let b10 = this.authenticateContext.handshakeRedirectLoopCounter + 1, c10 = b6.Cookies.RedirectCount;
-          return a10.append("Set-Cookie", `${c10}=${b10}; SameSite=Lax; HttpOnly; Max-Age=2`), false;
-        }
-        removeDevBrowserFromURL(a10) {
-          let b10 = new URL(a10);
-          return b10.searchParams.delete(b6.QueryParameters.DevBrowser), b10.searchParams.delete(b6.QueryParameters.LegacyDevBrowser), b10;
-        }
-        getOrganizationSyncTarget(a10, b10) {
-          return b10.findTarget(a10);
-        }
-        getOrganizationSyncQueryParams(a10) {
-          let b10 = /* @__PURE__ */ new Map();
-          return "personalAccount" === a10.type && b10.set("organization_id", ""), "organization" === a10.type && (a10.organizationId && b10.set("organization_id", a10.organizationId), a10.organizationSlug && b10.set("organization_id", a10.organizationSlug)), b10;
-        }
-      }, eY = class {
-        constructor(a10) {
-          this.organizationPattern = this.createMatcher(a10?.organizationPatterns), this.personalAccountPattern = this.createMatcher(a10?.personalAccountPatterns);
-        }
-        createMatcher(a10) {
-          if (!a10) return null;
-          try {
-            return function(a11, b10) {
-              try {
-                var c10, d10, e10, f10, g10, h2, i2;
-                return c10 = void 0, d10 = [], e10 = a6(a11, d10, c10), f10 = d10, g10 = c10, void 0 === g10 && (g10 = {}), h2 = g10.decode, i2 = void 0 === h2 ? function(a12) {
-                  return a12;
-                } : h2, function(a12) {
-                  var b11 = e10.exec(a12);
-                  if (!b11) return false;
-                  for (var c11 = b11[0], d11 = b11.index, g11 = /* @__PURE__ */ Object.create(null), h3 = 1; h3 < b11.length; h3++) !function(a13) {
-                    if (void 0 !== b11[a13]) {
-                      var c12 = f10[a13 - 1];
-                      "*" === c12.modifier || "+" === c12.modifier ? g11[c12.name] = b11[a13].split(c12.prefix + c12.suffix).map(function(a14) {
-                        return i2(a14, c12);
-                      }) : g11[c12.name] = i2(b11[a13], c12);
-                    }
-                  }(h3);
-                  return { path: c11, index: d11, params: g11 };
-                };
-              } catch (a12) {
-                throw Error(`Invalid path and options: Consult the documentation of path-to-regexp here: https://github.com/pillarjs/path-to-regexp/tree/6.x
-${a12.message}`);
-              }
-            }(a10);
-          } catch (b10) {
-            throw Error(`Invalid pattern "${a10}": ${b10}`);
-          }
-        }
-        findTarget(a10) {
-          let b10 = this.findOrganizationTarget(a10);
-          return b10 || this.findPersonalAccountTarget(a10);
-        }
-        findOrganizationTarget(a10) {
-          if (!this.organizationPattern) return null;
-          try {
-            let b10 = this.organizationPattern(a10.pathname);
-            if (!b10 || !("params" in b10)) return null;
-            let c10 = b10.params;
-            if (c10.id) return { type: "organization", organizationId: c10.id };
-            if (c10.slug) return { type: "organization", organizationSlug: c10.slug };
-            return null;
-          } catch (a11) {
-            return console.error("Failed to match organization pattern:", a11), null;
-          }
-        }
-        findPersonalAccountTarget(a10) {
-          if (!this.personalAccountPattern) return null;
-          try {
-            return this.personalAccountPattern(a10.pathname) ? { type: "personalAccount" } : null;
-          } catch (a11) {
-            return console.error("Failed to match personal account pattern:", a11), null;
-          }
-        }
-      }, eZ = { NonEligibleNoCookie: "non-eligible-no-refresh-cookie", NonEligibleNonGet: "non-eligible-non-get", InvalidSessionToken: "invalid-session-token", MissingApiClient: "missing-api-client", MissingSessionToken: "missing-session-token", MissingRefreshToken: "missing-refresh-token", ExpiredSessionTokenDecodeFailed: "expired-session-token-decode-failed", ExpiredSessionTokenMissingSidClaim: "expired-session-token-missing-sid-claim", FetchError: "fetch-error", UnexpectedSDKError: "unexpected-sdk-error", UnexpectedBAPIError: "unexpected-bapi-error" };
-      function e$(a10, b10, c10) {
-        return er(a10, b10) ? null : eA({ tokenType: "string" == typeof b10 ? b10 : a10, authenticateContext: c10, reason: ey.TokenTypeMismatch });
-      }
-      var e_ = async (a10, b10) => {
-        let c10 = await cd(eF(a10), b10), d10 = b10.acceptsToken ?? cb.SessionToken;
-        if (d10 !== cb.M2MToken && (ca(c10.secretKey), c10.isSatellite)) {
-          var e10 = c10.signInUrl, f10 = c10.secretKey;
-          if (!e10 && bk(f10)) throw Error("Missing signInUrl. Pass a signInUrl for dev instances if an app is satellite");
-          if (c10.signInUrl && c10.origin && function(a11, b11) {
-            let c11;
-            try {
-              c11 = new URL(a11);
-            } catch {
-              throw Error("The signInUrl needs to have a absolute url format.");
-            }
-            if (c11.origin === b11) throw Error("The signInUrl needs to be on a different origin than your satellite application.");
-          }(c10.signInUrl, c10.origin), !(c10.proxyUrl || c10.domain)) throw Error("Missing domain and proxyUrl. A satellite application needs to specify a domain or a proxyUrl");
-        }
-        d10 === cb.M2MToken && function(a11) {
-          if (!a11.machineSecretKey && !a11.secretKey) throw Error("Machine token authentication requires either a Machine secret key or a Clerk secret key. Ensure a Clerk secret key or Machine secret key is set.");
-        }(c10);
-        let g10 = new eY(b10.organizationSyncOptions), h2 = new eX(c10, { organizationSyncOptions: b10.organizationSyncOptions }, g10);
-        async function i2(c11) {
-          if (!b10.apiClient) return { data: null, error: { message: "An apiClient is needed to perform token refresh.", cause: { reason: eZ.MissingApiClient } } };
-          let { sessionToken: d11, refreshTokenInCookie: e11 } = c11;
-          if (!d11) return { data: null, error: { message: "Session token must be provided.", cause: { reason: eZ.MissingSessionToken } } };
-          if (!e11) return { data: null, error: { message: "Refresh token must be provided.", cause: { reason: eZ.MissingRefreshToken } } };
-          let { data: f11, errors: g11 } = bR(d11);
-          if (!f11 || g11) return { data: null, error: { message: "Unable to decode the expired session token.", cause: { reason: eZ.ExpiredSessionTokenDecodeFailed, errors: g11 } } };
-          if (!f11?.payload?.sid) return { data: null, error: { message: "Expired session token is missing the `sid` claim.", cause: { reason: eZ.ExpiredSessionTokenMissingSidClaim } } };
-          try {
-            return { data: (await b10.apiClient.sessions.refreshSession(f11.payload.sid, { format: "cookie", suffixed_cookies: c11.usesSuffixedCookies(), expired_token: d11 || "", refresh_token: e11 || "", request_origin: c11.clerkUrl.origin, request_headers: Object.fromEntries(Array.from(a10.headers.entries()).map(([a11, b11]) => [a11, [b11]])) })).cookies, error: null };
-          } catch (a11) {
-            if (!a11?.errors?.length) return { data: null, error: { message: "Unexpected Server/BAPI error", cause: { reason: eZ.UnexpectedBAPIError, errors: [a11] } } };
-            if ("unexpected_error" === a11.errors[0].code) return { data: null, error: { message: "Fetch unexpected error", cause: { reason: eZ.FetchError, errors: a11.errors } } };
-            return { data: null, error: { message: a11.errors[0].code, cause: { reason: a11.errors[0].code, errors: a11.errors } } };
-          }
-        }
-        async function j2(a11) {
-          let { data: b11, error: c11 } = await i2(a11);
-          if (!b11 || 0 === b11.length) return { data: null, error: c11 };
-          let d11 = new Headers(), e11 = "";
-          b11.forEach((a12) => {
-            d11.append("Set-Cookie", a12), eG(a12).startsWith(b6.Cookies.Session) && (e11 = eH(a12));
-          });
-          let { data: f11, errors: g11 } = await eP(e11, a11);
-          return g11 ? { data: null, error: { message: "Clerk: unable to verify refreshed session token.", cause: { reason: eZ.InvalidSessionToken, errors: g11 } } } : { data: { jwtPayload: f11, sessionToken: e11, headers: d11 }, error: null };
-        }
-        function k2(a11, b11, c11, d11) {
-          if (!h2.isRequestEligibleForHandshake()) return eA({ tokenType: cb.SessionToken, authenticateContext: a11, reason: b11, message: c11 });
-          let e11 = d11 ?? h2.buildRedirectToHandshake(b11);
-          return (e11.get(b6.Headers.Location) && e11.set(b6.Headers.CacheControl, "no-store"), h2.checkAndTrackRedirectLoop(e11)) ? (console.log("Clerk: Refreshing the session token resulted in an infinite redirect loop. This usually means that your Clerk instance keys do not match - make sure to copy the correct publishable and secret keys from the Clerk dashboard."), eA({ tokenType: cb.SessionToken, authenticateContext: a11, reason: b11, message: c11 })) : function(a12, b12, c12 = "", d12) {
-            return eB({ status: ex.Handshake, reason: b12, message: c12, publishableKey: a12.publishableKey || "", isSatellite: a12.isSatellite || false, domain: a12.domain || "", proxyUrl: a12.proxyUrl || "", signInUrl: a12.signInUrl || "", signUpUrl: a12.signUpUrl || "", afterSignInUrl: a12.afterSignInUrl || "", afterSignUpUrl: a12.afterSignUpUrl || "", isSignedIn: false, isAuthenticated: false, tokenType: cb.SessionToken, toAuth: () => null, headers: d12, token: null });
-          }(a11, b11, c11, e11);
-        }
-        async function l2() {
-          let { tokenInHeader: a11 } = c10;
-          try {
-            let { data: b11, errors: d11 } = await eP(a11, c10);
-            if (d11) throw d11[0];
-            return ez({ tokenType: cb.SessionToken, authenticateContext: c10, sessionClaims: b11, headers: new Headers(), token: a11 });
-          } catch (a12) {
-            return n2(a12, "header");
-          }
-        }
-        async function m2() {
-          let a11 = c10.clientUat, b11 = !!c10.sessionTokenInCookie, d11 = !!c10.devBrowserToken;
-          if (c10.handshakeNonce || c10.handshakeToken) try {
-            return await h2.resolveHandshake();
-          } catch (a12) {
-            a12 instanceof bC && "development" === c10.instanceType ? h2.handleTokenVerificationErrorInDevelopment(a12) : console.error("Clerk: unable to resolve handshake:", a12);
-          }
-          let e11 = c10.isSatellite && "document" === c10.secFetchDest;
-          if ("production" === c10.instanceType && e11) return k2(c10, ey.SatelliteCookieNeedsSyncing, "");
-          if ("development" === c10.instanceType && e11 && !c10.clerkUrl.searchParams.has(b6.QueryParameters.ClerkSynced)) {
-            let a12 = new URL(c10.signInUrl);
-            a12.searchParams.append(b6.QueryParameters.ClerkRedirectUrl, c10.clerkUrl.toString());
-            let b12 = new Headers({ [b6.Headers.Location]: a12.toString() });
-            return k2(c10, ey.SatelliteCookieNeedsSyncing, "", b12);
-          }
-          let f11 = new URL(c10.clerkUrl).searchParams.get(b6.QueryParameters.ClerkRedirectUrl);
-          if ("development" === c10.instanceType && !c10.isSatellite && f11) {
-            let a12 = new URL(f11);
-            c10.devBrowserToken && a12.searchParams.append(b6.QueryParameters.DevBrowser, c10.devBrowserToken), a12.searchParams.append(b6.QueryParameters.ClerkSynced, "true");
-            let b12 = new Headers({ [b6.Headers.Location]: a12.toString() });
-            return k2(c10, ey.PrimaryRespondsToSyncing, "", b12);
-          }
-          if ("development" === c10.instanceType && c10.clerkUrl.searchParams.has(b6.QueryParameters.DevBrowser)) return k2(c10, ey.DevBrowserSync, "");
-          if ("development" === c10.instanceType && !d11) return k2(c10, ey.DevBrowserMissing, "");
-          if (!a11 && !b11) return eA({ tokenType: cb.SessionToken, authenticateContext: c10, reason: ey.SessionTokenAndUATMissing });
-          if (!a11 && b11) return k2(c10, ey.SessionTokenWithoutClientUAT, "");
-          if (a11 && !b11) return k2(c10, ey.ClientUATWithoutSessionToken, "");
-          let { data: i3, errors: j3 } = bR(c10.sessionTokenInCookie);
-          if (j3) return n2(j3[0], "cookie");
-          if (i3.payload.iat < c10.clientUat) return k2(c10, ey.SessionTokenIATBeforeClientUAT, "");
-          try {
-            let { data: a12, errors: b12 } = await eP(c10.sessionTokenInCookie, c10);
-            if (b12) throw b12[0];
-            let d12 = ez({ tokenType: cb.SessionToken, authenticateContext: c10, sessionClaims: a12, headers: new Headers(), token: c10.sessionTokenInCookie });
-            if (!c10.isSatellite && "document" === c10.secFetchDest && c10.isCrossOriginReferrer() && !c10.isKnownClerkReferrer() && 0 === c10.handshakeRedirectLoopCounter) return k2(c10, ey.PrimaryDomainCrossOriginSync, "Cross-origin request from satellite domain requires handshake");
-            let e12 = d12.toAuth();
-            if (e12.userId) {
-              let a13 = function(a14, b13) {
-                let c11 = g10.findTarget(a14.clerkUrl);
-                if (!c11) return null;
-                let d13 = false;
-                if ("organization" === c11.type && (c11.organizationSlug && c11.organizationSlug !== b13.orgSlug && (d13 = true), c11.organizationId && c11.organizationId !== b13.orgId && (d13 = true)), "personalAccount" === c11.type && b13.orgId && (d13 = true), !d13) return null;
-                if (a14.handshakeRedirectLoopCounter >= 3) return console.warn("Clerk: Organization activation handshake loop detected. This is likely due to an invalid organization ID or slug. Skipping organization activation."), null;
-                let e13 = k2(a14, ey.ActiveOrganizationMismatch, "");
-                return "handshake" !== e13.status ? null : e13;
-              }(c10, e12);
-              if (a13) return a13;
-            }
-            return d12;
-          } catch (a12) {
-            return n2(a12, "cookie");
-          }
-        }
-        async function n2(b11, d11) {
-          let e11;
-          if (!(b11 instanceof bC)) return eA({ tokenType: cb.SessionToken, authenticateContext: c10, reason: ey.UnexpectedError });
-          if (b11.reason === bA.TokenExpired && c10.refreshTokenInCookie && "GET" === a10.method) {
-            let { data: a11, error: b12 } = await j2(c10);
-            if (a11) return ez({ tokenType: cb.SessionToken, authenticateContext: c10, sessionClaims: a11.jwtPayload, headers: a11.headers, token: a11.sessionToken });
-            e11 = b12?.cause?.reason ? b12.cause.reason : eZ.UnexpectedSDKError;
-          } else e11 = "GET" !== a10.method ? eZ.NonEligibleNonGet : c10.refreshTokenInCookie ? null : eZ.NonEligibleNoCookie;
-          return (b11.tokenCarrier = d11, [bA.TokenExpired, bA.TokenNotActiveYet, bA.TokenIatInTheFuture].includes(b11.reason)) ? k2(c10, e1({ tokenError: b11.reason, refreshError: e11 }), b11.getFullMessage()) : eA({ tokenType: cb.SessionToken, authenticateContext: c10, reason: b11.reason, message: b11.getFullMessage() });
-        }
-        function o2(a11, b11) {
-          return b11 instanceof bE ? eA({ tokenType: a11, authenticateContext: c10, reason: b11.code, message: b11.getFullMessage() }) : eA({ tokenType: a11, authenticateContext: c10, reason: ey.UnexpectedError });
-        }
-        async function p2() {
-          let { tokenInHeader: a11 } = c10;
-          if (!a11) return n2(Error("Missing token in header"), "header");
-          if (!ep(a11)) return eA({ tokenType: d10, authenticateContext: c10, reason: ey.TokenTypeMismatch, message: "" });
-          let b11 = e$(eq(a11), d10, c10);
-          if (b11) return b11;
-          let { data: e11, tokenType: f11, errors: g11 } = await eU(a11, c10);
-          return g11 ? o2(f11, g11[0]) : ez({ tokenType: f11, authenticateContext: c10, machineData: e11, token: a11 });
-        }
-        async function q2() {
-          let { tokenInHeader: a11 } = c10;
-          if (!a11) return n2(Error("Missing token in header"), "header");
-          if (ep(a11)) {
-            let b12 = e$(eq(a11), d10, c10);
-            if (b12) return b12;
-            let { data: e12, tokenType: f11, errors: g11 } = await eU(a11, c10);
-            return g11 ? o2(f11, g11[0]) : ez({ tokenType: f11, authenticateContext: c10, machineData: e12, token: a11 });
-          }
-          let { data: b11, errors: e11 } = await eP(a11, c10);
-          return e11 ? n2(e11[0], "header") : ez({ tokenType: cb.SessionToken, authenticateContext: c10, sessionClaims: b11, token: a11 });
-        }
-        return Array.isArray(d10) && !function(a11, b11) {
-          let c11 = null, { tokenInHeader: d11 } = b11;
-          return d11 && (c11 = ep(d11) ? eq(d11) : cb.SessionToken), er(c11 ?? cb.SessionToken, a11);
-        }(d10, c10) ? function() {
-          let a11 = ev();
-          return eB({ status: ex.SignedOut, reason: ey.TokenTypeMismatch, message: "", proxyUrl: "", publishableKey: "", isSatellite: false, domain: "", signInUrl: "", signUpUrl: "", afterSignInUrl: "", afterSignUpUrl: "", isSignedIn: false, isAuthenticated: false, tokenType: null, toAuth: () => a11, headers: new Headers(), token: null });
-        }() : c10.tokenInHeader ? "any" === d10 ? q2() : d10 === cb.SessionToken ? l2() : p2() : d10 === cb.OAuthToken || d10 === cb.ApiKey || d10 === cb.M2MToken ? eA({ tokenType: d10, authenticateContext: c10, reason: "No token in header" }) : m2();
-      }, e0 = (a10) => {
-        let { isSignedIn: b10, isAuthenticated: c10, proxyUrl: d10, reason: e10, message: f10, publishableKey: g10, isSatellite: h2, domain: i2 } = a10;
-        return { isSignedIn: b10, isAuthenticated: c10, proxyUrl: d10, reason: e10, message: f10, publishableKey: g10, isSatellite: h2, domain: i2 };
-      }, e1 = ({ tokenError: a10, refreshError: b10 }) => {
-        switch (a10) {
-          case bA.TokenExpired:
-            return `${ey.SessionTokenExpired}-refresh-${b10}`;
-          case bA.TokenNotActiveYet:
-            return ey.SessionTokenNBF;
-          case bA.TokenIatInTheFuture:
-            return ey.SessionTokenIatInTheFuture;
-          default:
-            return ey.UnexpectedError;
-        }
-      }, e2 = { secretKey: "", machineSecretKey: "", jwtKey: "", apiUrl: void 0, apiVersion: void 0, proxyUrl: "", publishableKey: "", isSatellite: false, domain: "", audience: "" };
-      c(378), c(944), c(918).s;
-      var e3 = c(66);
-      let e4 = "" + e3.s8 + ";404";
-      e3.s8, e3.s8, c(515).X, c(449), "undefined" == typeof URLPattern || URLPattern, c(107), c(979), c(770), c(823), c(918);
-      let { env: e5, stdout: e6 } = (null == (fX = globalThis) ? void 0 : fX.process) ?? {}, e7 = e5 && !e5.NO_COLOR && (e5.FORCE_COLOR || (null == e6 ? void 0 : e6.isTTY) && !e5.CI && "dumb" !== e5.TERM), e8 = (a10, b10, c10, d10) => {
-        let e10 = a10.substring(0, d10) + c10, f10 = a10.substring(d10 + b10.length), g10 = f10.indexOf(b10);
-        return ~g10 ? e10 + e8(f10, b10, c10, g10) : e10 + f10;
-      }, e9 = (a10, b10, c10 = a10) => e7 ? (d10) => {
-        let e10 = "" + d10, f10 = e10.indexOf(b10, a10.length);
-        return ~f10 ? a10 + e8(e10, b10, c10, f10) + b10 : a10 + e10 + b10;
-      } : String, fa = e9("\x1B[1m", "\x1B[22m", "\x1B[22m\x1B[1m");
-      e9("\x1B[2m", "\x1B[22m", "\x1B[22m\x1B[2m"), e9("\x1B[3m", "\x1B[23m"), e9("\x1B[4m", "\x1B[24m"), e9("\x1B[7m", "\x1B[27m"), e9("\x1B[8m", "\x1B[28m"), e9("\x1B[9m", "\x1B[29m"), e9("\x1B[30m", "\x1B[39m");
-      let fb = e9("\x1B[31m", "\x1B[39m"), fc = e9("\x1B[32m", "\x1B[39m"), fd = e9("\x1B[33m", "\x1B[39m");
-      e9("\x1B[34m", "\x1B[39m");
-      let fe = e9("\x1B[35m", "\x1B[39m");
-      e9("\x1B[38;2;173;127;168m", "\x1B[39m"), e9("\x1B[36m", "\x1B[39m");
-      let ff = e9("\x1B[37m", "\x1B[39m");
-      e9("\x1B[90m", "\x1B[39m"), e9("\x1B[40m", "\x1B[49m"), e9("\x1B[41m", "\x1B[49m"), e9("\x1B[42m", "\x1B[49m"), e9("\x1B[43m", "\x1B[49m"), e9("\x1B[44m", "\x1B[49m"), e9("\x1B[45m", "\x1B[49m"), e9("\x1B[46m", "\x1B[49m"), e9("\x1B[47m", "\x1B[49m"), ff(fa("\u25CB")), fb(fa("\u2A2F")), fd(fa("\u26A0")), ff(fa(" ")), fc(fa("\u2713")), fe(fa("\xBB")), new aJ(1e4, (a10) => a10.length), /* @__PURE__ */ new WeakMap();
-      let fg = { Headers: { NextRewrite: "x-middleware-rewrite", NextResume: "x-middleware-next", NextRedirect: "Location", NextUrl: "next-url", NextAction: "next-action", NextjsData: "x-nextjs-data" } }, fh = (a10, b10, c10) => (a10.headers.set(b10, c10), a10), fi = "__clerk_db_jwt", fj = { rE: "15.5.6" }, fk = (a10) => {
-        if (!a10 || "string" != typeof a10) return a10;
-        try {
-          return (a10 || "").replace(/^(sk_(live|test)_)(.+?)(.{3})$/, "$1*********$4");
-        } catch {
-          return "";
-        }
-      }, fl = (a10) => (Array.isArray(a10) ? a10 : [a10]).map((a11) => "string" == typeof a11 ? fk(a11) : JSON.stringify(Object.fromEntries(Object.entries(a11).map(([a12, b10]) => [a12, fk(b10)])), null, 2)).join(", "), fm = (a10) => {
-        let b10 = (c10) => {
-          if (!c10) return c10;
-          if (Array.isArray(c10)) return c10.map((a11) => "object" == typeof a11 || Array.isArray(a11) ? b10(a11) : a11);
-          let d10 = { ...c10 };
-          for (let c11 of Object.keys(d10)) {
-            let e10 = a10(c11.toString());
-            e10 !== c11 && (d10[e10] = d10[c11], delete d10[c11]), "object" == typeof d10[e10] && (d10[e10] = b10(d10[e10]));
-          }
-          return d10;
-        };
-        return b10;
-      };
-      function fn(a10) {
-        if ("boolean" == typeof a10) return a10;
-        if (null == a10) return false;
-        if ("string" == typeof a10) {
-          if ("true" === a10.toLowerCase()) return true;
-          if ("false" === a10.toLowerCase()) return false;
-        }
-        let b10 = parseInt(a10, 10);
-        return !isNaN(b10) && b10 > 0;
-      }
-      fm(function(a10) {
-        return a10 ? a10.replace(/[A-Z]/g, (a11) => `_${a11.toLowerCase()}`) : "";
-      }), fm(function(a10) {
-        return a10 ? a10.replace(/([-_][a-z])/g, (a11) => a11.toUpperCase().replace(/-|_/, "")) : "";
-      }), process.env.NEXT_PUBLIC_CLERK_JS_VERSION, process.env.NEXT_PUBLIC_CLERK_JS_URL;
-      let fo = process.env.CLERK_API_VERSION || "v1", fp = process.env.CLERK_SECRET_KEY || "", fq = process.env.CLERK_MACHINE_SECRET_KEY || "", fr = "pk_test_Y2hlZXJmdWwtbWFtbWFsLTc4LmNsZXJrLmFjY291bnRzLmRldiQ", fs = process.env.CLERK_ENCRYPTION_KEY || "", ft = process.env.CLERK_API_URL || ((a10) => {
-        let b10 = bi(a10)?.frontendApi;
-        return b10?.startsWith("clerk.") && a9.some((a11) => b10?.endsWith(a11)) ? be : bc.some((a11) => b10?.endsWith(a11)) ? "https://api.lclclerk.com" : bd.some((a11) => b10?.endsWith(a11)) ? "https://api.clerkstage.dev" : be;
-      })(fr), fu = process.env.NEXT_PUBLIC_CLERK_DOMAIN || "", fv = process.env.NEXT_PUBLIC_CLERK_PROXY_URL || "", fw = fn(process.env.NEXT_PUBLIC_CLERK_IS_SATELLITE) || false, fx = process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || "", fy = process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL || "", fz = fn(process.env.NEXT_PUBLIC_CLERK_TELEMETRY_DISABLED), fA = fn(process.env.NEXT_PUBLIC_CLERK_TELEMETRY_DEBUG), fB = fn(process.env.NEXT_PUBLIC_CLERK_KEYLESS_DISABLED) || false, fC = !(fj.rE.startsWith("13.") || fj.rE.startsWith("14.0")) && false, fD = (a10) => {
-        if (!(a10 instanceof Error) || !("message" in a10)) return false;
-        let { message: b10 } = a10, c10 = b10.toLowerCase(), d10 = c10.includes("dynamic server usage"), e10 = c10.includes("this page needs to bail out of prerendering");
-        return /Route .*? needs to bail out of prerendering at this point because it used .*?./.test(b10) || d10 || e10;
-      };
-      async function fE() {
-        try {
-          let { headers: a10 } = await Promise.resolve().then(c.bind(c, 924)), b10 = await a10();
-          return new M("https://placeholder.com", { headers: b10 });
-        } catch (a10) {
-          if (a10 && fD(a10)) throw a10;
-          throw Error(`Clerk: auth(), currentUser() and clerkClient(), are only supported in App Router (/app directory).
-If you're using /pages, try getAuth() instead.
-Original error: ${a10}`);
-        }
-      }
-      var fF = class {
-        #a;
-        #b = 864e5;
-        constructor(a10) {
-          this.#a = a10;
-        }
-        isEventThrottled(a10) {
-          let b10 = Date.now(), c10 = this.#c(a10), d10 = this.#a.getItem(c10);
-          return !!d10 && !(b10 - d10 > this.#b) || (this.#a.setItem(c10, b10), false);
-        }
-        #c(a10) {
-          let { sk: b10, pk: c10, payload: d10, ...e10 } = a10, f10 = { ...d10, ...e10 };
-          return JSON.stringify(Object.keys({ ...d10, ...e10 }).sort().map((a11) => f10[a11]));
-        }
-      }, fG = class {
-        #d = "clerk_telemetry_throttler";
-        getItem(a10) {
-          return this.#e()[a10];
-        }
-        setItem(a10, b10) {
-          try {
-            let c10 = this.#e();
-            c10[a10] = b10, localStorage.setItem(this.#d, JSON.stringify(c10));
-          } catch (a11) {
-            a11 instanceof DOMException && ("QuotaExceededError" === a11.name || "NS_ERROR_DOM_QUOTA_REACHED" === a11.name) && localStorage.length > 0 && localStorage.removeItem(this.#d);
-          }
-        }
-        removeItem(a10) {
-          try {
-            let b10 = this.#e();
-            delete b10[a10], localStorage.setItem(this.#d, JSON.stringify(b10));
-          } catch {
-          }
-        }
-        #e() {
-          try {
-            let a10 = localStorage.getItem(this.#d);
-            if (!a10) return {};
-            return JSON.parse(a10);
-          } catch {
-            return {};
-          }
-        }
-        static isSupported() {
-          return "undefined" != typeof window && !!window.localStorage;
-        }
-      }, fH = class {
-        #a = /* @__PURE__ */ new Map();
-        #f = 1e4;
-        getItem(a10) {
-          return this.#a.size > this.#f ? void this.#a.clear() : this.#a.get(a10);
-        }
-        setItem(a10, b10) {
-          this.#a.set(a10, b10);
-        }
-        removeItem(a10) {
-          this.#a.delete(a10);
-        }
-      };
-      let fI = /* @__PURE__ */ new Set(["error", "warn", "info", "debug", "trace"]), fJ = { samplingRate: 1, maxBufferSize: 5, endpoint: "https://clerk-telemetry.com" };
-      var fK = class {
-        #g;
-        #h;
-        #i = {};
-        #j = [];
-        #k = null;
-        constructor(a10) {
-          this.#g = { maxBufferSize: a10.maxBufferSize ?? fJ.maxBufferSize, samplingRate: a10.samplingRate ?? fJ.samplingRate, perEventSampling: a10.perEventSampling ?? true, disabled: a10.disabled ?? false, debug: a10.debug ?? false, endpoint: fJ.endpoint }, a10.clerkVersion || "undefined" != typeof window ? this.#i.clerkVersion = a10.clerkVersion ?? "" : this.#i.clerkVersion = "", this.#i.sdk = a10.sdk, this.#i.sdkVersion = a10.sdkVersion, this.#i.publishableKey = a10.publishableKey ?? "";
-          let b10 = bi(a10.publishableKey);
-          b10 && (this.#i.instanceType = b10.instanceType), a10.secretKey && (this.#i.secretKey = a10.secretKey.substring(0, 16));
-          let c10 = fG.isSupported() ? new fG() : new fH();
-          this.#h = new fF(c10);
-        }
-        get isEnabled() {
-          return !("development" !== this.#i.instanceType || this.#g.disabled || "undefined" != typeof process && process.env && fn(process.env.CLERK_TELEMETRY_DISABLED) || "undefined" != typeof window && window?.navigator?.webdriver);
-        }
-        get isDebug() {
-          return this.#g.debug || "undefined" != typeof process && process.env && fn(process.env.CLERK_TELEMETRY_DEBUG);
-        }
-        record(a10) {
-          try {
-            let b10 = this.#l(a10.event, a10.payload);
-            if (this.#m(b10.event, b10), !this.#n(b10, a10.eventSamplingRate)) return;
-            this.#j.push({ kind: "event", value: b10 }), this.#o();
-          } catch (a11) {
-            console.error("[clerk/telemetry] Error recording telemetry event", a11);
-          }
-        }
-        recordLog(a10) {
-          try {
-            if (!this.#p(a10)) return;
-            let b10 = "string" == typeof a10?.level && fI.has(a10.level), c10 = "string" == typeof a10?.message && a10.message.trim().length > 0, d10 = null, e10 = a10?.timestamp;
-            if ("number" == typeof e10 || "string" == typeof e10) {
-              let a11 = new Date(e10);
-              Number.isNaN(a11.getTime()) || (d10 = a11);
-            }
-            if (!b10 || !c10 || null === d10) {
-              this.isDebug && "undefined" != typeof console && console.warn("[clerk/telemetry] Dropping invalid telemetry log entry", { levelIsValid: b10, messageIsValid: c10, timestampIsValid: null !== d10 });
-              return;
-            }
-            let f10 = this.#q(), g10 = { sdk: f10.name, sdkv: f10.version, cv: this.#i.clerkVersion ?? "", lvl: a10.level, msg: a10.message, ts: d10.toISOString(), pk: this.#i.publishableKey || null, payload: this.#r(a10.context) };
-            this.#j.push({ kind: "log", value: g10 }), this.#o();
-          } catch (a11) {
-            console.error("[clerk/telemetry] Error recording telemetry log entry", a11);
-          }
-        }
-        #n(a10, b10) {
-          return this.isEnabled && !this.isDebug && this.#s(a10, b10);
-        }
-        #p(a10) {
-          return true;
-        }
-        #s(a10, b10) {
-          let c10 = Math.random();
-          return !!(c10 <= this.#g.samplingRate && (false === this.#g.perEventSampling || void 0 === b10 || c10 <= b10)) && !this.#h.isEventThrottled(a10);
-        }
-        #o() {
-          if ("undefined" == typeof window) return void this.#t();
-          if (this.#j.length >= this.#g.maxBufferSize) {
-            this.#k && ("undefined" != typeof cancelIdleCallback ? cancelIdleCallback(Number(this.#k)) : clearTimeout(Number(this.#k))), this.#t();
-            return;
-          }
-          this.#k || ("requestIdleCallback" in window ? this.#k = requestIdleCallback(() => {
-            this.#t(), this.#k = null;
-          }) : this.#k = setTimeout(() => {
-            this.#t(), this.#k = null;
-          }, 0));
-        }
-        #t() {
-          let a10 = [...this.#j];
-          if (this.#j = [], this.#k = null, 0 === a10.length) return;
-          let b10 = a10.filter((a11) => "event" === a11.kind).map((a11) => a11.value), c10 = a10.filter((a11) => "log" === a11.kind).map((a11) => a11.value);
-          b10.length > 0 && fetch(new URL("/v1/event", this.#g.endpoint), { headers: { "Content-Type": "application/json" }, keepalive: true, method: "POST", body: JSON.stringify({ events: b10 }) }).catch(() => void 0), c10.length > 0 && fetch(new URL("/v1/logs", this.#g.endpoint), { headers: { "Content-Type": "application/json" }, keepalive: true, method: "POST", body: JSON.stringify({ logs: c10 }) }).catch(() => void 0);
-        }
-        #m(a10, b10) {
-          this.isDebug && (void 0 !== console.groupCollapsed ? (console.groupCollapsed("[clerk/telemetry]", a10), console.log(b10), console.groupEnd()) : console.log("[clerk/telemetry]", a10, b10));
-        }
-        #q() {
-          let a10 = { name: this.#i.sdk, version: this.#i.sdkVersion };
-          if ("undefined" != typeof window) {
-            let b10 = window;
-            if (b10.Clerk) {
-              let c10 = b10.Clerk;
-              if ("object" == typeof c10 && null !== c10 && "constructor" in c10 && "function" == typeof c10.constructor && c10.constructor.sdkMetadata) {
-                let { name: b11, version: d10 } = c10.constructor.sdkMetadata;
-                void 0 !== b11 && (a10.name = b11), void 0 !== d10 && (a10.version = d10);
-              }
-            }
-          }
-          return a10;
-        }
-        #l(a10, b10) {
-          let c10 = this.#q();
-          return { event: a10, cv: this.#i.clerkVersion ?? "", it: this.#i.instanceType ?? "", sdk: c10.name, sdkv: c10.version, ...this.#i.publishableKey ? { pk: this.#i.publishableKey } : {}, ...this.#i.secretKey ? { sk: this.#i.secretKey } : {}, payload: b10 };
-        }
-        #r(a10) {
-          if (null == a10 || "object" != typeof a10) return null;
-          try {
-            let b10 = JSON.parse(JSON.stringify(a10));
-            if (b10 && "object" == typeof b10 && !Array.isArray(b10)) return b10;
-            return null;
-          } catch {
-            return null;
-          }
-        }
-      };
-      let fL = { secretKey: fp, publishableKey: fr, apiUrl: ft, apiVersion: fo, userAgent: "@clerk/nextjs@6.35.1", proxyUrl: fv, domain: fu, isSatellite: fw, machineSecretKey: fq, sdkMetadata: { name: "@clerk/nextjs", version: "6.35.1", environment: "production" }, telemetry: { disabled: fz, debug: fA } }, fM = (a10) => function(a11) {
-        let b10 = { ...a11 }, c10 = em(b10), d10 = function(a12) {
-          let b11 = b9(e2, a12.options), c11 = a12.apiClient;
-          return { authenticateRequest: (a13, d11 = {}) => {
-            let { apiUrl: e11, apiVersion: f10 } = b11, g10 = b9(b11, d11);
-            return e_(a13, { ...d11, ...g10, apiUrl: e11, apiVersion: f10, apiClient: c11 });
-          }, debugRequestState: e0 };
-        }({ options: b10, apiClient: c10 }), e10 = new fK({ publishableKey: b10.publishableKey, secretKey: b10.secretKey, samplingRate: 0.1, ...b10.sdkMetadata ? { sdk: b10.sdkMetadata.name, sdkVersion: b10.sdkMetadata.version } : {}, ...b10.telemetry || {} });
-        return { ...c10, ...d10, telemetry: e10 };
-      }({ ...fL, ...a10 });
-      function fN(a10, b10) {
-        var c10, d10;
-        return function(a11) {
-          try {
-            let { headers: b11, nextUrl: c11, cookies: d11 } = a11 || {};
-            return "function" == typeof (null == b11 ? void 0 : b11.get) && "function" == typeof (null == c11 ? void 0 : c11.searchParams.get) && "function" == typeof (null == d11 ? void 0 : d11.get);
-          } catch {
-            return false;
-          }
-        }(a10) || function(a11) {
-          try {
-            let { headers: b11 } = a11 || {};
-            return "function" == typeof (null == b11 ? void 0 : b11.get);
-          } catch {
-            return false;
-          }
-        }(a10) ? a10.headers.get(b10) : a10.headers[b10] || a10.headers[b10.toLowerCase()] || (null == (d10 = null == (c10 = a10.socket) ? void 0 : c10._httpMessage) ? void 0 : d10.getHeader(b10));
-      }
-      var fO = c(521);
-      let fP = /* @__PURE__ */ new Map(), fQ = new fO.AsyncLocalStorage(), fR = /* @__PURE__ */ new Set(), fS = { warnOnce: (a10) => {
-        fR.has(a10) || (fR.add(a10), console.warn(a10));
-      } };
-      function fT(a10) {
-        return /^http(s)?:\/\//.test(a10 || "");
-      }
-      function fU(a10, b10, c10) {
-        return "function" == typeof a10 ? a10(b10) : void 0 !== a10 ? a10 : void 0 !== c10 ? c10 : void 0;
-      }
-      var fV, fW, fX, fY, fZ, f$, f_, f0, f1, f2, f3 = Object.defineProperty, f4 = (null == (fY = "undefined" != typeof globalThis ? globalThis : void 0) ? void 0 : fY.crypto) || (null == (fZ = void 0 !== c.g ? c.g : void 0) ? void 0 : fZ.crypto) || (null == (f$ = "undefined" != typeof window ? window : void 0) ? void 0 : f$.crypto) || (null == (f_ = "undefined" != typeof self ? self : void 0) ? void 0 : f_.crypto) || (null == (f1 = null == (f0 = "undefined" != typeof frames ? frames : void 0) ? void 0 : f0[0]) ? void 0 : f1.crypto);
-      f2 = f4 ? (a10) => {
-        let b10 = [];
-        for (let c10 = 0; c10 < a10; c10 += 4) b10.push(f4.getRandomValues(new Uint32Array(1))[0]);
-        return new f6(b10, a10);
-      } : (a10) => {
-        let b10 = [], c10 = (a11) => {
-          let b11 = a11, c11 = 987654321;
-          return () => {
-            let a12 = ((c11 = 36969 * (65535 & c11) + (c11 >> 16) | 0) << 16) + (b11 = 18e3 * (65535 & b11) + (b11 >> 16) | 0) | 0;
-            return a12 /= 4294967296, (a12 += 0.5) * (Math.random() > 0.5 ? 1 : -1);
-          };
-        };
-        for (let d10 = 0, e10; d10 < a10; d10 += 4) {
-          let a11 = c10(4294967296 * (e10 || Math.random()));
-          e10 = 987654071 * a11(), b10.push(4294967296 * a11() | 0);
-        }
-        return new f6(b10, a10);
-      };
-      var f5 = class {
-        static create(...a10) {
-          return new this(...a10);
-        }
-        mixIn(a10) {
-          return Object.assign(this, a10);
-        }
-        clone() {
-          let a10 = new this.constructor();
-          return Object.assign(a10, this), a10;
-        }
-      }, f6 = class extends f5 {
-        constructor(a10 = [], b10 = 4 * a10.length) {
-          super();
-          let c10 = a10;
-          if (c10 instanceof ArrayBuffer && (c10 = new Uint8Array(c10)), (c10 instanceof Int8Array || c10 instanceof Uint8ClampedArray || c10 instanceof Int16Array || c10 instanceof Uint16Array || c10 instanceof Int32Array || c10 instanceof Uint32Array || c10 instanceof Float32Array || c10 instanceof Float64Array) && (c10 = new Uint8Array(c10.buffer, c10.byteOffset, c10.byteLength)), c10 instanceof Uint8Array) {
-            let a11 = c10.byteLength, b11 = [];
-            for (let d10 = 0; d10 < a11; d10 += 1) b11[d10 >>> 2] |= c10[d10] << 24 - d10 % 4 * 8;
-            this.words = b11, this.sigBytes = a11;
-          } else this.words = a10, this.sigBytes = b10;
-        }
-        toString(a10 = f7) {
-          return a10.stringify(this);
-        }
-        concat(a10) {
-          let b10 = this.words, c10 = a10.words, d10 = this.sigBytes, e10 = a10.sigBytes;
-          if (this.clamp(), d10 % 4) for (let a11 = 0; a11 < e10; a11 += 1) {
-            let e11 = c10[a11 >>> 2] >>> 24 - a11 % 4 * 8 & 255;
-            b10[d10 + a11 >>> 2] |= e11 << 24 - (d10 + a11) % 4 * 8;
-          }
-          else for (let a11 = 0; a11 < e10; a11 += 4) b10[d10 + a11 >>> 2] = c10[a11 >>> 2];
-          return this.sigBytes += e10, this;
-        }
-        clamp() {
-          let { words: a10, sigBytes: b10 } = this;
-          a10[b10 >>> 2] &= 4294967295 << 32 - b10 % 4 * 8, a10.length = Math.ceil(b10 / 4);
-        }
-        clone() {
-          let a10 = super.clone.call(this);
-          return a10.words = this.words.slice(0), a10;
-        }
-      };
-      ((a10, b10, c10) => ((a11, b11, c11) => b11 in a11 ? f3(a11, b11, { enumerable: true, configurable: true, writable: true, value: c11 }) : a11[b11] = c11)(a10, "symbol" != typeof b10 ? b10 + "" : b10, c10))(f6, "random", f2);
-      var f7 = { stringify(a10) {
-        let { words: b10, sigBytes: c10 } = a10, d10 = [];
-        for (let a11 = 0; a11 < c10; a11 += 1) {
-          let c11 = b10[a11 >>> 2] >>> 24 - a11 % 4 * 8 & 255;
-          d10.push((c11 >>> 4).toString(16)), d10.push((15 & c11).toString(16));
-        }
-        return d10.join("");
-      }, parse(a10) {
-        let b10 = a10.length, c10 = [];
-        for (let d10 = 0; d10 < b10; d10 += 2) c10[d10 >>> 3] |= parseInt(a10.substr(d10, 2), 16) << 24 - d10 % 8 * 4;
-        return new f6(c10, b10 / 2);
-      } }, f8 = { stringify(a10) {
-        let { words: b10, sigBytes: c10 } = a10, d10 = [];
-        for (let a11 = 0; a11 < c10; a11 += 1) {
-          let c11 = b10[a11 >>> 2] >>> 24 - a11 % 4 * 8 & 255;
-          d10.push(String.fromCharCode(c11));
-        }
-        return d10.join("");
-      }, parse(a10) {
-        let b10 = a10.length, c10 = [];
-        for (let d10 = 0; d10 < b10; d10 += 1) c10[d10 >>> 2] |= (255 & a10.charCodeAt(d10)) << 24 - d10 % 4 * 8;
-        return new f6(c10, b10);
-      } }, f9 = { stringify(a10) {
-        try {
-          return decodeURIComponent(escape(f8.stringify(a10)));
-        } catch {
-          throw Error("Malformed UTF-8 data");
-        }
-      }, parse: (a10) => f8.parse(unescape(encodeURIComponent(a10))) }, ga = class extends f5 {
-        constructor() {
-          super(), this._minBufferSize = 0;
-        }
-        reset() {
-          this._data = new f6(), this._nDataBytes = 0;
-        }
-        _append(a10) {
-          let b10 = a10;
-          "string" == typeof b10 && (b10 = f9.parse(b10)), this._data.concat(b10), this._nDataBytes += b10.sigBytes;
-        }
-        _process(a10) {
-          let b10, { _data: c10, blockSize: d10 } = this, e10 = c10.words, f10 = c10.sigBytes, g10 = f10 / (4 * d10), h2 = (g10 = a10 ? Math.ceil(g10) : Math.max((0 | g10) - this._minBufferSize, 0)) * d10, i2 = Math.min(4 * h2, f10);
-          if (h2) {
-            for (let a11 = 0; a11 < h2; a11 += d10) this._doProcessBlock(e10, a11);
-            b10 = e10.splice(0, h2), c10.sigBytes -= i2;
-          }
-          return new f6(b10, i2);
-        }
-        clone() {
-          let a10 = super.clone.call(this);
-          return a10._data = this._data.clone(), a10;
-        }
-      }, gb = class extends ga {
-        constructor(a10) {
-          super(), this.blockSize = 16, this.cfg = Object.assign(new f5(), a10), this.reset();
-        }
-        static _createHelper(a10) {
-          return (b10, c10) => new a10(c10).finalize(b10);
-        }
-        static _createHmacHelper(a10) {
-          return (b10, c10) => new gc(a10, c10).finalize(b10);
-        }
-        reset() {
-          super.reset.call(this), this._doReset();
-        }
-        update(a10) {
-          return this._append(a10), this._process(), this;
-        }
-        finalize(a10) {
-          return a10 && this._append(a10), this._doFinalize();
-        }
-      }, gc = class extends f5 {
-        constructor(a10, b10) {
-          super();
-          let c10 = new a10();
-          this._hasher = c10;
-          let d10 = b10;
-          "string" == typeof d10 && (d10 = f9.parse(d10));
-          let e10 = c10.blockSize, f10 = 4 * e10;
-          d10.sigBytes > f10 && (d10 = c10.finalize(b10)), d10.clamp();
-          let g10 = d10.clone();
-          this._oKey = g10;
-          let h2 = d10.clone();
-          this._iKey = h2;
-          let i2 = g10.words, j2 = h2.words;
-          for (let a11 = 0; a11 < e10; a11 += 1) i2[a11] ^= 1549556828, j2[a11] ^= 909522486;
-          g10.sigBytes = f10, h2.sigBytes = f10, this.reset();
-        }
-        reset() {
-          let a10 = this._hasher;
-          a10.reset(), a10.update(this._iKey);
-        }
-        update(a10) {
-          return this._hasher.update(a10), this;
-        }
-        finalize(a10) {
-          let b10 = this._hasher, c10 = b10.finalize(a10);
-          return b10.reset(), b10.finalize(this._oKey.clone().concat(c10));
-        }
-      }, gd = { stringify(a10) {
-        let { words: b10, sigBytes: c10 } = a10, d10 = this._map;
-        a10.clamp();
-        let e10 = [];
-        for (let a11 = 0; a11 < c10; a11 += 3) {
-          let f11 = (b10[a11 >>> 2] >>> 24 - a11 % 4 * 8 & 255) << 16 | (b10[a11 + 1 >>> 2] >>> 24 - (a11 + 1) % 4 * 8 & 255) << 8 | b10[a11 + 2 >>> 2] >>> 24 - (a11 + 2) % 4 * 8 & 255;
-          for (let b11 = 0; b11 < 4 && a11 + 0.75 * b11 < c10; b11 += 1) e10.push(d10.charAt(f11 >>> 6 * (3 - b11) & 63));
-        }
-        let f10 = d10.charAt(64);
-        if (f10) for (; e10.length % 4; ) e10.push(f10);
-        return e10.join("");
-      }, parse(a10) {
-        let b10 = a10.length, c10 = this._map, d10 = this._reverseMap;
-        if (!d10) {
-          this._reverseMap = [], d10 = this._reverseMap;
-          for (let a11 = 0; a11 < c10.length; a11 += 1) d10[c10.charCodeAt(a11)] = a11;
-        }
-        let e10 = c10.charAt(64);
-        if (e10) {
-          let c11 = a10.indexOf(e10);
-          -1 !== c11 && (b10 = c11);
-        }
-        var f10 = b10, g10 = d10;
-        let h2 = [], i2 = 0;
-        for (let b11 = 0; b11 < f10; b11 += 1) if (b11 % 4) {
-          let c11 = g10[a10.charCodeAt(b11 - 1)] << b11 % 4 * 2 | g10[a10.charCodeAt(b11)] >>> 6 - b11 % 4 * 2;
-          h2[i2 >>> 2] |= c11 << 24 - i2 % 4 * 8, i2 += 1;
-        }
-        return f6.create(h2, i2);
-      }, _map: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=" }, ge = [];
-      for (let a10 = 0; a10 < 64; a10 += 1) ge[a10] = 4294967296 * Math.abs(Math.sin(a10 + 1)) | 0;
-      var gf = (a10, b10, c10, d10, e10, f10, g10) => {
-        let h2 = a10 + (b10 & c10 | ~b10 & d10) + e10 + g10;
-        return (h2 << f10 | h2 >>> 32 - f10) + b10;
-      }, gg = (a10, b10, c10, d10, e10, f10, g10) => {
-        let h2 = a10 + (b10 & d10 | c10 & ~d10) + e10 + g10;
-        return (h2 << f10 | h2 >>> 32 - f10) + b10;
-      }, gh = (a10, b10, c10, d10, e10, f10, g10) => {
-        let h2 = a10 + (b10 ^ c10 ^ d10) + e10 + g10;
-        return (h2 << f10 | h2 >>> 32 - f10) + b10;
-      }, gi = (a10, b10, c10, d10, e10, f10, g10) => {
-        let h2 = a10 + (c10 ^ (b10 | ~d10)) + e10 + g10;
-        return (h2 << f10 | h2 >>> 32 - f10) + b10;
-      }, gj = class extends gb {
-        _doReset() {
-          this._hash = new f6([1732584193, 4023233417, 2562383102, 271733878]);
-        }
-        _doProcessBlock(a10, b10) {
-          for (let c11 = 0; c11 < 16; c11 += 1) {
-            let d11 = b10 + c11, e11 = a10[d11];
-            a10[d11] = (e11 << 8 | e11 >>> 24) & 16711935 | (e11 << 24 | e11 >>> 8) & 4278255360;
-          }
-          let c10 = this._hash.words, d10 = a10[b10 + 0], e10 = a10[b10 + 1], f10 = a10[b10 + 2], g10 = a10[b10 + 3], h2 = a10[b10 + 4], i2 = a10[b10 + 5], j2 = a10[b10 + 6], k2 = a10[b10 + 7], l2 = a10[b10 + 8], m2 = a10[b10 + 9], n2 = a10[b10 + 10], o2 = a10[b10 + 11], p2 = a10[b10 + 12], q2 = a10[b10 + 13], r2 = a10[b10 + 14], s2 = a10[b10 + 15], t2 = c10[0], u2 = c10[1], v2 = c10[2], w2 = c10[3];
-          t2 = gf(t2, u2, v2, w2, d10, 7, ge[0]), w2 = gf(w2, t2, u2, v2, e10, 12, ge[1]), v2 = gf(v2, w2, t2, u2, f10, 17, ge[2]), u2 = gf(u2, v2, w2, t2, g10, 22, ge[3]), t2 = gf(t2, u2, v2, w2, h2, 7, ge[4]), w2 = gf(w2, t2, u2, v2, i2, 12, ge[5]), v2 = gf(v2, w2, t2, u2, j2, 17, ge[6]), u2 = gf(u2, v2, w2, t2, k2, 22, ge[7]), t2 = gf(t2, u2, v2, w2, l2, 7, ge[8]), w2 = gf(w2, t2, u2, v2, m2, 12, ge[9]), v2 = gf(v2, w2, t2, u2, n2, 17, ge[10]), u2 = gf(u2, v2, w2, t2, o2, 22, ge[11]), t2 = gf(t2, u2, v2, w2, p2, 7, ge[12]), w2 = gf(w2, t2, u2, v2, q2, 12, ge[13]), v2 = gf(v2, w2, t2, u2, r2, 17, ge[14]), u2 = gf(u2, v2, w2, t2, s2, 22, ge[15]), t2 = gg(t2, u2, v2, w2, e10, 5, ge[16]), w2 = gg(w2, t2, u2, v2, j2, 9, ge[17]), v2 = gg(v2, w2, t2, u2, o2, 14, ge[18]), u2 = gg(u2, v2, w2, t2, d10, 20, ge[19]), t2 = gg(t2, u2, v2, w2, i2, 5, ge[20]), w2 = gg(w2, t2, u2, v2, n2, 9, ge[21]), v2 = gg(v2, w2, t2, u2, s2, 14, ge[22]), u2 = gg(u2, v2, w2, t2, h2, 20, ge[23]), t2 = gg(t2, u2, v2, w2, m2, 5, ge[24]), w2 = gg(w2, t2, u2, v2, r2, 9, ge[25]), v2 = gg(v2, w2, t2, u2, g10, 14, ge[26]), u2 = gg(u2, v2, w2, t2, l2, 20, ge[27]), t2 = gg(t2, u2, v2, w2, q2, 5, ge[28]), w2 = gg(w2, t2, u2, v2, f10, 9, ge[29]), v2 = gg(v2, w2, t2, u2, k2, 14, ge[30]), u2 = gg(u2, v2, w2, t2, p2, 20, ge[31]), t2 = gh(t2, u2, v2, w2, i2, 4, ge[32]), w2 = gh(w2, t2, u2, v2, l2, 11, ge[33]), v2 = gh(v2, w2, t2, u2, o2, 16, ge[34]), u2 = gh(u2, v2, w2, t2, r2, 23, ge[35]), t2 = gh(t2, u2, v2, w2, e10, 4, ge[36]), w2 = gh(w2, t2, u2, v2, h2, 11, ge[37]), v2 = gh(v2, w2, t2, u2, k2, 16, ge[38]), u2 = gh(u2, v2, w2, t2, n2, 23, ge[39]), t2 = gh(t2, u2, v2, w2, q2, 4, ge[40]), w2 = gh(w2, t2, u2, v2, d10, 11, ge[41]), v2 = gh(v2, w2, t2, u2, g10, 16, ge[42]), u2 = gh(u2, v2, w2, t2, j2, 23, ge[43]), t2 = gh(t2, u2, v2, w2, m2, 4, ge[44]), w2 = gh(w2, t2, u2, v2, p2, 11, ge[45]), v2 = gh(v2, w2, t2, u2, s2, 16, ge[46]), u2 = gh(u2, v2, w2, t2, f10, 23, ge[47]), t2 = gi(t2, u2, v2, w2, d10, 6, ge[48]), w2 = gi(w2, t2, u2, v2, k2, 10, ge[49]), v2 = gi(v2, w2, t2, u2, r2, 15, ge[50]), u2 = gi(u2, v2, w2, t2, i2, 21, ge[51]), t2 = gi(t2, u2, v2, w2, p2, 6, ge[52]), w2 = gi(w2, t2, u2, v2, g10, 10, ge[53]), v2 = gi(v2, w2, t2, u2, n2, 15, ge[54]), u2 = gi(u2, v2, w2, t2, e10, 21, ge[55]), t2 = gi(t2, u2, v2, w2, l2, 6, ge[56]), w2 = gi(w2, t2, u2, v2, s2, 10, ge[57]), v2 = gi(v2, w2, t2, u2, j2, 15, ge[58]), u2 = gi(u2, v2, w2, t2, q2, 21, ge[59]), t2 = gi(t2, u2, v2, w2, h2, 6, ge[60]), w2 = gi(w2, t2, u2, v2, o2, 10, ge[61]), v2 = gi(v2, w2, t2, u2, f10, 15, ge[62]), u2 = gi(u2, v2, w2, t2, m2, 21, ge[63]), c10[0] = c10[0] + t2 | 0, c10[1] = c10[1] + u2 | 0, c10[2] = c10[2] + v2 | 0, c10[3] = c10[3] + w2 | 0;
-        }
-        _doFinalize() {
-          let a10 = this._data, b10 = a10.words, c10 = 8 * this._nDataBytes, d10 = 8 * a10.sigBytes;
-          b10[d10 >>> 5] |= 128 << 24 - d10 % 32;
-          let e10 = Math.floor(c10 / 4294967296);
-          b10[(d10 + 64 >>> 9 << 4) + 15] = (e10 << 8 | e10 >>> 24) & 16711935 | (e10 << 24 | e10 >>> 8) & 4278255360, b10[(d10 + 64 >>> 9 << 4) + 14] = (c10 << 8 | c10 >>> 24) & 16711935 | (c10 << 24 | c10 >>> 8) & 4278255360, a10.sigBytes = (b10.length + 1) * 4, this._process();
-          let f10 = this._hash, g10 = f10.words;
-          for (let a11 = 0; a11 < 4; a11 += 1) {
-            let b11 = g10[a11];
-            g10[a11] = (b11 << 8 | b11 >>> 24) & 16711935 | (b11 << 24 | b11 >>> 8) & 4278255360;
-          }
-          return f10;
-        }
-        clone() {
-          let a10 = super.clone.call(this);
-          return a10._hash = this._hash.clone(), a10;
-        }
-      };
-      gb._createHelper(gj), gb._createHmacHelper(gj);
-      var gk = class extends f5 {
-        constructor(a10) {
-          super(), this.cfg = Object.assign(new f5(), { keySize: 4, hasher: gj, iterations: 1 }, a10);
-        }
-        compute(a10, b10) {
-          let c10, { cfg: d10 } = this, e10 = d10.hasher.create(), f10 = f6.create(), g10 = f10.words, { keySize: h2, iterations: i2 } = d10;
-          for (; g10.length < h2; ) {
-            c10 && e10.update(c10), c10 = e10.update(a10).finalize(b10), e10.reset();
-            for (let a11 = 1; a11 < i2; a11 += 1) c10 = e10.finalize(c10), e10.reset();
-            f10.concat(c10);
-          }
-          return f10.sigBytes = 4 * h2, f10;
-        }
-      }, gl = class extends ga {
-        constructor(a10, b10, c10) {
-          super(), this.cfg = Object.assign(new f5(), c10), this._xformMode = a10, this._key = b10, this.reset();
-        }
-        static createEncryptor(a10, b10) {
-          return this.create(this._ENC_XFORM_MODE, a10, b10);
-        }
-        static createDecryptor(a10, b10) {
-          return this.create(this._DEC_XFORM_MODE, a10, b10);
-        }
-        static _createHelper(a10) {
-          let b10 = (a11) => "string" == typeof a11 ? gt : gs;
-          return { encrypt: (c10, d10, e10) => b10(d10).encrypt(a10, c10, d10, e10), decrypt: (c10, d10, e10) => b10(d10).decrypt(a10, c10, d10, e10) };
-        }
-        reset() {
-          super.reset.call(this), this._doReset();
-        }
-        process(a10) {
-          return this._append(a10), this._process();
-        }
-        finalize(a10) {
-          return a10 && this._append(a10), this._doFinalize();
-        }
-      };
-      gl._ENC_XFORM_MODE = 1, gl._DEC_XFORM_MODE = 2, gl.keySize = 4, gl.ivSize = 4;
-      var gm = class extends f5 {
-        constructor(a10, b10) {
-          super(), this._cipher = a10, this._iv = b10;
-        }
-        static createEncryptor(a10, b10) {
-          return this.Encryptor.create(a10, b10);
-        }
-        static createDecryptor(a10, b10) {
-          return this.Decryptor.create(a10, b10);
-        }
-      };
-      function gn(a10, b10, c10) {
-        let d10, e10 = this._iv;
-        e10 ? (d10 = e10, this._iv = void 0) : d10 = this._prevBlock;
-        for (let e11 = 0; e11 < c10; e11 += 1) a10[b10 + e11] ^= d10[e11];
-      }
-      var go = class extends gm {
-      };
-      go.Encryptor = class extends go {
-        processBlock(a10, b10) {
-          let c10 = this._cipher, { blockSize: d10 } = c10;
-          gn.call(this, a10, b10, d10), c10.encryptBlock(a10, b10), this._prevBlock = a10.slice(b10, b10 + d10);
-        }
-      }, go.Decryptor = class extends go {
-        processBlock(a10, b10) {
-          let c10 = this._cipher, { blockSize: d10 } = c10, e10 = a10.slice(b10, b10 + d10);
-          c10.decryptBlock(a10, b10), gn.call(this, a10, b10, d10), this._prevBlock = e10;
-        }
-      };
-      var gp = { pad(a10, b10) {
-        let c10 = 4 * b10, d10 = c10 - a10.sigBytes % c10, e10 = d10 << 24 | d10 << 16 | d10 << 8 | d10, f10 = [];
-        for (let a11 = 0; a11 < d10; a11 += 4) f10.push(e10);
-        let g10 = f6.create(f10, d10);
-        a10.concat(g10);
-      }, unpad(a10) {
-        let b10 = 255 & a10.words[a10.sigBytes - 1 >>> 2];
-        a10.sigBytes -= b10;
-      } }, gq = class extends gl {
-        constructor(a10, b10, c10) {
-          super(a10, b10, Object.assign({ mode: go, padding: gp }, c10)), this.blockSize = 4;
-        }
-        reset() {
-          let a10;
-          super.reset.call(this);
-          let { cfg: b10 } = this, { iv: c10, mode: d10 } = b10;
-          this._xformMode === this.constructor._ENC_XFORM_MODE ? a10 = d10.createEncryptor : (a10 = d10.createDecryptor, this._minBufferSize = 1), this._mode = a10.call(d10, this, c10 && c10.words), this._mode.__creator = a10;
-        }
-        _doProcessBlock(a10, b10) {
-          this._mode.processBlock(a10, b10);
-        }
-        _doFinalize() {
-          let a10, { padding: b10 } = this.cfg;
-          return this._xformMode === this.constructor._ENC_XFORM_MODE ? (b10.pad(this._data, this.blockSize), a10 = this._process(true)) : (a10 = this._process(true), b10.unpad(a10)), a10;
-        }
-      }, gr = class extends f5 {
-        constructor(a10) {
-          super(), this.mixIn(a10);
-        }
-        toString(a10) {
-          return (a10 || this.formatter).stringify(this);
-        }
-      }, gs = class extends f5 {
-        static encrypt(a10, b10, c10, d10) {
-          let e10 = Object.assign(new f5(), this.cfg, d10), f10 = a10.createEncryptor(c10, e10), g10 = f10.finalize(b10), h2 = f10.cfg;
-          return gr.create({ ciphertext: g10, key: c10, iv: h2.iv, algorithm: a10, mode: h2.mode, padding: h2.padding, blockSize: f10.blockSize, formatter: e10.format });
-        }
-        static decrypt(a10, b10, c10, d10) {
-          let e10 = b10, f10 = Object.assign(new f5(), this.cfg, d10);
-          return e10 = this._parse(e10, f10.format), a10.createDecryptor(c10, f10).finalize(e10.ciphertext);
-        }
-        static _parse(a10, b10) {
-          return "string" == typeof a10 ? b10.parse(a10, this) : a10;
-        }
-      };
-      gs.cfg = Object.assign(new f5(), { format: { stringify(a10) {
-        let { ciphertext: b10, salt: c10 } = a10;
-        return (c10 ? f6.create([1398893684, 1701076831]).concat(c10).concat(b10) : b10).toString(gd);
-      }, parse(a10) {
-        let b10, c10 = gd.parse(a10), d10 = c10.words;
-        return 1398893684 === d10[0] && 1701076831 === d10[1] && (b10 = f6.create(d10.slice(2, 4)), d10.splice(0, 4), c10.sigBytes -= 16), gr.create({ ciphertext: c10, salt: b10 });
-      } } });
-      var gt = class extends gs {
-        static encrypt(a10, b10, c10, d10) {
-          let e10 = Object.assign(new f5(), this.cfg, d10), f10 = e10.kdf.execute(c10, a10.keySize, a10.ivSize, e10.salt, e10.hasher);
-          e10.iv = f10.iv;
-          let g10 = gs.encrypt.call(this, a10, b10, f10.key, e10);
-          return g10.mixIn(f10), g10;
-        }
-        static decrypt(a10, b10, c10, d10) {
-          let e10 = b10, f10 = Object.assign(new f5(), this.cfg, d10);
-          e10 = this._parse(e10, f10.format);
-          let g10 = f10.kdf.execute(c10, a10.keySize, a10.ivSize, e10.salt, f10.hasher);
-          return f10.iv = g10.iv, gs.decrypt.call(this, a10, e10, g10.key, f10);
-        }
-      };
-      gt.cfg = Object.assign(gs.cfg, { kdf: { execute(a10, b10, c10, d10, e10) {
-        let f10, g10 = d10;
-        g10 || (g10 = f6.random(8)), f10 = e10 ? gk.create({ keySize: b10 + c10, hasher: e10 }).compute(a10, g10) : gk.create({ keySize: b10 + c10 }).compute(a10, g10);
-        let h2 = f6.create(f10.words.slice(b10), 4 * c10);
-        return f10.sigBytes = 4 * b10, gr.create({ key: f10, iv: h2, salt: g10 });
-      } } });
-      var gu = [], gv = [], gw = [], gx = [], gy = [], gz = [], gA = [], gB = [], gC = [], gD = [], gE = [];
-      for (let a10 = 0; a10 < 256; a10 += 1) a10 < 128 ? gE[a10] = a10 << 1 : gE[a10] = a10 << 1 ^ 283;
-      var gF = 0, gG = 0;
-      for (let a10 = 0; a10 < 256; a10 += 1) {
-        let a11 = gG ^ gG << 1 ^ gG << 2 ^ gG << 3 ^ gG << 4;
-        a11 = a11 >>> 8 ^ 255 & a11 ^ 99, gu[gF] = a11, gv[a11] = gF;
-        let b10 = gE[gF], c10 = gE[b10], d10 = gE[c10], e10 = 257 * gE[a11] ^ 16843008 * a11;
-        gw[gF] = e10 << 24 | e10 >>> 8, gx[gF] = e10 << 16 | e10 >>> 16, gy[gF] = e10 << 8 | e10 >>> 24, gz[gF] = e10, e10 = 16843009 * d10 ^ 65537 * c10 ^ 257 * b10 ^ 16843008 * gF, gA[a11] = e10 << 24 | e10 >>> 8, gB[a11] = e10 << 16 | e10 >>> 16, gC[a11] = e10 << 8 | e10 >>> 24, gD[a11] = e10, gF ? (gF = b10 ^ gE[gE[gE[d10 ^ b10]]], gG ^= gE[gE[gG]]) : gF = gG = 1;
-      }
-      var gH = [0, 1, 2, 4, 8, 16, 32, 64, 128, 27, 54], gI = class extends gq {
-        _doReset() {
-          let a10;
-          if (this._nRounds && this._keyPriorReset === this._key) return;
-          this._keyPriorReset = this._key;
-          let b10 = this._keyPriorReset, c10 = b10.words, d10 = b10.sigBytes / 4;
-          this._nRounds = d10 + 6;
-          let e10 = (this._nRounds + 1) * 4;
-          this._keySchedule = [];
-          let f10 = this._keySchedule;
-          for (let b11 = 0; b11 < e10; b11 += 1) b11 < d10 ? f10[b11] = c10[b11] : (a10 = f10[b11 - 1], b11 % d10 ? d10 > 6 && b11 % d10 == 4 && (a10 = gu[a10 >>> 24] << 24 | gu[a10 >>> 16 & 255] << 16 | gu[a10 >>> 8 & 255] << 8 | gu[255 & a10]) : a10 = (gu[(a10 = a10 << 8 | a10 >>> 24) >>> 24] << 24 | gu[a10 >>> 16 & 255] << 16 | gu[a10 >>> 8 & 255] << 8 | gu[255 & a10]) ^ gH[b11 / d10 | 0] << 24, f10[b11] = f10[b11 - d10] ^ a10);
-          this._invKeySchedule = [];
-          let g10 = this._invKeySchedule;
-          for (let b11 = 0; b11 < e10; b11 += 1) {
-            let c11 = e10 - b11;
-            a10 = b11 % 4 ? f10[c11] : f10[c11 - 4], b11 < 4 || c11 <= 4 ? g10[b11] = a10 : g10[b11] = gA[gu[a10 >>> 24]] ^ gB[gu[a10 >>> 16 & 255]] ^ gC[gu[a10 >>> 8 & 255]] ^ gD[gu[255 & a10]];
-          }
-        }
-        encryptBlock(a10, b10) {
-          this._doCryptBlock(a10, b10, this._keySchedule, gw, gx, gy, gz, gu);
-        }
-        decryptBlock(a10, b10) {
-          let c10 = a10[b10 + 1];
-          a10[b10 + 1] = a10[b10 + 3], a10[b10 + 3] = c10, this._doCryptBlock(a10, b10, this._invKeySchedule, gA, gB, gC, gD, gv), c10 = a10[b10 + 1], a10[b10 + 1] = a10[b10 + 3], a10[b10 + 3] = c10;
-        }
-        _doCryptBlock(a10, b10, c10, d10, e10, f10, g10, h2) {
-          let i2 = this._nRounds, j2 = a10[b10] ^ c10[0], k2 = a10[b10 + 1] ^ c10[1], l2 = a10[b10 + 2] ^ c10[2], m2 = a10[b10 + 3] ^ c10[3], n2 = 4;
-          for (let a11 = 1; a11 < i2; a11 += 1) {
-            let a12 = d10[j2 >>> 24] ^ e10[k2 >>> 16 & 255] ^ f10[l2 >>> 8 & 255] ^ g10[255 & m2] ^ c10[n2];
-            n2 += 1;
-            let b11 = d10[k2 >>> 24] ^ e10[l2 >>> 16 & 255] ^ f10[m2 >>> 8 & 255] ^ g10[255 & j2] ^ c10[n2];
-            n2 += 1;
-            let h3 = d10[l2 >>> 24] ^ e10[m2 >>> 16 & 255] ^ f10[j2 >>> 8 & 255] ^ g10[255 & k2] ^ c10[n2];
-            n2 += 1;
-            let i3 = d10[m2 >>> 24] ^ e10[j2 >>> 16 & 255] ^ f10[k2 >>> 8 & 255] ^ g10[255 & l2] ^ c10[n2];
-            n2 += 1, j2 = a12, k2 = b11, l2 = h3, m2 = i3;
-          }
-          let o2 = (h2[j2 >>> 24] << 24 | h2[k2 >>> 16 & 255] << 16 | h2[l2 >>> 8 & 255] << 8 | h2[255 & m2]) ^ c10[n2];
-          n2 += 1;
-          let p2 = (h2[k2 >>> 24] << 24 | h2[l2 >>> 16 & 255] << 16 | h2[m2 >>> 8 & 255] << 8 | h2[255 & j2]) ^ c10[n2];
-          n2 += 1;
-          let q2 = (h2[l2 >>> 24] << 24 | h2[m2 >>> 16 & 255] << 16 | h2[j2 >>> 8 & 255] << 8 | h2[255 & k2]) ^ c10[n2];
-          n2 += 1;
-          let r2 = (h2[m2 >>> 24] << 24 | h2[j2 >>> 16 & 255] << 16 | h2[k2 >>> 8 & 255] << 8 | h2[255 & l2]) ^ c10[n2];
-          n2 += 1, a10[b10] = o2, a10[b10 + 1] = p2, a10[b10 + 2] = q2, a10[b10 + 3] = r2;
-        }
-      };
-      gI.keySize = 8;
-      var gJ = gq._createHelper(gI), gK = [], gL = class extends gb {
-        _doReset() {
-          this._hash = new f6([1732584193, 4023233417, 2562383102, 271733878, 3285377520]);
-        }
-        _doProcessBlock(a10, b10) {
-          let c10 = this._hash.words, d10 = c10[0], e10 = c10[1], f10 = c10[2], g10 = c10[3], h2 = c10[4];
-          for (let c11 = 0; c11 < 80; c11 += 1) {
-            if (c11 < 16) gK[c11] = 0 | a10[b10 + c11];
-            else {
-              let a11 = gK[c11 - 3] ^ gK[c11 - 8] ^ gK[c11 - 14] ^ gK[c11 - 16];
-              gK[c11] = a11 << 1 | a11 >>> 31;
-            }
-            let i2 = (d10 << 5 | d10 >>> 27) + h2 + gK[c11];
-            c11 < 20 ? i2 += (e10 & f10 | ~e10 & g10) + 1518500249 : c11 < 40 ? i2 += (e10 ^ f10 ^ g10) + 1859775393 : c11 < 60 ? i2 += (e10 & f10 | e10 & g10 | f10 & g10) - 1894007588 : i2 += (e10 ^ f10 ^ g10) - 899497514, h2 = g10, g10 = f10, f10 = e10 << 30 | e10 >>> 2, e10 = d10, d10 = i2;
-          }
-          c10[0] = c10[0] + d10 | 0, c10[1] = c10[1] + e10 | 0, c10[2] = c10[2] + f10 | 0, c10[3] = c10[3] + g10 | 0, c10[4] = c10[4] + h2 | 0;
-        }
-        _doFinalize() {
-          let a10 = this._data, b10 = a10.words, c10 = 8 * this._nDataBytes, d10 = 8 * a10.sigBytes;
-          return b10[d10 >>> 5] |= 128 << 24 - d10 % 32, b10[(d10 + 64 >>> 9 << 4) + 14] = Math.floor(c10 / 4294967296), b10[(d10 + 64 >>> 9 << 4) + 15] = c10, a10.sigBytes = 4 * b10.length, this._process(), this._hash;
-        }
-        clone() {
-          let a10 = super.clone.call(this);
-          return a10._hash = this._hash.clone(), a10;
-        }
-      }, gM = (gb._createHelper(gL), gb._createHmacHelper(gL));
-      let gN = `
-Missing domain and proxyUrl. A satellite application needs to specify a domain or a proxyUrl.
-
-1) With middleware
-   e.g. export default clerkMiddleware({domain:'YOUR_DOMAIN',isSatellite:true});
-2) With environment variables e.g.
-   NEXT_PUBLIC_CLERK_DOMAIN='YOUR_DOMAIN'
-   NEXT_PUBLIC_CLERK_IS_SATELLITE='true'
-   `, gO = `
-Invalid signInUrl. A satellite application requires a signInUrl for development instances.
-Check if signInUrl is missing from your configuration or if it is not an absolute URL
-
-1) With middleware
-   e.g. export default clerkMiddleware({signInUrl:'SOME_URL', isSatellite:true});
-2) With environment variables e.g.
-   NEXT_PUBLIC_CLERK_SIGN_IN_URL='SOME_URL'
-   NEXT_PUBLIC_CLERK_IS_SATELLITE='true'`, gP = `Clerk: Unable to decrypt request data.
-
-Refresh the page if your .env file was just updated. If the issue persists, ensure the encryption key is valid and properly set.
-
-For more information, see: https://clerk.com/docs/reference/nextjs/clerk-middleware#dynamic-keys. (code=encryption_key_invalid)`, gQ = bw({ packageName: "@clerk/nextjs" }), gR = "x-middleware-override-headers", gS = "x-middleware-request", gT = (a10, b10, c10) => {
-        a10.headers.get(gR) || (a10.headers.set(gR, [...b10.headers.keys()]), b10.headers.forEach((b11, c11) => {
-          a10.headers.set(`${gS}-${c11}`, b11);
-        })), Object.entries(c10).forEach(([b11, c11]) => {
-          a10.headers.set(gR, `${a10.headers.get(gR)},${b11}`), a10.headers.set(`${gS}-${b11}`, c11);
-        });
-      }, gU = (a10) => R.redirect(a10, { headers: { [b6.Headers.ClerkRedirectTo]: "true" } }), gV = "clerk_keyless_dummy_key";
-      function gW() {
-        if (a7()) throw Error("Clerk: Unable to decrypt request data, this usually means the encryption key is invalid. Ensure the encryption key is properly set. For more information, see: https://clerk.com/docs/reference/nextjs/clerk-middleware#dynamic-keys. (code=encryption_key_invalid)");
-        throw Error(gP);
-      }
-      function gX(a10, b10) {
-        return JSON.parse(gJ.decrypt(a10, b10).toString(f9));
-      }
-      let gY = async () => {
-        var a10, b10;
-        let c10;
-        try {
-          let a11 = await fE(), b11 = fN(a11, b6.Headers.ClerkRequestData);
-          c10 = function(a12) {
-            if (!a12) return {};
-            let b12 = a7() ? fs || fp : fs || fp || gV;
-            try {
-              return gX(a12, b12);
-            } catch {
-              if (fC) try {
-                return gX(a12, gV);
-              } catch {
-                gW();
-              }
-              gW();
-            }
-          }(b11);
-        } catch (a11) {
-          if (a11 && fD(a11)) throw a11;
-        }
-        let d10 = null != (b10 = null == (a10 = fQ.getStore()) ? void 0 : a10.get("requestData")) ? b10 : c10;
-        return (null == d10 ? void 0 : d10.secretKey) || (null == d10 ? void 0 : d10.publishableKey) ? fM(d10) : fM({});
-      };
-      class gZ {
-        static createDefaultDirectives() {
-          return Object.entries(this.DEFAULT_DIRECTIVES).reduce((a10, [b10, c10]) => (a10[b10] = new Set(c10), a10), {});
-        }
-        static isKeyword(a10) {
-          return this.KEYWORDS.has(a10.replace(/^'|'$/g, ""));
-        }
-        static formatValue(a10) {
-          let b10 = a10.replace(/^'|'$/g, "");
-          return this.isKeyword(b10) ? `'${b10}'` : a10;
-        }
-        static handleDirectiveValues(a10) {
-          let b10 = /* @__PURE__ */ new Set();
-          return a10.includes("'none'") || a10.includes("none") ? b10.add("'none'") : a10.forEach((a11) => b10.add(this.formatValue(a11))), b10;
-        }
-      }
-      gZ.KEYWORDS = /* @__PURE__ */ new Set(["none", "self", "strict-dynamic", "unsafe-eval", "unsafe-hashes", "unsafe-inline"]), gZ.DEFAULT_DIRECTIVES = { "connect-src": ["self", "https://clerk-telemetry.com", "https://*.clerk-telemetry.com", "https://api.stripe.com", "https://maps.googleapis.com"], "default-src": ["self"], "form-action": ["self"], "frame-src": ["self", "https://challenges.cloudflare.com", "https://*.js.stripe.com", "https://js.stripe.com", "https://hooks.stripe.com"], "img-src": ["self", "https://img.clerk.com"], "script-src": ["self", "unsafe-inline", "https:", "http:", "https://*.js.stripe.com", "https://js.stripe.com", "https://maps.googleapis.com"], "style-src": ["self", "unsafe-inline"], "worker-src": ["self", "blob:"] };
-      let g$ = "__clerk_keys_";
-      async function g_(a10) {
-        let b10 = new TextEncoder().encode(a10);
-        return Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", b10))).map((a11) => a11.toString(16).padStart(2, "0")).join("").slice(0, 16);
-      }
-      async function g0() {
-        let a10 = process.env.PWD;
-        if (!a10) return `${g$}0`;
-        let b10 = a10.split("/").filter(Boolean).slice(-3).reverse().join("/"), c10 = await g_(b10);
-        return `${g$}${c10}`;
-      }
-      async function g1(a10) {
-        let b10;
-        if (!fC) return;
-        let c10 = await g0();
-        try {
-          c10 && (b10 = JSON.parse(a10(c10) || "{}"));
-        } catch {
-          b10 = void 0;
-        }
-        return b10;
-      }
-      let g2 = { REDIRECT_TO_URL: "CLERK_PROTECT_REDIRECT_TO_URL", REDIRECT_TO_SIGN_IN: "CLERK_PROTECT_REDIRECT_TO_SIGN_IN", REDIRECT_TO_SIGN_UP: "CLERK_PROTECT_REDIRECT_TO_SIGN_UP" }, g3 = { NOT_FOUND: 404, FORBIDDEN: 403, UNAUTHORIZED: 401 }, g4 = new Set(Object.values(g3)), g5 = "NEXT_HTTP_ERROR_FALLBACK";
-      function g6(a10) {
-        if (!function(a11) {
-          if ("object" != typeof a11 || null === a11 || !("digest" in a11) || "string" != typeof a11.digest) return false;
-          let [b11, c10] = a11.digest.split(";");
-          return b11 === g5 && g4.has(Number(c10));
-        }(a10)) return;
-        let [, b10] = a10.digest.split(";");
-        return Number(b10);
-      }
-      let g7 = "NEXT_REDIRECT";
-      function g8(a10, b10, c10 = "replace", d10 = 307) {
-        let e10 = Error(g7);
-        throw e10.digest = `${g7};${c10};${a10};${d10};`, e10.clerk_digest = g2.REDIRECT_TO_URL, Object.assign(e10, b10), e10;
-      }
-      function g9(a10, b10) {
-        return null === b10 ? "" : b10 || a10;
-      }
-      function ha(a10) {
-        if ("object" != typeof a10 || null === a10 || !("digest" in a10) || "string" != typeof a10.digest) return false;
-        let b10 = a10.digest.split(";"), [c10, d10] = b10, e10 = b10.slice(2, -2).join(";"), f10 = Number(b10.at(-2));
-        return c10 === g7 && ("replace" === d10 || "push" === d10) && "string" == typeof e10 && !isNaN(f10) && 307 === f10;
-      }
-      function hb() {
-        let a10 = Error(g5);
-        throw a10.digest = `${g5};${g3.UNAUTHORIZED}`, a10;
-      }
-      let hc = (a10) => !!a10.headers.get(fg.Headers.NextUrl) && !((a11) => {
-        var b10, c10;
-        return !!a11.headers.get(fg.Headers.NextUrl) && ((null == (b10 = a11.headers.get(b6.Headers.Accept)) ? void 0 : b10.includes("text/x-component")) || (null == (c10 = a11.headers.get(b6.Headers.ContentType)) ? void 0 : c10.includes("multipart/form-data")) || !!a11.headers.get(fg.Headers.NextAction));
-      })(a10) || hd(), hd = () => {
-        let a10 = globalThis.fetch;
-        if (!function(a11) {
-          return "__nextPatched" in a11 && true === a11.__nextPatched;
-        }(a10)) return false;
-        let { page: b10, pagePath: c10 } = a10.__nextGetStaticStore().getStore() || {};
-        return !!(c10 || b10);
-      }, he = (a10) => !!a10.headers.get(fg.Headers.NextjsData), hf = ((a10) => {
-        if ("function" == typeof a10) return (b11) => a10(b11);
-        let b10 = ((a11) => {
-          let b11 = [a11 || ""].flat().filter(Boolean).map((a12) => a12 instanceof RegExp ? a12 : ((a13) => {
-            try {
-              return a6(a13);
-            } catch (b12) {
-              throw Error(`Invalid path: ${a13}.
-Consult the documentation of path-to-regexp here: https://github.com/pillarjs/path-to-regexp/tree/6.x
-${b12.message}`);
-            }
-          })(a12));
-          return (a12) => b11.some((b12) => b12.test(a12));
-        })(a10);
-        return (a11) => b10(a11.nextUrl.pathname);
-      })(["/user/:id", "/admin/:path*"]), hg = ((...a10) => {
-        let [b10, c10] = ((a11) => [a11[0] instanceof Request ? a11[0] : void 0, a11[0] instanceof Request ? a11[1] : void 0])(a10), [d10, e10] = ((a11) => ["function" == typeof a11[0] ? a11[0] : void 0, (2 === a11.length ? a11[1] : "function" == typeof a11[0] ? {} : a11[0]) || {}])(a10);
-        return fQ.run(fP, () => {
-          let a11 = /* @__PURE__ */ ((a12, b11) => (...c11) => {
-            let d11 = ("string" == typeof a12 ? /* @__PURE__ */ ((a13, b12) => () => {
-              let c12 = [], d12 = false;
-              return { enable: () => {
-                d12 = true;
-              }, debug: (...a14) => {
-                d12 && c12.push(a14.map((a15) => "function" == typeof a15 ? a15() : a15));
-              }, commit: () => {
-                if (d12) {
-                  var e12, f11;
-                  for (let d13 of (console.log((e12 = a13, `[clerk debug start: ${e12}]`)), c12)) {
-                    let a14 = b12(d13);
-                    a14 = a14.split("\n").map((a15) => `  ${a15}`).join("\n"), process.env.VERCEL && (a14 = function(a15, b13) {
-                      let c13 = new TextEncoder(), d14 = new TextDecoder("utf-8"), e13 = c13.encode(a15).slice(0, 4096);
-                      return d14.decode(e13).replace(/\uFFFD/g, "");
-                    }(a14, 4096)), console.log(a14);
-                  }
-                  console.log((f11 = a13, `[clerk debug end: ${f11}] (@clerk/nextjs=6.35.1,next=${fj.rE},timestamp=${Math.round((/* @__PURE__ */ new Date()).getTime() / 1e3)})`));
-                }
-              } };
-            })(a12, fl) : a12)(), e11 = b11(d11);
-            try {
-              let a13 = e11(...c11);
-              if ("object" == typeof a13 && "then" in a13 && "function" == typeof a13.then) return a13.then((a14) => (d11.commit(), a14)).catch((a14) => {
-                throw d11.commit(), a14;
-              });
-              return d11.commit(), a13;
-            } catch (a13) {
-              throw d11.commit(), a13;
-            }
-          })("clerkMiddleware", (a12) => async (b11, c11) => {
-            var f11, g11;
-            let h2, i2, j2, k2, l2, m2, n2, o2, p2 = "function" == typeof e10 ? await e10(b11) : e10, q2 = await g1((a13) => {
-              var c12;
-              return null == (c12 = b11.cookies.get(a13)) ? void 0 : c12.value;
-            }), r2 = function(a13, b12) {
-              return a13 || b12(), a13;
-            }(p2.publishableKey || fr || (null == q2 ? void 0 : q2.publishableKey), () => gQ.throwMissingPublishableKeyError()), s2 = function(a13, b12) {
-              return a13 || b12(), a13;
-            }(p2.secretKey || fp || (null == q2 ? void 0 : q2.secretKey), () => gQ.throwMissingSecretKeyError()), t2 = { publishableKey: r2, secretKey: s2, signInUrl: p2.signInUrl || fx, signUpUrl: p2.signUpUrl || fy, ...p2 };
-            fP.set("requestData", t2);
-            let u2 = await gY();
-            t2.debug && a12.enable();
-            let v2 = eF(b11);
-            a12.debug("options", t2), a12.debug("url", () => v2.toJSON());
-            let w2 = b11.headers.get(b6.Headers.Authorization);
-            w2 && w2.startsWith("Basic ") && a12.debug("Basic Auth detected");
-            let x2 = b11.headers.get(b6.Headers.ContentSecurityPolicy);
-            x2 && a12.debug("Content-Security-Policy detected", () => ({ value: x2 }));
-            let y2 = await u2.authenticateRequest(v2, ((a13, b12) => ({ ...b12, ...((a14, b13) => {
-              let c12, d11 = fU(null == b13 ? void 0 : b13.proxyUrl, a14.clerkUrl, fv);
-              c12 = d11 && !fT(d11) ? new URL(d11, a14.clerkUrl).toString() : d11;
-              let e11 = fU(b13.isSatellite, new URL(a14.url), fw), f12 = fU(b13.domain, new URL(a14.url), fu), g12 = (null == b13 ? void 0 : b13.signInUrl) || fx;
-              if (e11 && !c12 && !f12) throw Error(gN);
-              if (e11 && !fT(g12) && bk(b13.secretKey || fp)) throw Error(gO);
-              return { proxyUrl: c12, isSatellite: e11, domain: f12, signInUrl: g12 };
-            })(a13, b12), acceptsToken: "any" }))(v2, t2));
-            a12.debug("requestState", () => ({ status: y2.status, headers: JSON.stringify(Object.fromEntries(y2.headers)), reason: y2.reason }));
-            let z2 = y2.headers.get(b6.Headers.Location);
-            if (z2) {
-              let a13 = R.redirect(z2);
-              return y2.headers.forEach((b12, c12) => {
-                c12 !== b6.Headers.Location && a13.headers.append(c12, b12);
-              }), a13;
-            }
-            if (y2.status === ex.Handshake) throw Error("Clerk: handshake status without redirect");
-            let A2 = y2.toAuth();
-            a12.debug("auth", () => ({ auth: A2, debug: A2.debug() }));
-            let B2 = (h2 = v2, (a13 = {}) => {
-              !function(a14, b12) {
-                g8(a14, { clerk_digest: g2.REDIRECT_TO_SIGN_IN, returnBackUrl: g9(a14, b12) });
-              }(h2.clerkUrl.toString(), a13.returnBackUrl);
-            }), C2 = (i2 = v2, (a13 = {}) => {
-              !function(a14, b12) {
-                g8(a14, { clerk_digest: g2.REDIRECT_TO_SIGN_UP, returnBackUrl: g9(a14, b12) });
-              }(i2.clerkUrl.toString(), a13.returnBackUrl);
-            }), D2 = await (j2 = v2, k2 = A2, l2 = B2, async (a13, b12) => function(a14) {
-              let { redirectToSignIn: b13, authObject: c12, redirect: d11, notFound: e11, request: f12, unauthorized: g12 } = a14;
-              return async (...a15) => {
-                var h3, i3, j3, k3, l3, m3, n3, o3;
-                let p3 = ((a16) => {
-                  if (a16 && !a16.unauthenticatedUrl && !a16.unauthorizedUrl && !a16.token && (1 !== Object.keys(a16).length || !("token" in a16))) return a16;
-                })(a15[0]), q3 = (null == (h3 = a15[0]) ? void 0 : h3.unauthenticatedUrl) || (null == (i3 = a15[1]) ? void 0 : i3.unauthenticatedUrl), r3 = (null == (j3 = a15[0]) ? void 0 : j3.unauthorizedUrl) || (null == (k3 = a15[1]) ? void 0 : k3.unauthorizedUrl), s3 = (null == (l3 = a15[0]) ? void 0 : l3.token) || (null == (m3 = a15[1]) ? void 0 : m3.token) || cb.SessionToken, t3 = () => c12.tokenType !== cb.SessionToken ? g12() : r3 ? d11(r3) : e11();
-                if (!er(c12.tokenType, s3)) return t3();
-                if (c12.tokenType !== cb.SessionToken) return c12.isAuthenticated ? c12 : t3();
-                if ("pending" === c12.sessionStatus || !c12.userId) {
-                  return q3 ? d11(q3) : "document" === (n3 = f12).headers.get(b6.Headers.SecFetchDest) || "iframe" === n3.headers.get(b6.Headers.SecFetchDest) || (null == (o3 = n3.headers.get(b6.Headers.Accept)) ? void 0 : o3.includes("text/html")) || hc(n3) || he(n3) ? b13() : e11();
-                }
-                return p3 ? "function" == typeof p3 ? p3(c12.has) ? c12 : t3() : c12.has(p3) ? c12 : t3() : c12;
-              };
-            }({ request: j2, redirect: (a14) => g8(a14, { redirectUrl: a14 }), notFound: () => function() {
-              let a14 = Object.defineProperty(Error(e4), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
-              throw a14.digest = e4, a14;
-            }(), unauthorized: hb, authObject: ew({ authObject: k2, acceptsToken: (null == a13 ? void 0 : a13.token) || (null == b12 ? void 0 : b12.token) || cb.SessionToken }), redirectToSignIn: l2 })(a13, b12)), E2 = (m2 = y2, n2 = B2, o2 = C2, async (a13) => {
-              var b12;
-              let c12 = m2.toAuth({ treatPendingAsSignedOut: null == a13 ? void 0 : a13.treatPendingAsSignedOut }), d11 = null != (b12 = null == a13 ? void 0 : a13.acceptsToken) ? b12 : cb.SessionToken, e11 = ew({ authObject: c12, acceptsToken: d11 });
-              return e11.tokenType === cb.SessionToken && er(cb.SessionToken, d11) ? Object.assign(e11, { redirectToSignIn: n2, redirectToSignUp: o2 }) : e11;
-            });
-            E2.protect = D2;
-            let F2 = R.next();
-            try {
-              F2 = await fQ.run(fP, async () => null == d10 ? void 0 : d10(E2, b11, c11)) || F2;
-            } catch (a13) {
-              F2 = ((a14, b12, c12, d11) => {
-                var e11;
-                if (g6(a14) === g3.UNAUTHORIZED) {
-                  let a15 = new R(null, { status: 401 }), b13 = d11.toAuth();
-                  if (b13 && b13.tokenType === cb.OAuthToken) {
-                    let b14 = bi(d11.publishableKey);
-                    return fh(a15, "WWW-Authenticate", `Bearer resource_metadata="https://${null == b14 ? void 0 : b14.frontendApi}/.well-known/oauth-protected-resource"`);
-                  }
-                  return a15;
-                }
-                if (function(a15) {
-                  return "object" == typeof a15 && null !== a15 && "digest" in a15 && "NEXT_NOT_FOUND" === a15.digest || g6(a15) === g3.NOT_FOUND;
-                }(a14)) return fh(R.rewrite(new URL(`/clerk_${Date.now()}`, c12.url)), b6.Headers.AuthReason, "protect-rewrite");
-                let f12 = function(a15) {
-                  return !!ha(a15) && "clerk_digest" in a15 && a15.clerk_digest === g2.REDIRECT_TO_SIGN_IN;
-                }(a14), g12 = function(a15) {
-                  return !!ha(a15) && "clerk_digest" in a15 && a15.clerk_digest === g2.REDIRECT_TO_SIGN_UP;
-                }(a14);
-                if (f12 || g12) {
-                  let c13 = ((a15) => {
-                    let { publishableKey: b13, redirectAdapter: c14, signInUrl: d12, signUpUrl: e12, baseUrl: f13, sessionStatus: g14 } = a15, h3 = bi(b13), i3 = h3?.frontendApi, j3 = h3?.instanceType === "development", k3 = bV(i3), l3 = "pending" === g14, m3 = (b14, { returnBackUrl: d13 }) => c14(b7(f13, `${b14}/tasks`, d13, j3 ? a15.devBrowserToken : null));
-                    return { redirectToSignUp: ({ returnBackUrl: b14 } = {}) => {
-                      e12 || k3 || bx.throwMissingPublishableKeyError();
-                      let g15 = `${k3}/sign-up`, h4 = e12 || function(a16) {
-                        if (!a16) return;
-                        let b15 = new URL(a16, f13);
-                        return b15.pathname = `${b15.pathname}/create`, b15.toString();
-                      }(d12) || g15;
-                      return l3 ? m3(h4, { returnBackUrl: b14 }) : c14(b7(f13, h4, b14, j3 ? a15.devBrowserToken : null));
-                    }, redirectToSignIn: ({ returnBackUrl: b14 } = {}) => {
-                      d12 || k3 || bx.throwMissingPublishableKeyError();
-                      let e13 = `${k3}/sign-in`, g15 = d12 || e13;
-                      return l3 ? m3(g15, { returnBackUrl: b14 }) : c14(b7(f13, g15, b14, j3 ? a15.devBrowserToken : null));
-                    } };
-                  })({ redirectAdapter: gU, baseUrl: b12.clerkUrl, signInUrl: d11.signInUrl, signUpUrl: d11.signUpUrl, publishableKey: d11.publishableKey, sessionStatus: null == (e11 = d11.toAuth()) ? void 0 : e11.sessionStatus }), { returnBackUrl: g13 } = a14;
-                  return c13[f12 ? "redirectToSignIn" : "redirectToSignUp"]({ returnBackUrl: g13 });
-                }
-                if (ha(a14)) return gU(a14.redirectUrl);
-                throw a14;
-              })(a13, v2, b11, y2);
-            }
-            if (t2.contentSecurityPolicy) {
-              let { headers: b12 } = function(a13, b13) {
-                var c12;
-                let d11 = [], e11 = b13.strict ? function() {
-                  let a14 = new Uint8Array(16);
-                  return crypto.getRandomValues(a14), btoa(Array.from(a14, (a15) => String.fromCharCode(a15)).join(""));
-                }() : void 0, f12 = function(a14, b14, c13, d12) {
-                  let e12 = Object.entries(gZ.DEFAULT_DIRECTIVES).reduce((a15, [b15, c14]) => (a15[b15] = new Set(c14), a15), {});
-                  if (e12["connect-src"].add(b14), a14 && (e12["script-src"].delete("http:"), e12["script-src"].delete("https:"), e12["script-src"].add("'strict-dynamic'"), d12 && e12["script-src"].add(`'nonce-${d12}'`)), c13) {
-                    let a15 = /* @__PURE__ */ new Map();
-                    Object.entries(c13).forEach(([b15, c14]) => {
-                      let d13 = Array.isArray(c14) ? c14 : [c14];
-                      gZ.DEFAULT_DIRECTIVES[b15] ? function(a16, b16, c15) {
-                        if (c15.includes("'none'") || c15.includes("none")) {
-                          a16[b16] = /* @__PURE__ */ new Set(["'none'"]);
-                          return;
-                        }
-                        let d14 = /* @__PURE__ */ new Set();
-                        a16[b16].forEach((a17) => {
-                          d14.add(gZ.formatValue(a17));
-                        }), c15.forEach((a17) => {
-                          d14.add(gZ.formatValue(a17));
-                        }), a16[b16] = d14;
-                      }(e12, b15, d13) : function(a16, b16, c15) {
-                        if (c15.includes("'none'") || c15.includes("none")) return a16.set(b16, /* @__PURE__ */ new Set(["'none'"]));
-                        let d14 = /* @__PURE__ */ new Set();
-                        c15.forEach((a17) => {
-                          let b17 = gZ.formatValue(a17);
-                          d14.add(b17);
-                        }), a16.set(b16, d14);
-                      }(a15, b15, d13);
-                    }), a15.forEach((a16, b15) => {
-                      e12[b15] = a16;
-                    });
-                  }
-                  return Object.entries(e12).sort(([a15], [b15]) => a15.localeCompare(b15)).map(([a15, b15]) => {
-                    let c14 = Array.from(b15).map((a16) => ({ raw: a16, formatted: gZ.formatValue(a16) }));
-                    return `${a15} ${c14.map((a16) => a16.formatted).join(" ")}`;
-                  }).join("; ");
-                }(null != (c12 = b13.strict) && c12, a13, b13.directives, e11);
-                return b13.reportTo && (f12 += "; report-to csp-endpoint", d11.push([b6.Headers.ReportingEndpoints, `csp-endpoint="${b13.reportTo}"`])), b13.reportOnly ? d11.push([b6.Headers.ContentSecurityPolicyReportOnly, f12]) : d11.push([b6.Headers.ContentSecurityPolicy, f12]), e11 && d11.push([b6.Headers.Nonce, e11]), { headers: d11 };
-              }((null != (g11 = null == (f11 = bi(r2)) ? void 0 : f11.frontendApi) ? g11 : "").replace("$", ""), t2.contentSecurityPolicy);
-              b12.forEach(([a13, b13]) => {
-                fh(F2, a13, b13);
-              }), a12.debug("Clerk generated CSP", () => ({ headers: b12 }));
-            }
-            if (y2.headers && y2.headers.forEach((b12, c12) => {
-              c12 === b6.Headers.ContentSecurityPolicy && a12.debug("Content-Security-Policy detected", () => ({ value: b12 })), F2.headers.append(c12, b12);
-            }), F2.headers.get(fg.Headers.NextRedirect)) return a12.debug("handlerResult is redirect"), ((a13, b12, c12) => {
-              let d11 = b12.headers.get("location");
-              if ("true" === b12.headers.get(b6.Headers.ClerkRedirectTo) && d11 && bk(c12.secretKey) && a13.clerkUrl.isCrossOrigin(d11)) {
-                let c13 = a13.cookies.get(fi) || "", e11 = function(a14, b13) {
-                  let c14 = new URL(a14), d12 = c14.searchParams.get(fi);
-                  c14.searchParams.delete(fi);
-                  let e12 = d12 || b13;
-                  return e12 && c14.searchParams.set(fi, e12), c14;
-                }(new URL(d11), c13);
-                return R.redirect(e11.href, b12);
-              }
-              return b12;
-            })(v2, F2, t2);
-            t2.debug && gT(F2, v2, { [b6.Headers.EnableDebug]: "true" });
-            let G2 = s2 === (null == q2 ? void 0 : q2.secretKey) ? { publishableKey: null == q2 ? void 0 : q2.publishableKey, secretKey: null == q2 ? void 0 : q2.secretKey } : {};
-            return !function(a13, b12, c12, d11, e11, f12) {
-              let g12, { reason: h3, message: i3, status: j3, token: k3 } = c12;
-              if (b12 || (b12 = R.next()), b12.headers.get(fg.Headers.NextRedirect)) return;
-              "1" === b12.headers.get(fg.Headers.NextResume) && (b12.headers.delete(fg.Headers.NextResume), g12 = new URL(a13.url));
-              let l3 = b12.headers.get(fg.Headers.NextRewrite);
-              if (l3) {
-                let b13 = new URL(a13.url);
-                if ((g12 = new URL(l3)).origin !== b13.origin) return;
-              }
-              if (g12) {
-                let c13 = function(a14, b13, c14) {
-                  var d12;
-                  let e12 = (a15) => !a15 || !Object.values(a15).some((a16) => void 0 !== a16);
-                  if (e12(a14) && e12(b13) && !c14) return;
-                  if (a14.secretKey && !fs) return void fS.warnOnce("Clerk: Missing `CLERK_ENCRYPTION_KEY`. Required for propagating `secretKey` middleware option. See docs: https://clerk.com/docs/reference/nextjs/clerk-middleware#dynamic-keys");
-                  let f13 = a7() ? fs || (d12 = () => gQ.throwMissingSecretKeyError(), fp || d12(), fp) : fs || fp || gV;
-                  return gJ.encrypt(JSON.stringify({ ...b13, ...a14, machineAuthObject: null != c14 ? c14 : void 0 }), f13).toString();
-                }(d11, e11, f12);
-                gT(b12, a13, { [b6.Headers.AuthStatus]: j3, [b6.Headers.AuthToken]: k3 || "", [b6.Headers.AuthSignature]: k3 ? gM(k3, (null == d11 ? void 0 : d11.secretKey) || fp || e11.secretKey || "").toString() : "", [b6.Headers.AuthMessage]: i3 || "", [b6.Headers.AuthReason]: h3 || "", [b6.Headers.ClerkUrl]: a13.clerkUrl.toString(), ...c13 ? { [b6.Headers.ClerkRequestData]: c13 } : {} }), b12.headers.set(fg.Headers.NextRewrite, g12.href);
-              }
-            }(v2, F2, y2, p2, G2, "session_token" === A2.tokenType ? null : ((a13) => {
-              let { debug: b12, getToken: c12, has: d11, ...e11 } = a13;
-              return e11;
-            })(A2)), F2;
-          }), f10 = async (b11, c11) => {
-            var d11, f11;
-            if ("/clerk-sync-keyless" === b11.nextUrl.pathname) return ((a12) => {
-              let b12 = a12.nextUrl.searchParams.get("returnUrl"), c12 = new URL(a12.url);
-              return c12.pathname = "", R.redirect(b12 || c12.toString());
-            })(b11);
-            let g11 = "function" == typeof e10 ? await e10(b11) : e10, h2 = await g1((a12) => {
-              var c12;
-              return null == (c12 = b11.cookies.get(a12)) ? void 0 : c12.value;
-            }), i2 = !(g11.publishableKey || fr || (null == h2 ? void 0 : h2.publishableKey)), j2 = null != (f11 = null == (d11 = fN(b11, b6.Headers.Authorization)) ? void 0 : d11.replace("Bearer ", "")) ? f11 : "";
-            if (i2 && !ep(j2)) {
-              let a12 = R.next();
-              return gT(a12, b11, { [b6.Headers.AuthStatus]: "signed-out" }), a12;
-            }
-            return a11(b11, c11);
-          }, g10 = async (b11, c11) => fC ? f10(b11, c11) : a11(b11, c11);
-          return b10 && c10 ? g10(b10, c10) : g10;
-        });
-      })(async (a10, b10) => {
-        let { userId: c10, redirectToSignIn: d10 } = await a10();
-        if (hf(b10) && !c10) {
-          let a11 = new URL("/user", b10.url);
-          return a11.searchParams.set("redirectTo", b10.nextUrl.pathname), R.redirect(a11);
-        }
-        return R.next();
-      }), hh = { matcher: ["/user/:path*", "/admin/:path*"] };
-      c(747);
-      let hi = { ...e }, hj = hi.middleware || hi.default, hk = "/src/middleware";
-      if ("function" != typeof hj) throw Object.defineProperty(Error(`The Middleware "${hk}" must export a \`middleware\` or a \`default\` function`), "__NEXT_ERROR_CODE", { value: "E120", enumerable: false, configurable: true });
-      function hl(a10) {
-        return a3({ ...a10, page: hk, handler: async (...a11) => {
-          try {
-            return await hj(...a11);
-          } catch (e10) {
-            let b10 = a11[0], c10 = new URL(b10.url), d10 = c10.pathname + c10.search;
-            throw await i(e10, { path: d10, method: b10.method, headers: Object.fromEntries(b10.headers.entries()) }, { routerKind: "Pages Router", routePath: "/middleware", routeType: "middleware", revalidateReason: void 0 }), e10;
-          }
-        } });
       }
     }, 213: (a) => {
       (() => {
@@ -7272,6 +2859,4408 @@ ${b12.message}`);
         let a2 = d.Z.getStore();
         return (null == a2 ? void 0 : a2.rootTaskSpawnPhase) === "action";
       }
+    }, 843: (a, b, c) => {
+      "use strict";
+      let d;
+      c.r(b), c.d(b, { default: () => hl });
+      var e = {};
+      async function f() {
+        return "_ENTRIES" in globalThis && _ENTRIES.middleware_instrumentation && await _ENTRIES.middleware_instrumentation;
+      }
+      c.r(e), c.d(e, { config: () => hh, default: () => hg });
+      let g = null;
+      async function h() {
+        if ("phase-production-build" === process.env.NEXT_PHASE) return;
+        g || (g = f());
+        let a10 = await g;
+        if (null == a10 ? void 0 : a10.register) try {
+          await a10.register();
+        } catch (a11) {
+          throw a11.message = `An error occurred while loading instrumentation hook: ${a11.message}`, a11;
+        }
+      }
+      async function i(...a10) {
+        let b10 = await f();
+        try {
+          var c10;
+          await (null == b10 || null == (c10 = b10.onRequestError) ? void 0 : c10.call(b10, ...a10));
+        } catch (a11) {
+          console.error("Error in instrumentation.onRequestError:", a11);
+        }
+      }
+      let j = null;
+      function k() {
+        return j || (j = h()), j;
+      }
+      function l(a10) {
+        return `The edge runtime does not support Node.js '${a10}' module.
+Learn More: https://nextjs.org/docs/messages/node-module-in-edge-runtime`;
+      }
+      process !== c.g.process && (process.env = c.g.process.env, c.g.process = process);
+      try {
+        Object.defineProperty(globalThis, "__import_unsupported", { value: function(a10) {
+          let b10 = new Proxy(function() {
+          }, { get(b11, c10) {
+            if ("then" === c10) return {};
+            throw Object.defineProperty(Error(l(a10)), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
+          }, construct() {
+            throw Object.defineProperty(Error(l(a10)), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
+          }, apply(c10, d10, e10) {
+            if ("function" == typeof e10[0]) return e10[0](b10);
+            throw Object.defineProperty(Error(l(a10)), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
+          } });
+          return new Proxy({}, { get: () => b10 });
+        }, enumerable: false, configurable: false });
+      } catch {
+      }
+      k();
+      class m extends Error {
+        constructor({ page: a10 }) {
+          super(`The middleware "${a10}" accepts an async API directly with the form:
+  
+  export function middleware(request, event) {
+    return NextResponse.redirect('/new-location')
+  }
+  
+  Read more: https://nextjs.org/docs/messages/middleware-new-signature
+  `);
+        }
+      }
+      class n extends Error {
+        constructor() {
+          super(`The request.page has been deprecated in favour of \`URLPattern\`.
+  Read more: https://nextjs.org/docs/messages/middleware-request-page
+  `);
+        }
+      }
+      class o extends Error {
+        constructor() {
+          super(`The request.ua has been removed in favour of \`userAgent\` function.
+  Read more: https://nextjs.org/docs/messages/middleware-parse-user-agent
+  `);
+        }
+      }
+      let p = "_N_T_", q = { shared: "shared", reactServerComponents: "rsc", serverSideRendering: "ssr", actionBrowser: "action-browser", apiNode: "api-node", apiEdge: "api-edge", middleware: "middleware", instrument: "instrument", edgeAsset: "edge-asset", appPagesBrowser: "app-pages-browser", pagesDirBrowser: "pages-dir-browser", pagesDirEdge: "pages-dir-edge", pagesDirNode: "pages-dir-node" };
+      function r(a10) {
+        var b10, c10, d10, e10, f10, g10 = [], h2 = 0;
+        function i2() {
+          for (; h2 < a10.length && /\s/.test(a10.charAt(h2)); ) h2 += 1;
+          return h2 < a10.length;
+        }
+        for (; h2 < a10.length; ) {
+          for (b10 = h2, f10 = false; i2(); ) if ("," === (c10 = a10.charAt(h2))) {
+            for (d10 = h2, h2 += 1, i2(), e10 = h2; h2 < a10.length && "=" !== (c10 = a10.charAt(h2)) && ";" !== c10 && "," !== c10; ) h2 += 1;
+            h2 < a10.length && "=" === a10.charAt(h2) ? (f10 = true, h2 = e10, g10.push(a10.substring(b10, d10)), b10 = h2) : h2 = d10 + 1;
+          } else h2 += 1;
+          (!f10 || h2 >= a10.length) && g10.push(a10.substring(b10, a10.length));
+        }
+        return g10;
+      }
+      function s(a10) {
+        let b10 = {}, c10 = [];
+        if (a10) for (let [d10, e10] of a10.entries()) "set-cookie" === d10.toLowerCase() ? (c10.push(...r(e10)), b10[d10] = 1 === c10.length ? c10[0] : c10) : b10[d10] = e10;
+        return b10;
+      }
+      function t(a10) {
+        try {
+          return String(new URL(String(a10)));
+        } catch (b10) {
+          throw Object.defineProperty(Error(`URL is malformed "${String(a10)}". Please use only absolute URLs - https://nextjs.org/docs/messages/middleware-relative-urls`, { cause: b10 }), "__NEXT_ERROR_CODE", { value: "E61", enumerable: false, configurable: true });
+        }
+      }
+      ({ ...q, GROUP: { builtinReact: [q.reactServerComponents, q.actionBrowser], serverOnly: [q.reactServerComponents, q.actionBrowser, q.instrument, q.middleware], neutralTarget: [q.apiNode, q.apiEdge], clientOnly: [q.serverSideRendering, q.appPagesBrowser], bundled: [q.reactServerComponents, q.actionBrowser, q.serverSideRendering, q.appPagesBrowser, q.shared, q.instrument, q.middleware], appPages: [q.reactServerComponents, q.serverSideRendering, q.appPagesBrowser, q.actionBrowser] } });
+      let u = Symbol("response"), v = Symbol("passThrough"), w = Symbol("waitUntil");
+      class x {
+        constructor(a10, b10) {
+          this[v] = false, this[w] = b10 ? { kind: "external", function: b10 } : { kind: "internal", promises: [] };
+        }
+        respondWith(a10) {
+          this[u] || (this[u] = Promise.resolve(a10));
+        }
+        passThroughOnException() {
+          this[v] = true;
+        }
+        waitUntil(a10) {
+          if ("external" === this[w].kind) return (0, this[w].function)(a10);
+          this[w].promises.push(a10);
+        }
+      }
+      class y extends x {
+        constructor(a10) {
+          var b10;
+          super(a10.request, null == (b10 = a10.context) ? void 0 : b10.waitUntil), this.sourcePage = a10.page;
+        }
+        get request() {
+          throw Object.defineProperty(new m({ page: this.sourcePage }), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
+        }
+        respondWith() {
+          throw Object.defineProperty(new m({ page: this.sourcePage }), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
+        }
+      }
+      function z(a10) {
+        return a10.replace(/\/$/, "") || "/";
+      }
+      function A(a10) {
+        let b10 = a10.indexOf("#"), c10 = a10.indexOf("?"), d10 = c10 > -1 && (b10 < 0 || c10 < b10);
+        return d10 || b10 > -1 ? { pathname: a10.substring(0, d10 ? c10 : b10), query: d10 ? a10.substring(c10, b10 > -1 ? b10 : void 0) : "", hash: b10 > -1 ? a10.slice(b10) : "" } : { pathname: a10, query: "", hash: "" };
+      }
+      function B(a10, b10) {
+        if (!a10.startsWith("/") || !b10) return a10;
+        let { pathname: c10, query: d10, hash: e10 } = A(a10);
+        return "" + b10 + c10 + d10 + e10;
+      }
+      function C(a10, b10) {
+        if (!a10.startsWith("/") || !b10) return a10;
+        let { pathname: c10, query: d10, hash: e10 } = A(a10);
+        return "" + c10 + b10 + d10 + e10;
+      }
+      function D(a10, b10) {
+        if ("string" != typeof a10) return false;
+        let { pathname: c10 } = A(a10);
+        return c10 === b10 || c10.startsWith(b10 + "/");
+      }
+      let E = /* @__PURE__ */ new WeakMap();
+      function F(a10, b10) {
+        let c10;
+        if (!b10) return { pathname: a10 };
+        let d10 = E.get(b10);
+        d10 || (d10 = b10.map((a11) => a11.toLowerCase()), E.set(b10, d10));
+        let e10 = a10.split("/", 2);
+        if (!e10[1]) return { pathname: a10 };
+        let f10 = e10[1].toLowerCase(), g10 = d10.indexOf(f10);
+        return g10 < 0 ? { pathname: a10 } : (c10 = b10[g10], { pathname: a10 = a10.slice(c10.length + 1) || "/", detectedLocale: c10 });
+      }
+      let G = /(?!^https?:\/\/)(127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}|\[::1\]|localhost)/;
+      function H(a10, b10) {
+        return new URL(String(a10).replace(G, "localhost"), b10 && String(b10).replace(G, "localhost"));
+      }
+      let I = Symbol("NextURLInternal");
+      class J {
+        constructor(a10, b10, c10) {
+          let d10, e10;
+          "object" == typeof b10 && "pathname" in b10 || "string" == typeof b10 ? (d10 = b10, e10 = c10 || {}) : e10 = c10 || b10 || {}, this[I] = { url: H(a10, d10 ?? e10.base), options: e10, basePath: "" }, this.analyze();
+        }
+        analyze() {
+          var a10, b10, c10, d10, e10;
+          let f10 = function(a11, b11) {
+            var c11, d11;
+            let { basePath: e11, i18n: f11, trailingSlash: g11 } = null != (c11 = b11.nextConfig) ? c11 : {}, h3 = { pathname: a11, trailingSlash: "/" !== a11 ? a11.endsWith("/") : g11 };
+            e11 && D(h3.pathname, e11) && (h3.pathname = function(a12, b12) {
+              if (!D(a12, b12)) return a12;
+              let c12 = a12.slice(b12.length);
+              return c12.startsWith("/") ? c12 : "/" + c12;
+            }(h3.pathname, e11), h3.basePath = e11);
+            let i2 = h3.pathname;
+            if (h3.pathname.startsWith("/_next/data/") && h3.pathname.endsWith(".json")) {
+              let a12 = h3.pathname.replace(/^\/_next\/data\//, "").replace(/\.json$/, "").split("/");
+              h3.buildId = a12[0], i2 = "index" !== a12[1] ? "/" + a12.slice(1).join("/") : "/", true === b11.parseData && (h3.pathname = i2);
+            }
+            if (f11) {
+              let a12 = b11.i18nProvider ? b11.i18nProvider.analyze(h3.pathname) : F(h3.pathname, f11.locales);
+              h3.locale = a12.detectedLocale, h3.pathname = null != (d11 = a12.pathname) ? d11 : h3.pathname, !a12.detectedLocale && h3.buildId && (a12 = b11.i18nProvider ? b11.i18nProvider.analyze(i2) : F(i2, f11.locales)).detectedLocale && (h3.locale = a12.detectedLocale);
+            }
+            return h3;
+          }(this[I].url.pathname, { nextConfig: this[I].options.nextConfig, parseData: true, i18nProvider: this[I].options.i18nProvider }), g10 = function(a11, b11) {
+            let c11;
+            if ((null == b11 ? void 0 : b11.host) && !Array.isArray(b11.host)) c11 = b11.host.toString().split(":", 1)[0];
+            else {
+              if (!a11.hostname) return;
+              c11 = a11.hostname;
+            }
+            return c11.toLowerCase();
+          }(this[I].url, this[I].options.headers);
+          this[I].domainLocale = this[I].options.i18nProvider ? this[I].options.i18nProvider.detectDomainLocale(g10) : function(a11, b11, c11) {
+            if (a11) for (let f11 of (c11 && (c11 = c11.toLowerCase()), a11)) {
+              var d11, e11;
+              if (b11 === (null == (d11 = f11.domain) ? void 0 : d11.split(":", 1)[0].toLowerCase()) || c11 === f11.defaultLocale.toLowerCase() || (null == (e11 = f11.locales) ? void 0 : e11.some((a12) => a12.toLowerCase() === c11))) return f11;
+            }
+          }(null == (b10 = this[I].options.nextConfig) || null == (a10 = b10.i18n) ? void 0 : a10.domains, g10);
+          let h2 = (null == (c10 = this[I].domainLocale) ? void 0 : c10.defaultLocale) || (null == (e10 = this[I].options.nextConfig) || null == (d10 = e10.i18n) ? void 0 : d10.defaultLocale);
+          this[I].url.pathname = f10.pathname, this[I].defaultLocale = h2, this[I].basePath = f10.basePath ?? "", this[I].buildId = f10.buildId, this[I].locale = f10.locale ?? h2, this[I].trailingSlash = f10.trailingSlash;
+        }
+        formatPathname() {
+          var a10;
+          let b10;
+          return b10 = function(a11, b11, c10, d10) {
+            if (!b11 || b11 === c10) return a11;
+            let e10 = a11.toLowerCase();
+            return !d10 && (D(e10, "/api") || D(e10, "/" + b11.toLowerCase())) ? a11 : B(a11, "/" + b11);
+          }((a10 = { basePath: this[I].basePath, buildId: this[I].buildId, defaultLocale: this[I].options.forceLocale ? void 0 : this[I].defaultLocale, locale: this[I].locale, pathname: this[I].url.pathname, trailingSlash: this[I].trailingSlash }).pathname, a10.locale, a10.buildId ? void 0 : a10.defaultLocale, a10.ignorePrefix), (a10.buildId || !a10.trailingSlash) && (b10 = z(b10)), a10.buildId && (b10 = C(B(b10, "/_next/data/" + a10.buildId), "/" === a10.pathname ? "index.json" : ".json")), b10 = B(b10, a10.basePath), !a10.buildId && a10.trailingSlash ? b10.endsWith("/") ? b10 : C(b10, "/") : z(b10);
+        }
+        formatSearch() {
+          return this[I].url.search;
+        }
+        get buildId() {
+          return this[I].buildId;
+        }
+        set buildId(a10) {
+          this[I].buildId = a10;
+        }
+        get locale() {
+          return this[I].locale ?? "";
+        }
+        set locale(a10) {
+          var b10, c10;
+          if (!this[I].locale || !(null == (c10 = this[I].options.nextConfig) || null == (b10 = c10.i18n) ? void 0 : b10.locales.includes(a10))) throw Object.defineProperty(TypeError(`The NextURL configuration includes no locale "${a10}"`), "__NEXT_ERROR_CODE", { value: "E597", enumerable: false, configurable: true });
+          this[I].locale = a10;
+        }
+        get defaultLocale() {
+          return this[I].defaultLocale;
+        }
+        get domainLocale() {
+          return this[I].domainLocale;
+        }
+        get searchParams() {
+          return this[I].url.searchParams;
+        }
+        get host() {
+          return this[I].url.host;
+        }
+        set host(a10) {
+          this[I].url.host = a10;
+        }
+        get hostname() {
+          return this[I].url.hostname;
+        }
+        set hostname(a10) {
+          this[I].url.hostname = a10;
+        }
+        get port() {
+          return this[I].url.port;
+        }
+        set port(a10) {
+          this[I].url.port = a10;
+        }
+        get protocol() {
+          return this[I].url.protocol;
+        }
+        set protocol(a10) {
+          this[I].url.protocol = a10;
+        }
+        get href() {
+          let a10 = this.formatPathname(), b10 = this.formatSearch();
+          return `${this.protocol}//${this.host}${a10}${b10}${this.hash}`;
+        }
+        set href(a10) {
+          this[I].url = H(a10), this.analyze();
+        }
+        get origin() {
+          return this[I].url.origin;
+        }
+        get pathname() {
+          return this[I].url.pathname;
+        }
+        set pathname(a10) {
+          this[I].url.pathname = a10;
+        }
+        get hash() {
+          return this[I].url.hash;
+        }
+        set hash(a10) {
+          this[I].url.hash = a10;
+        }
+        get search() {
+          return this[I].url.search;
+        }
+        set search(a10) {
+          this[I].url.search = a10;
+        }
+        get password() {
+          return this[I].url.password;
+        }
+        set password(a10) {
+          this[I].url.password = a10;
+        }
+        get username() {
+          return this[I].url.username;
+        }
+        set username(a10) {
+          this[I].url.username = a10;
+        }
+        get basePath() {
+          return this[I].basePath;
+        }
+        set basePath(a10) {
+          this[I].basePath = a10.startsWith("/") ? a10 : `/${a10}`;
+        }
+        toString() {
+          return this.href;
+        }
+        toJSON() {
+          return this.href;
+        }
+        [Symbol.for("edge-runtime.inspect.custom")]() {
+          return { href: this.href, origin: this.origin, protocol: this.protocol, username: this.username, password: this.password, host: this.host, hostname: this.hostname, port: this.port, pathname: this.pathname, search: this.search, searchParams: this.searchParams, hash: this.hash };
+        }
+        clone() {
+          return new J(String(this), this[I].options);
+        }
+      }
+      var K = c(28);
+      let L = Symbol("internal request");
+      class M extends Request {
+        constructor(a10, b10 = {}) {
+          let c10 = "string" != typeof a10 && "url" in a10 ? a10.url : String(a10);
+          t(c10), a10 instanceof Request ? super(a10, b10) : super(c10, b10);
+          let d10 = new J(c10, { headers: s(this.headers), nextConfig: b10.nextConfig });
+          this[L] = { cookies: new K.tm(this.headers), nextUrl: d10, url: d10.toString() };
+        }
+        [Symbol.for("edge-runtime.inspect.custom")]() {
+          return { cookies: this.cookies, nextUrl: this.nextUrl, url: this.url, bodyUsed: this.bodyUsed, cache: this.cache, credentials: this.credentials, destination: this.destination, headers: Object.fromEntries(this.headers), integrity: this.integrity, keepalive: this.keepalive, method: this.method, mode: this.mode, redirect: this.redirect, referrer: this.referrer, referrerPolicy: this.referrerPolicy, signal: this.signal };
+        }
+        get cookies() {
+          return this[L].cookies;
+        }
+        get nextUrl() {
+          return this[L].nextUrl;
+        }
+        get page() {
+          throw new n();
+        }
+        get ua() {
+          throw new o();
+        }
+        get url() {
+          return this[L].url;
+        }
+      }
+      var N = c(115);
+      let O = Symbol("internal response"), P = /* @__PURE__ */ new Set([301, 302, 303, 307, 308]);
+      function Q(a10, b10) {
+        var c10;
+        if (null == a10 || null == (c10 = a10.request) ? void 0 : c10.headers) {
+          if (!(a10.request.headers instanceof Headers)) throw Object.defineProperty(Error("request.headers must be an instance of Headers"), "__NEXT_ERROR_CODE", { value: "E119", enumerable: false, configurable: true });
+          let c11 = [];
+          for (let [d10, e10] of a10.request.headers) b10.set("x-middleware-request-" + d10, e10), c11.push(d10);
+          b10.set("x-middleware-override-headers", c11.join(","));
+        }
+      }
+      class R extends Response {
+        constructor(a10, b10 = {}) {
+          super(a10, b10);
+          let c10 = this.headers, d10 = new Proxy(new K.VO(c10), { get(a11, d11, e10) {
+            switch (d11) {
+              case "delete":
+              case "set":
+                return (...e11) => {
+                  let f10 = Reflect.apply(a11[d11], a11, e11), g10 = new Headers(c10);
+                  return f10 instanceof K.VO && c10.set("x-middleware-set-cookie", f10.getAll().map((a12) => (0, K.Ud)(a12)).join(",")), Q(b10, g10), f10;
+                };
+              default:
+                return N.l.get(a11, d11, e10);
+            }
+          } });
+          this[O] = { cookies: d10, url: b10.url ? new J(b10.url, { headers: s(c10), nextConfig: b10.nextConfig }) : void 0 };
+        }
+        [Symbol.for("edge-runtime.inspect.custom")]() {
+          return { cookies: this.cookies, url: this.url, body: this.body, bodyUsed: this.bodyUsed, headers: Object.fromEntries(this.headers), ok: this.ok, redirected: this.redirected, status: this.status, statusText: this.statusText, type: this.type };
+        }
+        get cookies() {
+          return this[O].cookies;
+        }
+        static json(a10, b10) {
+          let c10 = Response.json(a10, b10);
+          return new R(c10.body, c10);
+        }
+        static redirect(a10, b10) {
+          let c10 = "number" == typeof b10 ? b10 : (null == b10 ? void 0 : b10.status) ?? 307;
+          if (!P.has(c10)) throw Object.defineProperty(RangeError('Failed to execute "redirect" on "response": Invalid status code'), "__NEXT_ERROR_CODE", { value: "E529", enumerable: false, configurable: true });
+          let d10 = "object" == typeof b10 ? b10 : {}, e10 = new Headers(null == d10 ? void 0 : d10.headers);
+          return e10.set("Location", t(a10)), new R(null, { ...d10, headers: e10, status: c10 });
+        }
+        static rewrite(a10, b10) {
+          let c10 = new Headers(null == b10 ? void 0 : b10.headers);
+          return c10.set("x-middleware-rewrite", t(a10)), Q(b10, c10), new R(null, { ...b10, headers: c10 });
+        }
+        static next(a10) {
+          let b10 = new Headers(null == a10 ? void 0 : a10.headers);
+          return b10.set("x-middleware-next", "1"), Q(a10, b10), new R(null, { ...a10, headers: b10 });
+        }
+      }
+      function S(a10, b10) {
+        let c10 = "string" == typeof b10 ? new URL(b10) : b10, d10 = new URL(a10, b10), e10 = d10.origin === c10.origin;
+        return { url: e10 ? d10.toString().slice(c10.origin.length) : d10.toString(), isRelative: e10 };
+      }
+      let T = "next-router-prefetch", U = ["rsc", "next-router-state-tree", T, "next-hmr-refresh", "next-router-segment-prefetch"], V = "_rsc";
+      var W = c(458), X = c(261), Y = function(a10) {
+        return a10.handleRequest = "BaseServer.handleRequest", a10.run = "BaseServer.run", a10.pipe = "BaseServer.pipe", a10.getStaticHTML = "BaseServer.getStaticHTML", a10.render = "BaseServer.render", a10.renderToResponseWithComponents = "BaseServer.renderToResponseWithComponents", a10.renderToResponse = "BaseServer.renderToResponse", a10.renderToHTML = "BaseServer.renderToHTML", a10.renderError = "BaseServer.renderError", a10.renderErrorToResponse = "BaseServer.renderErrorToResponse", a10.renderErrorToHTML = "BaseServer.renderErrorToHTML", a10.render404 = "BaseServer.render404", a10;
+      }(Y || {}), Z = function(a10) {
+        return a10.loadDefaultErrorComponents = "LoadComponents.loadDefaultErrorComponents", a10.loadComponents = "LoadComponents.loadComponents", a10;
+      }(Z || {}), $ = function(a10) {
+        return a10.getRequestHandler = "NextServer.getRequestHandler", a10.getServer = "NextServer.getServer", a10.getServerRequestHandler = "NextServer.getServerRequestHandler", a10.createServer = "createServer.createServer", a10;
+      }($ || {}), _ = function(a10) {
+        return a10.compression = "NextNodeServer.compression", a10.getBuildId = "NextNodeServer.getBuildId", a10.createComponentTree = "NextNodeServer.createComponentTree", a10.clientComponentLoading = "NextNodeServer.clientComponentLoading", a10.getLayoutOrPageModule = "NextNodeServer.getLayoutOrPageModule", a10.generateStaticRoutes = "NextNodeServer.generateStaticRoutes", a10.generateFsStaticRoutes = "NextNodeServer.generateFsStaticRoutes", a10.generatePublicRoutes = "NextNodeServer.generatePublicRoutes", a10.generateImageRoutes = "NextNodeServer.generateImageRoutes.route", a10.sendRenderResult = "NextNodeServer.sendRenderResult", a10.proxyRequest = "NextNodeServer.proxyRequest", a10.runApi = "NextNodeServer.runApi", a10.render = "NextNodeServer.render", a10.renderHTML = "NextNodeServer.renderHTML", a10.imageOptimizer = "NextNodeServer.imageOptimizer", a10.getPagePath = "NextNodeServer.getPagePath", a10.getRoutesManifest = "NextNodeServer.getRoutesManifest", a10.findPageComponents = "NextNodeServer.findPageComponents", a10.getFontManifest = "NextNodeServer.getFontManifest", a10.getServerComponentManifest = "NextNodeServer.getServerComponentManifest", a10.getRequestHandler = "NextNodeServer.getRequestHandler", a10.renderToHTML = "NextNodeServer.renderToHTML", a10.renderError = "NextNodeServer.renderError", a10.renderErrorToHTML = "NextNodeServer.renderErrorToHTML", a10.render404 = "NextNodeServer.render404", a10.startResponse = "NextNodeServer.startResponse", a10.route = "route", a10.onProxyReq = "onProxyReq", a10.apiResolver = "apiResolver", a10.internalFetch = "internalFetch", a10;
+      }(_ || {}), aa = function(a10) {
+        return a10.startServer = "startServer.startServer", a10;
+      }(aa || {}), ab = function(a10) {
+        return a10.getServerSideProps = "Render.getServerSideProps", a10.getStaticProps = "Render.getStaticProps", a10.renderToString = "Render.renderToString", a10.renderDocument = "Render.renderDocument", a10.createBodyResult = "Render.createBodyResult", a10;
+      }(ab || {}), ac = function(a10) {
+        return a10.renderToString = "AppRender.renderToString", a10.renderToReadableStream = "AppRender.renderToReadableStream", a10.getBodyResult = "AppRender.getBodyResult", a10.fetch = "AppRender.fetch", a10;
+      }(ac || {}), ad = function(a10) {
+        return a10.executeRoute = "Router.executeRoute", a10;
+      }(ad || {}), ae = function(a10) {
+        return a10.runHandler = "Node.runHandler", a10;
+      }(ae || {}), af = function(a10) {
+        return a10.runHandler = "AppRouteRouteHandlers.runHandler", a10;
+      }(af || {}), ag = function(a10) {
+        return a10.generateMetadata = "ResolveMetadata.generateMetadata", a10.generateViewport = "ResolveMetadata.generateViewport", a10;
+      }(ag || {}), ah = function(a10) {
+        return a10.execute = "Middleware.execute", a10;
+      }(ah || {});
+      let ai = ["Middleware.execute", "BaseServer.handleRequest", "Render.getServerSideProps", "Render.getStaticProps", "AppRender.fetch", "AppRender.getBodyResult", "Render.renderDocument", "Node.runHandler", "AppRouteRouteHandlers.runHandler", "ResolveMetadata.generateMetadata", "ResolveMetadata.generateViewport", "NextNodeServer.createComponentTree", "NextNodeServer.findPageComponents", "NextNodeServer.getLayoutOrPageModule", "NextNodeServer.startResponse", "NextNodeServer.clientComponentLoading"], aj = ["NextNodeServer.findPageComponents", "NextNodeServer.createComponentTree", "NextNodeServer.clientComponentLoading"];
+      function ak(a10) {
+        return null !== a10 && "object" == typeof a10 && "then" in a10 && "function" == typeof a10.then;
+      }
+      let { context: al, propagation: am, trace: an, SpanStatusCode: ao, SpanKind: ap, ROOT_CONTEXT: aq } = d = c(817);
+      class ar extends Error {
+        constructor(a10, b10) {
+          super(), this.bubble = a10, this.result = b10;
+        }
+      }
+      let as = (a10, b10) => {
+        (function(a11) {
+          return "object" == typeof a11 && null !== a11 && a11 instanceof ar;
+        })(b10) && b10.bubble ? a10.setAttribute("next.bubble", true) : (b10 && (a10.recordException(b10), a10.setAttribute("error.type", b10.name)), a10.setStatus({ code: ao.ERROR, message: null == b10 ? void 0 : b10.message })), a10.end();
+      }, at = /* @__PURE__ */ new Map(), au = d.createContextKey("next.rootSpanId"), av = 0, aw = { set(a10, b10, c10) {
+        a10.push({ key: b10, value: c10 });
+      } };
+      class ax {
+        getTracerInstance() {
+          return an.getTracer("next.js", "0.0.1");
+        }
+        getContext() {
+          return al;
+        }
+        getTracePropagationData() {
+          let a10 = al.active(), b10 = [];
+          return am.inject(a10, b10, aw), b10;
+        }
+        getActiveScopeSpan() {
+          return an.getSpan(null == al ? void 0 : al.active());
+        }
+        withPropagatedContext(a10, b10, c10) {
+          let d10 = al.active();
+          if (an.getSpanContext(d10)) return b10();
+          let e10 = am.extract(d10, a10, c10);
+          return al.with(e10, b10);
+        }
+        trace(...a10) {
+          var b10;
+          let [c10, d10, e10] = a10, { fn: f10, options: g10 } = "function" == typeof d10 ? { fn: d10, options: {} } : { fn: e10, options: { ...d10 } }, h2 = g10.spanName ?? c10;
+          if (!ai.includes(c10) && "1" !== process.env.NEXT_OTEL_VERBOSE || g10.hideSpan) return f10();
+          let i2 = this.getSpanContext((null == g10 ? void 0 : g10.parentSpan) ?? this.getActiveScopeSpan()), j2 = false;
+          i2 ? (null == (b10 = an.getSpanContext(i2)) ? void 0 : b10.isRemote) && (j2 = true) : (i2 = (null == al ? void 0 : al.active()) ?? aq, j2 = true);
+          let k2 = av++;
+          return g10.attributes = { "next.span_name": h2, "next.span_type": c10, ...g10.attributes }, al.with(i2.setValue(au, k2), () => this.getTracerInstance().startActiveSpan(h2, g10, (a11) => {
+            let b11 = "performance" in globalThis && "measure" in performance ? globalThis.performance.now() : void 0, d11 = () => {
+              at.delete(k2), b11 && process.env.NEXT_OTEL_PERFORMANCE_PREFIX && aj.includes(c10 || "") && performance.measure(`${process.env.NEXT_OTEL_PERFORMANCE_PREFIX}:next-${(c10.split(".").pop() || "").replace(/[A-Z]/g, (a12) => "-" + a12.toLowerCase())}`, { start: b11, end: performance.now() });
+            };
+            j2 && at.set(k2, new Map(Object.entries(g10.attributes ?? {})));
+            try {
+              if (f10.length > 1) return f10(a11, (b13) => as(a11, b13));
+              let b12 = f10(a11);
+              if (ak(b12)) return b12.then((b13) => (a11.end(), b13)).catch((b13) => {
+                throw as(a11, b13), b13;
+              }).finally(d11);
+              return a11.end(), d11(), b12;
+            } catch (b12) {
+              throw as(a11, b12), d11(), b12;
+            }
+          }));
+        }
+        wrap(...a10) {
+          let b10 = this, [c10, d10, e10] = 3 === a10.length ? a10 : [a10[0], {}, a10[1]];
+          return ai.includes(c10) || "1" === process.env.NEXT_OTEL_VERBOSE ? function() {
+            let a11 = d10;
+            "function" == typeof a11 && "function" == typeof e10 && (a11 = a11.apply(this, arguments));
+            let f10 = arguments.length - 1, g10 = arguments[f10];
+            if ("function" != typeof g10) return b10.trace(c10, a11, () => e10.apply(this, arguments));
+            {
+              let d11 = b10.getContext().bind(al.active(), g10);
+              return b10.trace(c10, a11, (a12, b11) => (arguments[f10] = function(a13) {
+                return null == b11 || b11(a13), d11.apply(this, arguments);
+              }, e10.apply(this, arguments)));
+            }
+          } : e10;
+        }
+        startSpan(...a10) {
+          let [b10, c10] = a10, d10 = this.getSpanContext((null == c10 ? void 0 : c10.parentSpan) ?? this.getActiveScopeSpan());
+          return this.getTracerInstance().startSpan(b10, c10, d10);
+        }
+        getSpanContext(a10) {
+          return a10 ? an.setSpan(al.active(), a10) : void 0;
+        }
+        getRootSpanAttributes() {
+          let a10 = al.active().getValue(au);
+          return at.get(a10);
+        }
+        setRootSpanAttribute(a10, b10) {
+          let c10 = al.active().getValue(au), d10 = at.get(c10);
+          d10 && d10.set(a10, b10);
+        }
+      }
+      let ay = (() => {
+        let a10 = new ax();
+        return () => a10;
+      })(), az = "__prerender_bypass";
+      Symbol("__next_preview_data"), Symbol(az);
+      class aA {
+        constructor(a10, b10, c10, d10) {
+          var e10;
+          let f10 = a10 && function(a11, b11) {
+            let c11 = W.o.from(a11.headers);
+            return { isOnDemandRevalidate: c11.get("x-prerender-revalidate") === b11.previewModeId, revalidateOnlyGenerated: c11.has("x-prerender-revalidate-if-generated") };
+          }(b10, a10).isOnDemandRevalidate, g10 = null == (e10 = c10.get(az)) ? void 0 : e10.value;
+          this._isEnabled = !!(!f10 && g10 && a10 && g10 === a10.previewModeId), this._previewModeId = null == a10 ? void 0 : a10.previewModeId, this._mutableCookies = d10;
+        }
+        get isEnabled() {
+          return this._isEnabled;
+        }
+        enable() {
+          if (!this._previewModeId) throw Object.defineProperty(Error("Invariant: previewProps missing previewModeId this should never happen"), "__NEXT_ERROR_CODE", { value: "E93", enumerable: false, configurable: true });
+          this._mutableCookies.set({ name: az, value: this._previewModeId, httpOnly: true, sameSite: "none", secure: true, path: "/" }), this._isEnabled = true;
+        }
+        disable() {
+          this._mutableCookies.set({ name: az, value: "", httpOnly: true, sameSite: "none", secure: true, path: "/", expires: /* @__PURE__ */ new Date(0) }), this._isEnabled = false;
+        }
+      }
+      function aB(a10, b10) {
+        if ("x-middleware-set-cookie" in a10.headers && "string" == typeof a10.headers["x-middleware-set-cookie"]) {
+          let c10 = a10.headers["x-middleware-set-cookie"], d10 = new Headers();
+          for (let a11 of r(c10)) d10.append("set-cookie", a11);
+          for (let a11 of new K.VO(d10).getAll()) b10.set(a11);
+        }
+      }
+      var aC = c(128), aD = c(213), aE = c.n(aD), aF = c(809), aG = c(379);
+      class aH {
+        constructor(a10, b10, c10) {
+          this.prev = null, this.next = null, this.key = a10, this.data = b10, this.size = c10;
+        }
+      }
+      class aI {
+        constructor() {
+          this.prev = null, this.next = null;
+        }
+      }
+      class aJ {
+        constructor(a10, b10) {
+          this.cache = /* @__PURE__ */ new Map(), this.totalSize = 0, this.maxSize = a10, this.calculateSize = b10, this.head = new aI(), this.tail = new aI(), this.head.next = this.tail, this.tail.prev = this.head;
+        }
+        addToHead(a10) {
+          a10.prev = this.head, a10.next = this.head.next, this.head.next.prev = a10, this.head.next = a10;
+        }
+        removeNode(a10) {
+          a10.prev.next = a10.next, a10.next.prev = a10.prev;
+        }
+        moveToHead(a10) {
+          this.removeNode(a10), this.addToHead(a10);
+        }
+        removeTail() {
+          let a10 = this.tail.prev;
+          return this.removeNode(a10), a10;
+        }
+        set(a10, b10) {
+          let c10 = (null == this.calculateSize ? void 0 : this.calculateSize.call(this, b10)) ?? 1;
+          if (c10 > this.maxSize) return void console.warn("Single item size exceeds maxSize");
+          let d10 = this.cache.get(a10);
+          if (d10) d10.data = b10, this.totalSize = this.totalSize - d10.size + c10, d10.size = c10, this.moveToHead(d10);
+          else {
+            let d11 = new aH(a10, b10, c10);
+            this.cache.set(a10, d11), this.addToHead(d11), this.totalSize += c10;
+          }
+          for (; this.totalSize > this.maxSize && this.cache.size > 0; ) {
+            let a11 = this.removeTail();
+            this.cache.delete(a11.key), this.totalSize -= a11.size;
+          }
+        }
+        has(a10) {
+          return this.cache.has(a10);
+        }
+        get(a10) {
+          let b10 = this.cache.get(a10);
+          if (b10) return this.moveToHead(b10), b10.data;
+        }
+        *[Symbol.iterator]() {
+          let a10 = this.head.next;
+          for (; a10 && a10 !== this.tail; ) {
+            let b10 = a10;
+            yield [b10.key, b10.data], a10 = a10.next;
+          }
+        }
+        remove(a10) {
+          let b10 = this.cache.get(a10);
+          b10 && (this.removeNode(b10), this.cache.delete(a10), this.totalSize -= b10.size);
+        }
+        get size() {
+          return this.cache.size;
+        }
+        get currentSize() {
+          return this.totalSize;
+        }
+      }
+      c(356).Buffer, new aJ(52428800, (a10) => a10.size), process.env.NEXT_PRIVATE_DEBUG_CACHE && console.debug.bind(console, "DefaultCacheHandler:"), process.env.NEXT_PRIVATE_DEBUG_CACHE && ((a10, ...b10) => {
+        console.log(`use-cache: ${a10}`, ...b10);
+      }), Symbol.for("@next/cache-handlers");
+      let aK = Symbol.for("@next/cache-handlers-map"), aL = Symbol.for("@next/cache-handlers-set"), aM = globalThis;
+      function aN() {
+        if (aM[aK]) return aM[aK].entries();
+      }
+      async function aO(a10, b10) {
+        if (!a10) return b10();
+        let c10 = aP(a10);
+        try {
+          return await b10();
+        } finally {
+          let b11 = function(a11, b12) {
+            let c11 = new Set(a11.pendingRevalidatedTags), d10 = new Set(a11.pendingRevalidateWrites);
+            return { pendingRevalidatedTags: b12.pendingRevalidatedTags.filter((a12) => !c11.has(a12)), pendingRevalidates: Object.fromEntries(Object.entries(b12.pendingRevalidates).filter(([b13]) => !(b13 in a11.pendingRevalidates))), pendingRevalidateWrites: b12.pendingRevalidateWrites.filter((a12) => !d10.has(a12)) };
+          }(c10, aP(a10));
+          await aR(a10, b11);
+        }
+      }
+      function aP(a10) {
+        return { pendingRevalidatedTags: a10.pendingRevalidatedTags ? [...a10.pendingRevalidatedTags] : [], pendingRevalidates: { ...a10.pendingRevalidates }, pendingRevalidateWrites: a10.pendingRevalidateWrites ? [...a10.pendingRevalidateWrites] : [] };
+      }
+      async function aQ(a10, b10) {
+        if (0 === a10.length) return;
+        let c10 = [];
+        b10 && c10.push(b10.revalidateTag(a10));
+        let d10 = function() {
+          if (aM[aL]) return aM[aL].values();
+        }();
+        if (d10) for (let b11 of d10) c10.push(b11.expireTags(...a10));
+        await Promise.all(c10);
+      }
+      async function aR(a10, b10) {
+        let c10 = (null == b10 ? void 0 : b10.pendingRevalidatedTags) ?? a10.pendingRevalidatedTags ?? [], d10 = (null == b10 ? void 0 : b10.pendingRevalidates) ?? a10.pendingRevalidates ?? {}, e10 = (null == b10 ? void 0 : b10.pendingRevalidateWrites) ?? a10.pendingRevalidateWrites ?? [];
+        return Promise.all([aQ(c10, a10.incrementalCache), ...Object.values(d10), ...e10]);
+      }
+      var aS = c(669), aT = c(566);
+      class aU {
+        constructor({ waitUntil: a10, onClose: b10, onTaskError: c10 }) {
+          this.workUnitStores = /* @__PURE__ */ new Set(), this.waitUntil = a10, this.onClose = b10, this.onTaskError = c10, this.callbackQueue = new (aE())(), this.callbackQueue.pause();
+        }
+        after(a10) {
+          if (ak(a10)) this.waitUntil || aV(), this.waitUntil(a10.catch((a11) => this.reportTaskError("promise", a11)));
+          else if ("function" == typeof a10) this.addCallback(a10);
+          else throw Object.defineProperty(Error("`after()`: Argument must be a promise or a function"), "__NEXT_ERROR_CODE", { value: "E50", enumerable: false, configurable: true });
+        }
+        addCallback(a10) {
+          this.waitUntil || aV();
+          let b10 = aC.FP.getStore();
+          b10 && this.workUnitStores.add(b10);
+          let c10 = aT.Z.getStore(), d10 = c10 ? c10.rootTaskSpawnPhase : null == b10 ? void 0 : b10.phase;
+          this.runCallbacksOnClosePromise || (this.runCallbacksOnClosePromise = this.runCallbacksOnClose(), this.waitUntil(this.runCallbacksOnClosePromise));
+          let e10 = (0, aS.cg)(async () => {
+            try {
+              await aT.Z.run({ rootTaskSpawnPhase: d10 }, () => a10());
+            } catch (a11) {
+              this.reportTaskError("function", a11);
+            }
+          });
+          this.callbackQueue.add(e10);
+        }
+        async runCallbacksOnClose() {
+          return await new Promise((a10) => this.onClose(a10)), this.runCallbacks();
+        }
+        async runCallbacks() {
+          if (0 === this.callbackQueue.size) return;
+          for (let a11 of this.workUnitStores) a11.phase = "after";
+          let a10 = aG.J.getStore();
+          if (!a10) throw Object.defineProperty(new aF.z("Missing workStore in AfterContext.runCallbacks"), "__NEXT_ERROR_CODE", { value: "E547", enumerable: false, configurable: true });
+          return aO(a10, () => (this.callbackQueue.start(), this.callbackQueue.onIdle()));
+        }
+        reportTaskError(a10, b10) {
+          if (console.error("promise" === a10 ? "A promise passed to `after()` rejected:" : "An error occurred in a function passed to `after()`:", b10), this.onTaskError) try {
+            null == this.onTaskError || this.onTaskError.call(this, b10);
+          } catch (a11) {
+            console.error(Object.defineProperty(new aF.z("`onTaskError` threw while handling an error thrown from an `after` task", { cause: a11 }), "__NEXT_ERROR_CODE", { value: "E569", enumerable: false, configurable: true }));
+          }
+        }
+      }
+      function aV() {
+        throw Object.defineProperty(Error("`after()` will not work correctly, because `waitUntil` is not available in the current environment."), "__NEXT_ERROR_CODE", { value: "E91", enumerable: false, configurable: true });
+      }
+      function aW(a10) {
+        let b10, c10 = { then: (d10, e10) => (b10 || (b10 = a10()), b10.then((a11) => {
+          c10.value = a11;
+        }).catch(() => {
+        }), b10.then(d10, e10)) };
+        return c10;
+      }
+      class aX {
+        onClose(a10) {
+          if (this.isClosed) throw Object.defineProperty(Error("Cannot subscribe to a closed CloseController"), "__NEXT_ERROR_CODE", { value: "E365", enumerable: false, configurable: true });
+          this.target.addEventListener("close", a10), this.listeners++;
+        }
+        dispatchClose() {
+          if (this.isClosed) throw Object.defineProperty(Error("Cannot close a CloseController multiple times"), "__NEXT_ERROR_CODE", { value: "E229", enumerable: false, configurable: true });
+          this.listeners > 0 && this.target.dispatchEvent(new Event("close")), this.isClosed = true;
+        }
+        constructor() {
+          this.target = new EventTarget(), this.listeners = 0, this.isClosed = false;
+        }
+      }
+      function aY() {
+        return { previewModeId: process.env.__NEXT_PREVIEW_MODE_ID || "", previewModeSigningKey: process.env.__NEXT_PREVIEW_MODE_SIGNING_KEY || "", previewModeEncryptionKey: process.env.__NEXT_PREVIEW_MODE_ENCRYPTION_KEY || "" };
+      }
+      let aZ = Symbol.for("@next/request-context");
+      async function a$(a10, b10, c10) {
+        let d10 = [], e10 = c10 && c10.size > 0;
+        for (let b11 of ((a11) => {
+          let b12 = ["/layout"];
+          if (a11.startsWith("/")) {
+            let c11 = a11.split("/");
+            for (let a12 = 1; a12 < c11.length + 1; a12++) {
+              let d11 = c11.slice(0, a12).join("/");
+              d11 && (d11.endsWith("/page") || d11.endsWith("/route") || (d11 = `${d11}${!d11.endsWith("/") ? "/" : ""}layout`), b12.push(d11));
+            }
+          }
+          return b12;
+        })(a10)) b11 = `${p}${b11}`, d10.push(b11);
+        if (b10.pathname && !e10) {
+          let a11 = `${p}${b10.pathname}`;
+          d10.push(a11);
+        }
+        return { tags: d10, expirationsByCacheKind: function(a11) {
+          let b11 = /* @__PURE__ */ new Map(), c11 = aN();
+          if (c11) for (let [d11, e11] of c11) "getExpiration" in e11 && b11.set(d11, aW(async () => e11.getExpiration(...a11)));
+          return b11;
+        }(d10) };
+      }
+      class a_ extends M {
+        constructor(a10) {
+          super(a10.input, a10.init), this.sourcePage = a10.page;
+        }
+        get request() {
+          throw Object.defineProperty(new m({ page: this.sourcePage }), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
+        }
+        respondWith() {
+          throw Object.defineProperty(new m({ page: this.sourcePage }), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
+        }
+        waitUntil() {
+          throw Object.defineProperty(new m({ page: this.sourcePage }), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
+        }
+      }
+      let a0 = { keys: (a10) => Array.from(a10.keys()), get: (a10, b10) => a10.get(b10) ?? void 0 }, a1 = (a10, b10) => ay().withPropagatedContext(a10.headers, b10, a0), a2 = false;
+      async function a3(a10) {
+        var b10;
+        let d10, e10;
+        if (!a2 && (a2 = true, "true" === process.env.NEXT_PRIVATE_TEST_PROXY)) {
+          let { interceptTestApis: a11, wrapRequestHandler: b11 } = c(720);
+          a11(), a1 = b11(a1);
+        }
+        await k();
+        let f10 = void 0 !== globalThis.__BUILD_MANIFEST;
+        a10.request.url = a10.request.url.replace(/\.rsc($|\?)/, "$1");
+        let g10 = a10.bypassNextUrl ? new URL(a10.request.url) : new J(a10.request.url, { headers: a10.request.headers, nextConfig: a10.request.nextConfig });
+        for (let a11 of [...g10.searchParams.keys()]) {
+          let b11 = g10.searchParams.getAll(a11), c10 = function(a12) {
+            for (let b12 of ["nxtP", "nxtI"]) if (a12 !== b12 && a12.startsWith(b12)) return a12.substring(b12.length);
+            return null;
+          }(a11);
+          if (c10) {
+            for (let a12 of (g10.searchParams.delete(c10), b11)) g10.searchParams.append(c10, a12);
+            g10.searchParams.delete(a11);
+          }
+        }
+        let h2 = process.env.__NEXT_BUILD_ID || "";
+        "buildId" in g10 && (h2 = g10.buildId || "", g10.buildId = "");
+        let i2 = function(a11) {
+          let b11 = new Headers();
+          for (let [c10, d11] of Object.entries(a11)) for (let a12 of Array.isArray(d11) ? d11 : [d11]) void 0 !== a12 && ("number" == typeof a12 && (a12 = a12.toString()), b11.append(c10, a12));
+          return b11;
+        }(a10.request.headers), j2 = i2.has("x-nextjs-data"), l2 = "1" === i2.get("rsc");
+        j2 && "/index" === g10.pathname && (g10.pathname = "/");
+        let m2 = /* @__PURE__ */ new Map();
+        if (!f10) for (let a11 of U) {
+          let b11 = i2.get(a11);
+          null !== b11 && (m2.set(a11, b11), i2.delete(a11));
+        }
+        let n2 = g10.searchParams.get(V), o2 = new a_({ page: a10.page, input: function(a11) {
+          let b11 = "string" == typeof a11, c10 = b11 ? new URL(a11) : a11;
+          return c10.searchParams.delete(V), b11 ? c10.toString() : c10;
+        }(g10).toString(), init: { body: a10.request.body, headers: i2, method: a10.request.method, nextConfig: a10.request.nextConfig, signal: a10.request.signal } });
+        j2 && Object.defineProperty(o2, "__isData", { enumerable: false, value: true }), !globalThis.__incrementalCacheShared && a10.IncrementalCache && (globalThis.__incrementalCache = new a10.IncrementalCache({ CurCacheHandler: a10.incrementalCacheHandler, minimalMode: true, fetchCacheKeyPrefix: "", dev: false, requestHeaders: a10.request.headers, getPrerenderManifest: () => ({ version: -1, routes: {}, dynamicRoutes: {}, notFoundRoutes: [], preview: aY() }) }));
+        let p2 = a10.request.waitUntil ?? (null == (b10 = function() {
+          let a11 = globalThis[aZ];
+          return null == a11 ? void 0 : a11.get();
+        }()) ? void 0 : b10.waitUntil), q2 = new y({ request: o2, page: a10.page, context: p2 ? { waitUntil: p2 } : void 0 });
+        if ((d10 = await a1(o2, () => {
+          if ("/middleware" === a10.page || "/src/middleware" === a10.page) {
+            let b11 = q2.waitUntil.bind(q2), c10 = new aX();
+            return ay().trace(ah.execute, { spanName: `middleware ${o2.method} ${o2.nextUrl.pathname}`, attributes: { "http.target": o2.nextUrl.pathname, "http.method": o2.method } }, async () => {
+              try {
+                var d11, f11, g11, i3, j3, k2;
+                let l3 = aY(), m3 = await a$("/", o2.nextUrl, null), n3 = (j3 = o2.nextUrl, k2 = (a11) => {
+                  e10 = a11;
+                }, function(a11, b12, c11, d12, e11, f12, g12, h3, i4, j4, k3, l4) {
+                  function m4(a12) {
+                    c11 && c11.setHeader("Set-Cookie", a12);
+                  }
+                  let n4 = {};
+                  return { type: "request", phase: a11, implicitTags: f12, url: { pathname: d12.pathname, search: d12.search ?? "" }, rootParams: e11, get headers() {
+                    return n4.headers || (n4.headers = function(a12) {
+                      let b13 = W.o.from(a12);
+                      for (let a13 of U) b13.delete(a13);
+                      return W.o.seal(b13);
+                    }(b12.headers)), n4.headers;
+                  }, get cookies() {
+                    if (!n4.cookies) {
+                      let a12 = new K.tm(W.o.from(b12.headers));
+                      aB(b12, a12), n4.cookies = X.Ck.seal(a12);
+                    }
+                    return n4.cookies;
+                  }, set cookies(value) {
+                    n4.cookies = value;
+                  }, get mutableCookies() {
+                    if (!n4.mutableCookies) {
+                      let a12 = function(a13, b13) {
+                        let c12 = new K.tm(W.o.from(a13));
+                        return X.K8.wrap(c12, b13);
+                      }(b12.headers, g12 || (c11 ? m4 : void 0));
+                      aB(b12, a12), n4.mutableCookies = a12;
+                    }
+                    return n4.mutableCookies;
+                  }, get userspaceMutableCookies() {
+                    return n4.userspaceMutableCookies || (n4.userspaceMutableCookies = (0, X.EJ)(this)), n4.userspaceMutableCookies;
+                  }, get draftMode() {
+                    return n4.draftMode || (n4.draftMode = new aA(i4, b12, this.cookies, this.mutableCookies)), n4.draftMode;
+                  }, renderResumeDataCache: h3 ?? null, isHmrRefresh: j4, serverComponentsHmrCache: k3 || globalThis.__serverComponentsHmrCache, devFallbackParams: null };
+                }("action", o2, void 0, j3, {}, m3, k2, void 0, l3, false, void 0, null)), p3 = function({ page: a11, renderOpts: b12, isPrefetchRequest: c11, buildId: d12, previouslyRevalidatedTags: e11 }) {
+                  var f12;
+                  let g12 = !b12.shouldWaitOnAllReady && !b12.supportsDynamicResponse && !b12.isDraftMode && !b12.isPossibleServerAction, h3 = b12.dev ?? false, i4 = h3 || g12 && (!!process.env.NEXT_DEBUG_BUILD || "1" === process.env.NEXT_SSG_FETCH_METRICS), j4 = { isStaticGeneration: g12, page: a11, route: (f12 = a11.split("/").reduce((a12, b13, c12, d13) => b13 ? "(" === b13[0] && b13.endsWith(")") || "@" === b13[0] || ("page" === b13 || "route" === b13) && c12 === d13.length - 1 ? a12 : a12 + "/" + b13 : a12, "")).startsWith("/") ? f12 : "/" + f12, incrementalCache: b12.incrementalCache || globalThis.__incrementalCache, cacheLifeProfiles: b12.cacheLifeProfiles, isRevalidate: b12.isRevalidate, isBuildTimePrerendering: b12.nextExport, hasReadableErrorStacks: b12.hasReadableErrorStacks, fetchCache: b12.fetchCache, isOnDemandRevalidate: b12.isOnDemandRevalidate, isDraftMode: b12.isDraftMode, isPrefetchRequest: c11, buildId: d12, reactLoadableManifest: (null == b12 ? void 0 : b12.reactLoadableManifest) || {}, assetPrefix: (null == b12 ? void 0 : b12.assetPrefix) || "", afterContext: function(a12) {
+                    let { waitUntil: b13, onClose: c12, onAfterTaskError: d13 } = a12;
+                    return new aU({ waitUntil: b13, onClose: c12, onTaskError: d13 });
+                  }(b12), cacheComponentsEnabled: b12.experimental.cacheComponents, dev: h3, previouslyRevalidatedTags: e11, refreshTagsByCacheKind: function() {
+                    let a12 = /* @__PURE__ */ new Map(), b13 = aN();
+                    if (b13) for (let [c12, d13] of b13) "refreshTags" in d13 && a12.set(c12, aW(async () => d13.refreshTags()));
+                    return a12;
+                  }(), runInCleanSnapshot: (0, aS.$p)(), shouldTrackFetchMetrics: i4 };
+                  return b12.store = j4, j4;
+                }({ page: "/", renderOpts: { cacheLifeProfiles: null == (f11 = a10.request.nextConfig) || null == (d11 = f11.experimental) ? void 0 : d11.cacheLife, experimental: { isRoutePPREnabled: false, cacheComponents: false, authInterrupts: !!(null == (i3 = a10.request.nextConfig) || null == (g11 = i3.experimental) ? void 0 : g11.authInterrupts) }, supportsDynamicResponse: true, waitUntil: b11, onClose: c10.onClose.bind(c10), onAfterTaskError: void 0 }, isPrefetchRequest: "1" === o2.headers.get(T), buildId: h2 ?? "", previouslyRevalidatedTags: [] });
+                return await aG.J.run(p3, () => aC.FP.run(n3, a10.handler, o2, q2));
+              } finally {
+                setTimeout(() => {
+                  c10.dispatchClose();
+                }, 0);
+              }
+            });
+          }
+          return a10.handler(o2, q2);
+        })) && !(d10 instanceof Response)) throw Object.defineProperty(TypeError("Expected an instance of Response to be returned"), "__NEXT_ERROR_CODE", { value: "E567", enumerable: false, configurable: true });
+        d10 && e10 && d10.headers.set("set-cookie", e10);
+        let r2 = null == d10 ? void 0 : d10.headers.get("x-middleware-rewrite");
+        if (d10 && r2 && (l2 || !f10)) {
+          let b11 = new J(r2, { forceLocale: true, headers: a10.request.headers, nextConfig: a10.request.nextConfig });
+          f10 || b11.host !== o2.nextUrl.host || (b11.buildId = h2 || b11.buildId, d10.headers.set("x-middleware-rewrite", String(b11)));
+          let { url: c10, isRelative: e11 } = S(b11.toString(), g10.toString());
+          !f10 && j2 && d10.headers.set("x-nextjs-rewrite", c10), l2 && e11 && (g10.pathname !== b11.pathname && d10.headers.set("x-nextjs-rewritten-path", b11.pathname), g10.search !== b11.search && d10.headers.set("x-nextjs-rewritten-query", b11.search.slice(1)));
+        }
+        if (d10 && r2 && l2 && n2) {
+          let a11 = new URL(r2);
+          a11.searchParams.has(V) || (a11.searchParams.set(V, n2), d10.headers.set("x-middleware-rewrite", a11.toString()));
+        }
+        let s2 = null == d10 ? void 0 : d10.headers.get("Location");
+        if (d10 && s2 && !f10) {
+          let b11 = new J(s2, { forceLocale: false, headers: a10.request.headers, nextConfig: a10.request.nextConfig });
+          d10 = new Response(d10.body, d10), b11.host === g10.host && (b11.buildId = h2 || b11.buildId, d10.headers.set("Location", b11.toString())), j2 && (d10.headers.delete("Location"), d10.headers.set("x-nextjs-redirect", S(b11.toString(), g10.toString()).url));
+        }
+        let t2 = d10 || R.next(), u2 = t2.headers.get("x-middleware-override-headers"), v2 = [];
+        if (u2) {
+          for (let [a11, b11] of m2) t2.headers.set(`x-middleware-request-${a11}`, b11), v2.push(a11);
+          v2.length > 0 && t2.headers.set("x-middleware-override-headers", u2 + "," + v2.join(","));
+        }
+        return { response: t2, waitUntil: ("internal" === q2[w].kind ? Promise.all(q2[w].promises).then(() => {
+        }) : void 0) ?? Promise.resolve(), fetchMetrics: o2.fetchMetrics };
+      }
+      function a4(a10) {
+        return a10.replace(/([.+*?=^!:${}()[\]|/\\])/g, "\\$1");
+      }
+      function a5(a10) {
+        return a10 && a10.sensitive ? "" : "i";
+      }
+      function a6(a10, b10, c10) {
+        var d10;
+        return a10 instanceof RegExp ? function(a11, b11) {
+          if (!b11) return a11;
+          for (var c11 = /\((?:\?<(.*?)>)?(?!\?)/g, d11 = 0, e10 = c11.exec(a11.source); e10; ) b11.push({ name: e10[1] || d11++, prefix: "", suffix: "", modifier: "", pattern: "" }), e10 = c11.exec(a11.source);
+          return a11;
+        }(a10, b10) : Array.isArray(a10) ? (d10 = a10.map(function(a11) {
+          return a6(a11, b10, c10).source;
+        }), new RegExp("(?:".concat(d10.join("|"), ")"), a5(c10))) : function(a11, b11, c11) {
+          void 0 === c11 && (c11 = {});
+          for (var d11 = c11.strict, e10 = void 0 !== d11 && d11, f10 = c11.start, g10 = c11.end, h2 = c11.encode, i2 = void 0 === h2 ? function(a12) {
+            return a12;
+          } : h2, j2 = c11.delimiter, k2 = c11.endsWith, l2 = "[".concat(a4(void 0 === k2 ? "" : k2), "]|$"), m2 = "[".concat(a4(void 0 === j2 ? "/#?" : j2), "]"), n2 = void 0 === f10 || f10 ? "^" : "", o2 = 0; o2 < a11.length; o2++) {
+            var p2 = a11[o2];
+            if ("string" == typeof p2) n2 += a4(i2(p2));
+            else {
+              var q2 = a4(i2(p2.prefix)), r2 = a4(i2(p2.suffix));
+              if (p2.pattern) if (b11 && b11.push(p2), q2 || r2) if ("+" === p2.modifier || "*" === p2.modifier) {
+                var s2 = "*" === p2.modifier ? "?" : "";
+                n2 += "(?:".concat(q2, "((?:").concat(p2.pattern, ")(?:").concat(r2).concat(q2, "(?:").concat(p2.pattern, "))*)").concat(r2, ")").concat(s2);
+              } else n2 += "(?:".concat(q2, "(").concat(p2.pattern, ")").concat(r2, ")").concat(p2.modifier);
+              else {
+                if ("+" === p2.modifier || "*" === p2.modifier) throw TypeError('Can not repeat "'.concat(p2.name, '" without a prefix and suffix'));
+                n2 += "(".concat(p2.pattern, ")").concat(p2.modifier);
+              }
+              else n2 += "(?:".concat(q2).concat(r2, ")").concat(p2.modifier);
+            }
+          }
+          if (void 0 === g10 || g10) e10 || (n2 += "".concat(m2, "?")), n2 += c11.endsWith ? "(?=".concat(l2, ")") : "$";
+          else {
+            var t2 = a11[a11.length - 1], u2 = "string" == typeof t2 ? m2.indexOf(t2[t2.length - 1]) > -1 : void 0 === t2;
+            e10 || (n2 += "(?:".concat(m2, "(?=").concat(l2, "))?")), u2 || (n2 += "(?=".concat(m2, "|").concat(l2, ")"));
+          }
+          return new RegExp(n2, a5(c11));
+        }(function(a11, b11) {
+          void 0 === b11 && (b11 = {});
+          for (var c11 = function(a12) {
+            for (var b12 = [], c12 = 0; c12 < a12.length; ) {
+              var d12 = a12[c12];
+              if ("*" === d12 || "+" === d12 || "?" === d12) {
+                b12.push({ type: "MODIFIER", index: c12, value: a12[c12++] });
+                continue;
+              }
+              if ("\\" === d12) {
+                b12.push({ type: "ESCAPED_CHAR", index: c12++, value: a12[c12++] });
+                continue;
+              }
+              if ("{" === d12) {
+                b12.push({ type: "OPEN", index: c12, value: a12[c12++] });
+                continue;
+              }
+              if ("}" === d12) {
+                b12.push({ type: "CLOSE", index: c12, value: a12[c12++] });
+                continue;
+              }
+              if (":" === d12) {
+                for (var e11 = "", f11 = c12 + 1; f11 < a12.length; ) {
+                  var g11 = a12.charCodeAt(f11);
+                  if (g11 >= 48 && g11 <= 57 || g11 >= 65 && g11 <= 90 || g11 >= 97 && g11 <= 122 || 95 === g11) {
+                    e11 += a12[f11++];
+                    continue;
+                  }
+                  break;
+                }
+                if (!e11) throw TypeError("Missing parameter name at ".concat(c12));
+                b12.push({ type: "NAME", index: c12, value: e11 }), c12 = f11;
+                continue;
+              }
+              if ("(" === d12) {
+                var h3 = 1, i3 = "", f11 = c12 + 1;
+                if ("?" === a12[f11]) throw TypeError('Pattern cannot start with "?" at '.concat(f11));
+                for (; f11 < a12.length; ) {
+                  if ("\\" === a12[f11]) {
+                    i3 += a12[f11++] + a12[f11++];
+                    continue;
+                  }
+                  if (")" === a12[f11]) {
+                    if (0 == --h3) {
+                      f11++;
+                      break;
+                    }
+                  } else if ("(" === a12[f11] && (h3++, "?" !== a12[f11 + 1])) throw TypeError("Capturing groups are not allowed at ".concat(f11));
+                  i3 += a12[f11++];
+                }
+                if (h3) throw TypeError("Unbalanced pattern at ".concat(c12));
+                if (!i3) throw TypeError("Missing pattern at ".concat(c12));
+                b12.push({ type: "PATTERN", index: c12, value: i3 }), c12 = f11;
+                continue;
+              }
+              b12.push({ type: "CHAR", index: c12, value: a12[c12++] });
+            }
+            return b12.push({ type: "END", index: c12, value: "" }), b12;
+          }(a11), d11 = b11.prefixes, e10 = void 0 === d11 ? "./" : d11, f10 = b11.delimiter, g10 = void 0 === f10 ? "/#?" : f10, h2 = [], i2 = 0, j2 = 0, k2 = "", l2 = function(a12) {
+            if (j2 < c11.length && c11[j2].type === a12) return c11[j2++].value;
+          }, m2 = function(a12) {
+            var b12 = l2(a12);
+            if (void 0 !== b12) return b12;
+            var d12 = c11[j2], e11 = d12.type, f11 = d12.index;
+            throw TypeError("Unexpected ".concat(e11, " at ").concat(f11, ", expected ").concat(a12));
+          }, n2 = function() {
+            for (var a12, b12 = ""; a12 = l2("CHAR") || l2("ESCAPED_CHAR"); ) b12 += a12;
+            return b12;
+          }, o2 = function(a12) {
+            for (var b12 = 0; b12 < g10.length; b12++) {
+              var c12 = g10[b12];
+              if (a12.indexOf(c12) > -1) return true;
+            }
+            return false;
+          }, p2 = function(a12) {
+            var b12 = h2[h2.length - 1], c12 = a12 || (b12 && "string" == typeof b12 ? b12 : "");
+            if (b12 && !c12) throw TypeError('Must have text between two parameters, missing text after "'.concat(b12.name, '"'));
+            return !c12 || o2(c12) ? "[^".concat(a4(g10), "]+?") : "(?:(?!".concat(a4(c12), ")[^").concat(a4(g10), "])+?");
+          }; j2 < c11.length; ) {
+            var q2 = l2("CHAR"), r2 = l2("NAME"), s2 = l2("PATTERN");
+            if (r2 || s2) {
+              var t2 = q2 || "";
+              -1 === e10.indexOf(t2) && (k2 += t2, t2 = ""), k2 && (h2.push(k2), k2 = ""), h2.push({ name: r2 || i2++, prefix: t2, suffix: "", pattern: s2 || p2(t2), modifier: l2("MODIFIER") || "" });
+              continue;
+            }
+            var u2 = q2 || l2("ESCAPED_CHAR");
+            if (u2) {
+              k2 += u2;
+              continue;
+            }
+            if (k2 && (h2.push(k2), k2 = ""), l2("OPEN")) {
+              var t2 = n2(), v2 = l2("NAME") || "", w2 = l2("PATTERN") || "", x2 = n2();
+              m2("CLOSE"), h2.push({ name: v2 || (w2 ? i2++ : ""), pattern: v2 && !w2 ? p2(t2) : w2, prefix: t2, suffix: x2, modifier: l2("MODIFIER") || "" });
+              continue;
+            }
+            m2("END");
+          }
+          return h2;
+        }(a10, c10), b10, c10);
+      }
+      let a7 = () => {
+        try {
+          return true;
+        } catch {
+        }
+        return false;
+      }, a8 = /* @__PURE__ */ new Set(), a9 = [".lcl.dev", ".lclstage.dev", ".lclclerk.com"], ba = [".accounts.dev", ".accountsstage.dev", ".accounts.lclclerk.com"], bb = [".lcl.dev", ".stg.dev", ".lclstage.dev", ".stgstage.dev", ".dev.lclclerk.com", ".stg.lclclerk.com", ".accounts.lclclerk.com", "accountsstage.dev", "accounts.dev"], bc = [".lcl.dev", "lclstage.dev", ".lclclerk.com", ".accounts.lclclerk.com"], bd = [".accountsstage.dev"], be = "https://api.clerk.com", bf = (a10) => "undefined" != typeof atob && "function" == typeof atob ? atob(a10) : "undefined" != typeof global && global.Buffer ? new global.Buffer(a10, "base64").toString() : a10, bg = "pk_live_";
+      function bh(a10) {
+        if (!a10.endsWith("$")) return false;
+        let b10 = a10.slice(0, -1);
+        return !b10.includes("$") && b10.includes(".");
+      }
+      function bi(a10, b10 = {}) {
+        let c10;
+        if (!(a10 = a10 || "") || !bj(a10)) {
+          if (b10.fatal && !a10) throw Error("Publishable key is missing. Ensure that your publishable key is correctly configured. Double-check your environment configuration for your keys, or access them here: https://dashboard.clerk.com/last-active?path=api-keys");
+          if (b10.fatal && !bj(a10)) throw Error("Publishable key not valid.");
+          return null;
+        }
+        let d10 = a10.startsWith(bg) ? "production" : "development";
+        try {
+          c10 = bf(a10.split("_")[2]);
+        } catch {
+          if (b10.fatal) throw Error("Publishable key not valid: Failed to decode key.");
+          return null;
+        }
+        if (!bh(c10)) {
+          if (b10.fatal) throw Error("Publishable key not valid: Decoded key has invalid format.");
+          return null;
+        }
+        let e10 = c10.slice(0, -1);
+        return b10.proxyUrl ? e10 = b10.proxyUrl : "development" !== d10 && b10.domain && b10.isSatellite && (e10 = `clerk.${b10.domain}`), { instanceType: d10, frontendApi: e10 };
+      }
+      function bj(a10 = "") {
+        try {
+          if (!(a10.startsWith(bg) || a10.startsWith("pk_test_"))) return false;
+          let b10 = a10.split("_");
+          if (3 !== b10.length) return false;
+          let c10 = b10[2];
+          if (!c10) return false;
+          return bh(bf(c10));
+        } catch {
+          return false;
+        }
+      }
+      function bk(a10) {
+        return a10.startsWith("test_") || a10.startsWith("sk_test_");
+      }
+      async function bl(a10, b10 = globalThis.crypto.subtle) {
+        var c10;
+        let d10 = new TextEncoder().encode(a10);
+        return (c10 = String.fromCharCode(...new Uint8Array(await b10.digest("sha-1", d10))), "undefined" != typeof btoa && "function" == typeof btoa ? btoa(c10) : "undefined" != typeof global && global.Buffer ? new global.Buffer(c10).toString("base64") : c10).replace(/\+/gi, "-").replace(/\//gi, "_").substring(0, 8);
+      }
+      let bm = { initialDelay: 125, maxDelayBetweenRetries: 0, factor: 2, shouldRetry: (a10, b10) => b10 < 5, retryImmediately: false, jitter: true }, bn = async (a10) => new Promise((b10) => setTimeout(b10, a10)), bo = (a10, b10) => b10 ? a10 * (1 + Math.random()) : a10, bp = async (a10, b10 = {}) => {
+        let c10 = 0, { shouldRetry: d10, initialDelay: e10, maxDelayBetweenRetries: f10, factor: g10, retryImmediately: h2, jitter: i2, onBeforeRetry: j2 } = { ...bm, ...b10 }, k2 = /* @__PURE__ */ ((a11) => {
+          let b11 = 0;
+          return async () => {
+            await bn((() => {
+              let c11 = a11.initialDelay * Math.pow(a11.factor, b11);
+              return c11 = bo(c11, a11.jitter), Math.min(a11.maxDelayBetweenRetries || c11, c11);
+            })()), b11++;
+          };
+        })({ initialDelay: e10, maxDelayBetweenRetries: f10, factor: g10, jitter: i2 });
+        for (; ; ) try {
+          return await a10();
+        } catch (a11) {
+          if (!d10(a11, ++c10)) throw a11;
+          j2 && await j2(c10), h2 && 1 === c10 ? await bn(bo(100, i2)) : await k2();
+        }
+      };
+      function bq(a10) {
+        return function(b10) {
+          let c10 = b10 ?? this;
+          if (!c10) throw TypeError(`${a10.kind || a10.name} type guard requires an error object`);
+          return c10 instanceof a10;
+        };
+      }
+      var br = class {
+        static kind = "ClerkApiError";
+        code;
+        message;
+        longMessage;
+        meta;
+        constructor(a10) {
+          let b10 = { code: a10.code, message: a10.message, longMessage: a10.long_message, meta: { paramName: a10.meta?.param_name, sessionId: a10.meta?.session_id, emailAddresses: a10.meta?.email_addresses, identifiers: a10.meta?.identifiers, zxcvbn: a10.meta?.zxcvbn, plan: a10.meta?.plan, isPlanUpgradePossible: a10.meta?.is_plan_upgrade_possible } };
+          this.code = b10.code, this.message = b10.message, this.longMessage = b10.longMessage, this.meta = b10.meta;
+        }
+      };
+      function bs(a10) {
+        return new br(a10);
+      }
+      bq(br);
+      var bt = class a10 extends Error {
+        static kind = "ClerkError";
+        clerkError = true;
+        code;
+        longMessage;
+        docsUrl;
+        cause;
+        get name() {
+          return this.constructor.name;
+        }
+        constructor(b10) {
+          super(new.target.formatMessage(new.target.kind, b10.message, b10.code, b10.docsUrl), { cause: b10.cause }), Object.setPrototypeOf(this, a10.prototype), this.code = b10.code, this.docsUrl = b10.docsUrl, this.longMessage = b10.longMessage, this.cause = b10.cause;
+        }
+        toString() {
+          return `[${this.name}]
+Message:${this.message}`;
+        }
+        static formatMessage(a11, b10, c10, d10) {
+          let e10 = "Clerk:", f10 = RegExp(e10.replace(" ", "\\s*"), "i");
+          return b10 = b10.replace(f10, ""), b10 = `${e10} ${b10.trim()}
+
+(code="${c10}")
+
+`, d10 && (b10 += `
+
+Docs: ${d10}`), b10;
+        }
+      }, bu = class a10 extends bt {
+        static kind = "ClerkAPIResponseError";
+        status;
+        clerkTraceId;
+        retryAfter;
+        errors;
+        constructor(b10, c10) {
+          let { data: d10, status: e10, clerkTraceId: f10, retryAfter: g10 } = c10;
+          super({ ...c10, message: b10, code: "api_response_error" }), Object.setPrototypeOf(this, a10.prototype), this.status = e10, this.clerkTraceId = f10, this.retryAfter = g10, this.errors = (d10 || []).map((a11) => new br(a11));
+        }
+        toString() {
+          let a11 = `[${this.name}]
+Message:${this.message}
+Status:${this.status}
+Serialized errors: ${this.errors.map((a12) => JSON.stringify(a12))}`;
+          return this.clerkTraceId && (a11 += `
+Clerk Trace ID: ${this.clerkTraceId}`), a11;
+        }
+        static formatMessage(a11, b10, c10, d10) {
+          return b10;
+        }
+      };
+      bq(bu);
+      let bv = Object.freeze({ InvalidProxyUrlErrorMessage: "The proxyUrl passed to Clerk is invalid. The expected value for proxyUrl is an absolute URL or a relative path with a leading '/'. (key={{url}})", InvalidPublishableKeyErrorMessage: "The publishableKey passed to Clerk is invalid. You can get your Publishable key at https://dashboard.clerk.com/last-active?path=api-keys. (key={{key}})", MissingPublishableKeyErrorMessage: "Missing publishableKey. You can get your key at https://dashboard.clerk.com/last-active?path=api-keys.", MissingSecretKeyErrorMessage: "Missing secretKey. You can get your key at https://dashboard.clerk.com/last-active?path=api-keys.", MissingClerkProvider: "{{source}} can only be used within the <ClerkProvider /> component. Learn more: https://clerk.com/docs/components/clerk-provider" });
+      function bw({ packageName: a10, customMessages: b10 }) {
+        let c10 = a10;
+        function d10(a11, b11) {
+          if (!b11) return `${c10}: ${a11}`;
+          let d11 = a11;
+          for (let c11 of a11.matchAll(/{{([a-zA-Z0-9-_]+)}}/g)) {
+            let a12 = (b11[c11[1]] || "").toString();
+            d11 = d11.replace(`{{${c11[1]}}}`, a12);
+          }
+          return `${c10}: ${d11}`;
+        }
+        let e10 = { ...bv, ...b10 };
+        return { setPackageName({ packageName: a11 }) {
+          return "string" == typeof a11 && (c10 = a11), this;
+        }, setMessages({ customMessages: a11 }) {
+          return Object.assign(e10, a11 || {}), this;
+        }, throwInvalidPublishableKeyError(a11) {
+          throw Error(d10(e10.InvalidPublishableKeyErrorMessage, a11));
+        }, throwInvalidProxyUrl(a11) {
+          throw Error(d10(e10.InvalidProxyUrlErrorMessage, a11));
+        }, throwMissingPublishableKeyError() {
+          throw Error(d10(e10.MissingPublishableKeyErrorMessage));
+        }, throwMissingSecretKeyError() {
+          throw Error(d10(e10.MissingSecretKeyErrorMessage));
+        }, throwMissingClerkProviderError(a11) {
+          throw Error(d10(e10.MissingClerkProvider, a11));
+        }, throw(a11) {
+          throw Error(d10(a11));
+        } };
+      }
+      bq(class a10 extends bt {
+        static kind = "ClerkRuntimeError";
+        clerkRuntimeError = true;
+        constructor(b10, c10) {
+          super({ ...c10, message: b10 }), Object.setPrototypeOf(this, a10.prototype);
+        }
+      });
+      var bx = bw({ packageName: "@clerk/backend" }), { isDevOrStagingUrl: by } = /* @__PURE__ */ function() {
+        let a10 = /* @__PURE__ */ new Map();
+        return { isDevOrStagingUrl: (b10) => {
+          if (!b10) return false;
+          let c10 = "string" == typeof b10 ? b10 : b10.hostname, d10 = a10.get(c10);
+          return void 0 === d10 && (d10 = bb.some((a11) => c10.endsWith(a11)), a10.set(c10, d10)), d10;
+        } };
+      }(), bz = { InvalidSecretKey: "clerk_key_invalid" }, bA = { TokenExpired: "token-expired", TokenInvalid: "token-invalid", TokenInvalidAlgorithm: "token-invalid-algorithm", TokenInvalidAuthorizedParties: "token-invalid-authorized-parties", TokenInvalidSignature: "token-invalid-signature", TokenNotActiveYet: "token-not-active-yet", TokenIatInTheFuture: "token-iat-in-the-future", TokenVerificationFailed: "token-verification-failed", InvalidSecretKey: "secret-key-invalid", LocalJWKMissing: "jwk-local-missing", RemoteJWKFailedToLoad: "jwk-remote-failed-to-load", JWKFailedToResolve: "jwk-failed-to-resolve", JWKKidMismatch: "jwk-kid-mismatch" }, bB = { ContactSupport: "Contact support@clerk.com", EnsureClerkJWT: "Make sure that this is a valid Clerk-generated JWT.", SetClerkJWTKey: "Set the CLERK_JWT_KEY environment variable.", SetClerkSecretKey: "Set the CLERK_SECRET_KEY environment variable." }, bC = class a10 extends Error {
+        constructor({ action: b10, message: c10, reason: d10 }) {
+          super(c10), Object.setPrototypeOf(this, a10.prototype), this.reason = d10, this.message = c10, this.action = b10;
+        }
+        getFullMessage() {
+          return `${[this.message, this.action].filter((a11) => a11).join(" ")} (reason=${this.reason}, token-carrier=${this.tokenCarrier})`;
+        }
+      }, bD = { TokenInvalid: "token-invalid", InvalidSecretKey: "secret-key-invalid", UnexpectedError: "unexpected-error" }, bE = class a10 extends Error {
+        constructor({ message: b10, code: c10, status: d10 }) {
+          super(b10), Object.setPrototypeOf(this, a10.prototype), this.code = c10, this.status = d10;
+        }
+        getFullMessage() {
+          return `${this.message} (code=${this.code}, status=${this.status})`;
+        }
+      };
+      let bF = crypto;
+      var bG = fetch.bind(globalThis), bH = { crypto: bF, get fetch() {
+        return bG;
+      }, AbortController: globalThis.AbortController, Blob: globalThis.Blob, FormData: globalThis.FormData, Headers: globalThis.Headers, Request: globalThis.Request, Response: globalThis.Response }, bI = { parse: (a10, b10) => function(a11, b11, c10 = {}) {
+        if (!b11.codes) {
+          b11.codes = {};
+          for (let a12 = 0; a12 < b11.chars.length; ++a12) b11.codes[b11.chars[a12]] = a12;
+        }
+        if (!c10.loose && a11.length * b11.bits & 7) throw SyntaxError("Invalid padding");
+        let d10 = a11.length;
+        for (; "=" === a11[d10 - 1]; ) if (--d10, !c10.loose && !((a11.length - d10) * b11.bits & 7)) throw SyntaxError("Invalid padding");
+        let e10 = new (c10.out ?? Uint8Array)(d10 * b11.bits / 8 | 0), f10 = 0, g10 = 0, h2 = 0;
+        for (let c11 = 0; c11 < d10; ++c11) {
+          let d11 = b11.codes[a11[c11]];
+          if (void 0 === d11) throw SyntaxError("Invalid character " + a11[c11]);
+          g10 = g10 << b11.bits | d11, (f10 += b11.bits) >= 8 && (f10 -= 8, e10[h2++] = 255 & g10 >> f10);
+        }
+        if (f10 >= b11.bits || 255 & g10 << 8 - f10) throw SyntaxError("Unexpected end of data");
+        return e10;
+      }(a10, bJ, b10) }, bJ = { chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_", bits: 6 }, bK = { RS256: "SHA-256", RS384: "SHA-384", RS512: "SHA-512" }, bL = "RSASSA-PKCS1-v1_5", bM = { RS256: bL, RS384: bL, RS512: bL }, bN = Object.keys(bK), bO = (a10) => {
+        if (void 0 !== a10 && "JWT" !== a10) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenInvalid, message: `Invalid JWT type ${JSON.stringify(a10)}. Expected "JWT".` });
+      }, bP = (a10) => {
+        if (!bN.includes(a10)) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenInvalidAlgorithm, message: `Invalid JWT algorithm ${JSON.stringify(a10)}. Supported: ${bN}.` });
+      };
+      async function bQ(a10, b10) {
+        let { header: c10, signature: d10, raw: e10 } = a10, f10 = new TextEncoder().encode([e10.header, e10.payload].join(".")), g10 = function(a11) {
+          let b11 = bK[a11], c11 = bM[a11];
+          if (!b11 || !c11) throw Error(`Unsupported algorithm ${a11}, expected one of ${bN.join(",")}.`);
+          return { hash: { name: bK[a11] }, name: bM[a11] };
+        }(c10.alg);
+        try {
+          let a11 = await function(a12, b11, c11) {
+            if ("object" == typeof a12) return bH.crypto.subtle.importKey("jwk", a12, b11, false, [c11]);
+            let d11 = function(a13) {
+              let b12 = bf(a13.replace(/-----BEGIN.*?-----/g, "").replace(/-----END.*?-----/g, "").replace(/\s/g, "")), c12 = new Uint8Array(new ArrayBuffer(b12.length));
+              for (let a14 = 0, d12 = b12.length; a14 < d12; a14++) c12[a14] = b12.charCodeAt(a14);
+              return c12;
+            }(a12), e11 = "sign" === c11 ? "pkcs8" : "spki";
+            return bH.crypto.subtle.importKey(e11, d11, b11, false, [c11]);
+          }(b10, g10, "verify");
+          return { data: await bH.crypto.subtle.verify(g10.name, a11, d10, f10) };
+        } catch (a11) {
+          return { errors: [new bC({ reason: bA.TokenInvalidSignature, message: a11?.message })] };
+        }
+      }
+      function bR(a10) {
+        let b10 = (a10 || "").toString().split(".");
+        if (3 !== b10.length) return { errors: [new bC({ reason: bA.TokenInvalid, message: "Invalid JWT form. A JWT consists of three parts separated by dots." })] };
+        let [c10, d10, e10] = b10, f10 = new TextDecoder(), g10 = JSON.parse(f10.decode(bI.parse(c10, { loose: true }))), h2 = JSON.parse(f10.decode(bI.parse(d10, { loose: true })));
+        return { data: { header: g10, payload: h2, signature: bI.parse(e10, { loose: true }), raw: { header: c10, payload: d10, signature: e10, text: a10 } } };
+      }
+      async function bS(a10, b10) {
+        let { audience: c10, authorizedParties: d10, clockSkewInMs: e10, key: f10 } = b10, g10 = e10 || 5e3, { data: h2, errors: i2 } = bR(a10);
+        if (i2) return { errors: i2 };
+        let { header: j2, payload: k2 } = h2;
+        try {
+          let { typ: a11, alg: b11 } = j2;
+          bO(a11), bP(b11);
+          let { azp: e11, sub: f11, aud: h3, iat: i3, exp: l3, nbf: m3 } = k2;
+          if ("string" != typeof f11) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenVerificationFailed, message: `Subject claim (sub) is required and must be a string. Received ${JSON.stringify(f11)}.` });
+          ((a12, b12) => {
+            let c11 = [b12].flat().filter((a13) => !!a13), d11 = [a12].flat().filter((a13) => !!a13);
+            if (c11.length > 0 && d11.length > 0) if ("string" == typeof a12) {
+              if (!c11.includes(a12)) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenVerificationFailed, message: `Invalid JWT audience claim (aud) ${JSON.stringify(a12)}. Is not included in "${JSON.stringify(c11)}".` });
+            } else {
+              let b13;
+              if (b13 = a12, Array.isArray(b13) && b13.length > 0 && b13.every((a13) => "string" == typeof a13) && !a12.some((a13) => c11.includes(a13))) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenVerificationFailed, message: `Invalid JWT audience claim array (aud) ${JSON.stringify(a12)}. Is not included in "${JSON.stringify(c11)}".` });
+            }
+          })([h3], [c10]);
+          if (e11 && d10 && 0 !== d10.length && !d10.includes(e11)) throw new bC({ reason: bA.TokenInvalidAuthorizedParties, message: `Invalid JWT Authorized party claim (azp) ${JSON.stringify(e11)}. Expected "${d10}".` });
+          if ("number" != typeof l3) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenVerificationFailed, message: `Invalid JWT expiry date claim (exp) ${JSON.stringify(l3)}. Expected number.` });
+          let n2 = new Date(Date.now()), o2 = /* @__PURE__ */ new Date(0);
+          if (o2.setUTCSeconds(l3), o2.getTime() <= n2.getTime() - g10) throw new bC({ reason: bA.TokenExpired, message: `JWT is expired. Expiry date: ${o2.toUTCString()}, Current date: ${n2.toUTCString()}.` });
+          ((a12, b12) => {
+            if (void 0 === a12) return;
+            if ("number" != typeof a12) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenVerificationFailed, message: `Invalid JWT not before date claim (nbf) ${JSON.stringify(a12)}. Expected number.` });
+            let c11 = new Date(Date.now()), d11 = /* @__PURE__ */ new Date(0);
+            if (d11.setUTCSeconds(a12), d11.getTime() > c11.getTime() + b12) throw new bC({ reason: bA.TokenNotActiveYet, message: `JWT cannot be used prior to not before date claim (nbf). Not before date: ${d11.toUTCString()}; Current date: ${c11.toUTCString()};` });
+          })(m3, g10), ((a12, b12) => {
+            if (void 0 === a12) return;
+            if ("number" != typeof a12) throw new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenVerificationFailed, message: `Invalid JWT issued at date claim (iat) ${JSON.stringify(a12)}. Expected number.` });
+            let c11 = new Date(Date.now()), d11 = /* @__PURE__ */ new Date(0);
+            if (d11.setUTCSeconds(a12), d11.getTime() > c11.getTime() + b12) throw new bC({ reason: bA.TokenIatInTheFuture, message: `JWT issued at date claim (iat) is in the future. Issued at date: ${d11.toUTCString()}; Current date: ${c11.toUTCString()};` });
+          })(i3, g10);
+        } catch (a11) {
+          return { errors: [a11] };
+        }
+        let { data: l2, errors: m2 } = await bQ(h2, f10);
+        return m2 ? { errors: [new bC({ action: bB.EnsureClerkJWT, reason: bA.TokenVerificationFailed, message: `Error verifying JWT signature. ${m2[0]}` })] } : l2 ? { data: k2 } : { errors: [new bC({ reason: bA.TokenInvalidSignature, message: "JWT signature is invalid." })] };
+      }
+      var bT = (a10) => {
+        throw TypeError(a10);
+      }, bU = (a10, b10, c10) => (b10.has(a10) || bT("Cannot access private method"), c10);
+      function bV(a10) {
+        return a10 ? `https://${a10.replace(/clerk\.accountsstage\./, "accountsstage.").replace(/clerk\.accounts\.|clerk\./, "accounts.")}` : "";
+      }
+      let bW = { strict_mfa: { afterMinutes: 10, level: "multi_factor" }, strict: { afterMinutes: 10, level: "second_factor" }, moderate: { afterMinutes: 60, level: "second_factor" }, lax: { afterMinutes: 1440, level: "second_factor" } }, bX = /* @__PURE__ */ new Set(["first_factor", "second_factor", "multi_factor"]), bY = /* @__PURE__ */ new Set(["strict_mfa", "strict", "moderate", "lax"]), bZ = (a10) => a10.replace(/^(org:)*/, "org:"), b$ = (a10, b10) => {
+        let { org: c10, user: d10 } = b_(a10), [e10, f10] = b10.split(":"), g10 = f10 || e10;
+        return "org" === e10 ? c10.includes(g10) : "user" === e10 ? d10.includes(g10) : [...c10, ...d10].includes(g10);
+      }, b_ = (a10) => {
+        let b10 = a10 ? a10.split(",").map((a11) => a11.trim()) : [];
+        return { org: b10.filter((a11) => a11.split(":")[0].includes("o")).map((a11) => a11.split(":")[1]), user: b10.filter((a11) => a11.split(":")[0].includes("u")).map((a11) => a11.split(":")[1]) };
+      };
+      var b0 = c(19), b1 = "https://api.clerk.com", b2 = "@clerk/backend@2.23.0", b3 = "2025-11-10", b4 = { Session: "__session", Refresh: "__refresh", ClientUat: "__client_uat", Handshake: "__clerk_handshake", DevBrowser: "__clerk_db_jwt", RedirectCount: "__clerk_redirect_count", HandshakeNonce: "__clerk_handshake_nonce" }, b5 = { ClerkSynced: "__clerk_synced", SuffixedCookies: "suffixed_cookies", ClerkRedirectUrl: "__clerk_redirect_url", DevBrowser: b4.DevBrowser, Handshake: b4.Handshake, HandshakeHelp: "__clerk_help", LegacyDevBrowser: "__dev_session", HandshakeReason: "__clerk_hs_reason", HandshakeNonce: b4.HandshakeNonce, HandshakeFormat: "format" }, b6 = { Cookies: b4, Headers: { Accept: "accept", AuthMessage: "x-clerk-auth-message", Authorization: "authorization", AuthReason: "x-clerk-auth-reason", AuthSignature: "x-clerk-auth-signature", AuthStatus: "x-clerk-auth-status", AuthToken: "x-clerk-auth-token", CacheControl: "cache-control", ClerkRedirectTo: "x-clerk-redirect-to", ClerkRequestData: "x-clerk-request-data", ClerkUrl: "x-clerk-clerk-url", CloudFrontForwardedProto: "cloudfront-forwarded-proto", ContentType: "content-type", ContentSecurityPolicy: "content-security-policy", ContentSecurityPolicyReportOnly: "content-security-policy-report-only", EnableDebug: "x-clerk-debug", ForwardedHost: "x-forwarded-host", ForwardedPort: "x-forwarded-port", ForwardedProto: "x-forwarded-proto", Host: "host", Location: "location", Nonce: "x-nonce", Origin: "origin", Referrer: "referer", SecFetchDest: "sec-fetch-dest", SecFetchSite: "sec-fetch-site", UserAgent: "user-agent", ReportingEndpoints: "reporting-endpoints" }, ContentTypes: { Json: "application/json" }, QueryParameters: b5 }, b7 = (a10, b10, c10, d10) => {
+        if ("" === a10) return b8(b10.toString(), c10?.toString());
+        let e10 = new URL(a10), f10 = c10 ? new URL(c10, e10) : void 0, g10 = new URL(b10, e10), h2 = `${e10.hostname}:${e10.port}` != `${g10.hostname}:${g10.port}`;
+        return f10 && (h2 && f10.searchParams.delete(b6.QueryParameters.ClerkSynced), g10.searchParams.set("redirect_url", f10.toString())), h2 && d10 && g10.searchParams.set(b6.QueryParameters.DevBrowser, d10), g10.toString();
+      }, b8 = (a10, b10) => {
+        let c10;
+        if (a10.startsWith("http")) c10 = new URL(a10);
+        else {
+          if (!b10 || !b10.startsWith("http")) throw Error("destination url or return back url should be an absolute path url!");
+          let d10 = new URL(b10);
+          c10 = new URL(a10, d10.origin);
+        }
+        return b10 && c10.searchParams.set("redirect_url", b10), c10.toString();
+      };
+      function b9(a10, b10) {
+        return Object.keys(a10).reduce((a11, c10) => ({ ...a11, [c10]: b10[c10] || a11[c10] }), { ...a10 });
+      }
+      function ca(a10) {
+        if (!a10 || "string" != typeof a10) throw Error("Missing Clerk Secret Key. Go to https://dashboard.clerk.com and get your key for your instance.");
+      }
+      var cb = { SessionToken: "session_token", ApiKey: "api_key", M2MToken: "m2m_token", OAuthToken: "oauth_token" }, cc = class {
+        constructor(a10, b10, c10) {
+          this.cookieSuffix = a10, this.clerkRequest = b10, this.originalFrontendApi = "", c10.acceptsToken === cb.M2MToken || c10.acceptsToken === cb.ApiKey ? this.initHeaderValues() : (this.initPublishableKeyValues(c10), this.initHeaderValues(), this.initCookieValues(), this.initHandshakeValues()), Object.assign(this, c10), this.clerkUrl = this.clerkRequest.clerkUrl;
+        }
+        get sessionToken() {
+          return this.sessionTokenInCookie || this.tokenInHeader;
+        }
+        usesSuffixedCookies() {
+          let a10 = this.getSuffixedCookie(b6.Cookies.ClientUat), b10 = this.getCookie(b6.Cookies.ClientUat), c10 = this.getSuffixedCookie(b6.Cookies.Session) || "", d10 = this.getCookie(b6.Cookies.Session) || "";
+          if (d10 && !this.tokenHasIssuer(d10)) return false;
+          if (d10 && !this.tokenBelongsToInstance(d10)) return true;
+          if (!a10 && !c10) return false;
+          let { data: e10 } = bR(d10), f10 = e10?.payload.iat || 0, { data: g10 } = bR(c10), h2 = g10?.payload.iat || 0;
+          if ("0" !== a10 && "0" !== b10 && f10 > h2 || "0" === a10 && "0" !== b10) return false;
+          if ("production" !== this.instanceType) {
+            let c11 = this.sessionExpired(g10);
+            if ("0" !== a10 && "0" === b10 && c11) return false;
+          }
+          return !!a10 || !c10;
+        }
+        isCrossOriginReferrer() {
+          if (!this.referrer || !this.clerkUrl.origin) return false;
+          try {
+            return new URL(this.referrer).origin !== this.clerkUrl.origin;
+          } catch {
+            return false;
+          }
+        }
+        isKnownClerkReferrer() {
+          if (!this.referrer) return false;
+          try {
+            let a10 = new URL(this.referrer), b10 = a10.hostname;
+            if (this.frontendApi) {
+              let a11 = this.frontendApi.startsWith("http") ? new URL(this.frontendApi).hostname : this.frontendApi;
+              if (b10 === a11) return true;
+            }
+            if (a9.some((a11) => b10.startsWith("accounts.") && b10.endsWith(a11)) || ba.some((a11) => b10.endsWith(a11) && !b10.endsWith(".clerk" + a11))) return true;
+            let c10 = bV(this.frontendApi);
+            if (c10) {
+              let b11 = new URL(c10).origin;
+              if (a10.origin === b11) return true;
+            }
+            if (b10.startsWith("accounts.")) return true;
+            return false;
+          } catch {
+            return false;
+          }
+        }
+        initPublishableKeyValues(a10) {
+          bi(a10.publishableKey, { fatal: true }), this.publishableKey = a10.publishableKey;
+          let b10 = bi(this.publishableKey, { fatal: true, domain: a10.domain, isSatellite: a10.isSatellite });
+          this.originalFrontendApi = b10.frontendApi;
+          let c10 = bi(this.publishableKey, { fatal: true, proxyUrl: a10.proxyUrl, domain: a10.domain, isSatellite: a10.isSatellite });
+          this.instanceType = c10.instanceType, this.frontendApi = c10.frontendApi;
+        }
+        initHeaderValues() {
+          this.tokenInHeader = this.parseAuthorizationHeader(this.getHeader(b6.Headers.Authorization)), this.origin = this.getHeader(b6.Headers.Origin), this.host = this.getHeader(b6.Headers.Host), this.forwardedHost = this.getHeader(b6.Headers.ForwardedHost), this.forwardedProto = this.getHeader(b6.Headers.CloudFrontForwardedProto) || this.getHeader(b6.Headers.ForwardedProto), this.referrer = this.getHeader(b6.Headers.Referrer), this.userAgent = this.getHeader(b6.Headers.UserAgent), this.secFetchDest = this.getHeader(b6.Headers.SecFetchDest), this.accept = this.getHeader(b6.Headers.Accept);
+        }
+        initCookieValues() {
+          this.sessionTokenInCookie = this.getSuffixedOrUnSuffixedCookie(b6.Cookies.Session), this.refreshTokenInCookie = this.getSuffixedCookie(b6.Cookies.Refresh), this.clientUat = Number.parseInt(this.getSuffixedOrUnSuffixedCookie(b6.Cookies.ClientUat) || "") || 0;
+        }
+        initHandshakeValues() {
+          this.devBrowserToken = this.getQueryParam(b6.QueryParameters.DevBrowser) || this.getSuffixedOrUnSuffixedCookie(b6.Cookies.DevBrowser), this.handshakeToken = this.getQueryParam(b6.QueryParameters.Handshake) || this.getCookie(b6.Cookies.Handshake), this.handshakeRedirectLoopCounter = Number(this.getCookie(b6.Cookies.RedirectCount)) || 0, this.handshakeNonce = this.getQueryParam(b6.QueryParameters.HandshakeNonce) || this.getCookie(b6.Cookies.HandshakeNonce);
+        }
+        getQueryParam(a10) {
+          return this.clerkRequest.clerkUrl.searchParams.get(a10);
+        }
+        getHeader(a10) {
+          return this.clerkRequest.headers.get(a10) || void 0;
+        }
+        getCookie(a10) {
+          return this.clerkRequest.cookies.get(a10) || void 0;
+        }
+        getSuffixedCookie(a10) {
+          let b10;
+          return this.getCookie((b10 = this.cookieSuffix, `${a10}_${b10}`)) || void 0;
+        }
+        getSuffixedOrUnSuffixedCookie(a10) {
+          return this.usesSuffixedCookies() ? this.getSuffixedCookie(a10) : this.getCookie(a10);
+        }
+        parseAuthorizationHeader(a10) {
+          if (!a10) return;
+          let [b10, c10] = a10.split(" ", 2);
+          return c10 ? "Bearer" === b10 ? c10 : void 0 : b10;
+        }
+        tokenHasIssuer(a10) {
+          let { data: b10, errors: c10 } = bR(a10);
+          return !c10 && !!b10.payload.iss;
+        }
+        tokenBelongsToInstance(a10) {
+          if (!a10) return false;
+          let { data: b10, errors: c10 } = bR(a10);
+          if (c10) return false;
+          let d10 = b10.payload.iss.replace(/https?:\/\//gi, "");
+          return this.originalFrontendApi === d10;
+        }
+        sessionExpired(a10) {
+          return !!a10 && a10?.payload.exp <= (Date.now() / 1e3 | 0);
+        }
+      }, cd = async (a10, b10) => new cc(b10.publishableKey ? await bl(b10.publishableKey, bH.crypto.subtle) : "", a10, b10), ce = RegExp("(?<!:)/{1,}", "g");
+      function cf(...a10) {
+        return a10.filter((a11) => a11).join("/").replace(ce, "/");
+      }
+      var cg = class {
+        constructor(a10) {
+          this.request = a10;
+        }
+        requireId(a10) {
+          if (!a10) throw Error("A valid resource ID is required.");
+        }
+      }, ch = "/actor_tokens", ci = class extends cg {
+        async create(a10) {
+          return this.request({ method: "POST", path: ch, bodyParams: a10 });
+        }
+        async revoke(a10) {
+          return this.requireId(a10), this.request({ method: "POST", path: cf(ch, a10, "revoke") });
+        }
+      }, cj = "/accountless_applications", ck = class extends cg {
+        async createAccountlessApplication(a10) {
+          let b10 = a10?.requestHeaders ? Object.fromEntries(a10.requestHeaders.entries()) : void 0;
+          return this.request({ method: "POST", path: cj, headerParams: b10 });
+        }
+        async completeAccountlessApplicationOnboarding(a10) {
+          let b10 = a10?.requestHeaders ? Object.fromEntries(a10.requestHeaders.entries()) : void 0;
+          return this.request({ method: "POST", path: cf(cj, "complete"), headerParams: b10 });
+        }
+      }, cl = "/allowlist_identifiers", cm = class extends cg {
+        async getAllowlistIdentifierList(a10 = {}) {
+          return this.request({ method: "GET", path: cl, queryParams: { ...a10, paginated: true } });
+        }
+        async createAllowlistIdentifier(a10) {
+          return this.request({ method: "POST", path: cl, bodyParams: a10 });
+        }
+        async deleteAllowlistIdentifier(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cl, a10) });
+        }
+      }, cn = "/api_keys", co = class extends cg {
+        async list(a10) {
+          return this.request({ method: "GET", path: cn, queryParams: a10 });
+        }
+        async create(a10) {
+          return this.request({ method: "POST", path: cn, bodyParams: a10 });
+        }
+        async revoke(a10) {
+          let { apiKeyId: b10, ...c10 } = a10;
+          return this.requireId(b10), this.request({ method: "POST", path: cf(cn, b10, "revoke"), bodyParams: c10 });
+        }
+        async getSecret(a10) {
+          return this.requireId(a10), this.request({ method: "GET", path: cf(cn, a10, "secret") });
+        }
+        async verifySecret(a10) {
+          return this.request({ method: "POST", path: cf(cn, "verify"), bodyParams: { secret: a10 } });
+        }
+      }, cp = class extends cg {
+        async changeDomain(a10) {
+          return this.request({ method: "POST", path: cf("/beta_features", "change_domain"), bodyParams: a10 });
+        }
+      }, cq = "/blocklist_identifiers", cr = class extends cg {
+        async getBlocklistIdentifierList(a10 = {}) {
+          return this.request({ method: "GET", path: cq, queryParams: a10 });
+        }
+        async createBlocklistIdentifier(a10) {
+          return this.request({ method: "POST", path: cq, bodyParams: a10 });
+        }
+        async deleteBlocklistIdentifier(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cq, a10) });
+        }
+      }, cs = "/clients", ct = class extends cg {
+        async getClientList(a10 = {}) {
+          return this.request({ method: "GET", path: cs, queryParams: { ...a10, paginated: true } });
+        }
+        async getClient(a10) {
+          return this.requireId(a10), this.request({ method: "GET", path: cf(cs, a10) });
+        }
+        verifyClient(a10) {
+          return this.request({ method: "POST", path: cf(cs, "verify"), bodyParams: { token: a10 } });
+        }
+        async getHandshakePayload(a10) {
+          return this.request({ method: "GET", path: cf(cs, "handshake_payload"), queryParams: a10 });
+        }
+      }, cu = "/domains", cv = class extends cg {
+        async list() {
+          return this.request({ method: "GET", path: cu });
+        }
+        async add(a10) {
+          return this.request({ method: "POST", path: cu, bodyParams: a10 });
+        }
+        async update(a10) {
+          let { domainId: b10, ...c10 } = a10;
+          return this.requireId(b10), this.request({ method: "PATCH", path: cf(cu, b10), bodyParams: c10 });
+        }
+        async delete(a10) {
+          return this.deleteDomain(a10);
+        }
+        async deleteDomain(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cu, a10) });
+        }
+      }, cw = "/email_addresses", cx = class extends cg {
+        async getEmailAddress(a10) {
+          return this.requireId(a10), this.request({ method: "GET", path: cf(cw, a10) });
+        }
+        async createEmailAddress(a10) {
+          return this.request({ method: "POST", path: cw, bodyParams: a10 });
+        }
+        async updateEmailAddress(a10, b10 = {}) {
+          return this.requireId(a10), this.request({ method: "PATCH", path: cf(cw, a10), bodyParams: b10 });
+        }
+        async deleteEmailAddress(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cw, a10) });
+        }
+      }, cy = class extends cg {
+        async verifyAccessToken(a10) {
+          return this.request({ method: "POST", path: cf("/oauth_applications/access_tokens", "verify"), bodyParams: { access_token: a10 } });
+        }
+      }, cz = "/instance", cA = class extends cg {
+        async get() {
+          return this.request({ method: "GET", path: cz });
+        }
+        async update(a10) {
+          return this.request({ method: "PATCH", path: cz, bodyParams: a10 });
+        }
+        async updateRestrictions(a10) {
+          return this.request({ method: "PATCH", path: cf(cz, "restrictions"), bodyParams: a10 });
+        }
+        async updateOrganizationSettings(a10) {
+          return this.request({ method: "PATCH", path: cf(cz, "organization_settings"), bodyParams: a10 });
+        }
+      }, cB = "/invitations", cC = class extends cg {
+        async getInvitationList(a10 = {}) {
+          return this.request({ method: "GET", path: cB, queryParams: { ...a10, paginated: true } });
+        }
+        async createInvitation(a10) {
+          return this.request({ method: "POST", path: cB, bodyParams: a10 });
+        }
+        async createInvitationBulk(a10) {
+          return this.request({ method: "POST", path: cf(cB, "bulk"), bodyParams: a10 });
+        }
+        async revokeInvitation(a10) {
+          return this.requireId(a10), this.request({ method: "POST", path: cf(cB, a10, "revoke") });
+        }
+      }, cD = "/machines", cE = class extends cg {
+        async get(a10) {
+          return this.requireId(a10), this.request({ method: "GET", path: cf(cD, a10) });
+        }
+        async list(a10 = {}) {
+          return this.request({ method: "GET", path: cD, queryParams: a10 });
+        }
+        async create(a10) {
+          return this.request({ method: "POST", path: cD, bodyParams: a10 });
+        }
+        async update(a10) {
+          let { machineId: b10, ...c10 } = a10;
+          return this.requireId(b10), this.request({ method: "PATCH", path: cf(cD, b10), bodyParams: c10 });
+        }
+        async delete(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cD, a10) });
+        }
+        async getSecretKey(a10) {
+          return this.requireId(a10), this.request({ method: "GET", path: cf(cD, a10, "secret_key") });
+        }
+        async rotateSecretKey(a10) {
+          let { machineId: b10, previousTokenTtl: c10 } = a10;
+          return this.requireId(b10), this.request({ method: "POST", path: cf(cD, b10, "secret_key", "rotate"), bodyParams: { previousTokenTtl: c10 } });
+        }
+        async createScope(a10, b10) {
+          return this.requireId(a10), this.request({ method: "POST", path: cf(cD, a10, "scopes"), bodyParams: { toMachineId: b10 } });
+        }
+        async deleteScope(a10, b10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cD, a10, "scopes", b10) });
+        }
+      }, cF = "/m2m_tokens", cG = class extends cg {
+        constructor() {
+          super(...arguments), ((a10, b10, c10) => b10.has(a10) ? bT("Cannot add the same private member more than once") : b10 instanceof WeakSet ? b10.add(a10) : b10.set(a10, c10))(this, fV);
+        }
+        async createToken(a10) {
+          let { claims: b10 = null, machineSecretKey: c10, secondsUntilExpiration: d10 = null } = a10 || {}, e10 = bU(this, fV, fW).call(this, { method: "POST", path: cF, bodyParams: { secondsUntilExpiration: d10, claims: b10 } }, c10);
+          return this.request(e10);
+        }
+        async revokeToken(a10) {
+          let { m2mTokenId: b10, revocationReason: c10 = null, machineSecretKey: d10 } = a10;
+          this.requireId(b10);
+          let e10 = bU(this, fV, fW).call(this, { method: "POST", path: cf(cF, b10, "revoke"), bodyParams: { revocationReason: c10 } }, d10);
+          return this.request(e10);
+        }
+        async verifyToken(a10) {
+          let { token: b10, machineSecretKey: c10 } = a10, d10 = bU(this, fV, fW).call(this, { method: "POST", path: cf(cF, "verify"), bodyParams: { token: b10 } }, c10);
+          return this.request(d10);
+        }
+      };
+      fV = /* @__PURE__ */ new WeakSet(), fW = function(a10, b10) {
+        return b10 ? { ...a10, headerParams: { ...a10.headerParams, Authorization: `Bearer ${b10}` } } : a10;
+      };
+      var cH = class extends cg {
+        async getJwks() {
+          return this.request({ method: "GET", path: "/jwks" });
+        }
+      }, cI = "/jwt_templates", cJ = class extends cg {
+        async list(a10 = {}) {
+          return this.request({ method: "GET", path: cI, queryParams: { ...a10, paginated: true } });
+        }
+        async get(a10) {
+          return this.requireId(a10), this.request({ method: "GET", path: cf(cI, a10) });
+        }
+        async create(a10) {
+          return this.request({ method: "POST", path: cI, bodyParams: a10 });
+        }
+        async update(a10) {
+          let { templateId: b10, ...c10 } = a10;
+          return this.requireId(b10), this.request({ method: "PATCH", path: cf(cI, b10), bodyParams: c10 });
+        }
+        async delete(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cI, a10) });
+        }
+      }, cK = "/organizations", cL = class extends cg {
+        async getOrganizationList(a10) {
+          return this.request({ method: "GET", path: cK, queryParams: a10 });
+        }
+        async createOrganization(a10) {
+          return this.request({ method: "POST", path: cK, bodyParams: a10 });
+        }
+        async getOrganization(a10) {
+          let { includeMembersCount: b10 } = a10, c10 = "organizationId" in a10 ? a10.organizationId : a10.slug;
+          return this.requireId(c10), this.request({ method: "GET", path: cf(cK, c10), queryParams: { includeMembersCount: b10 } });
+        }
+        async updateOrganization(a10, b10) {
+          return this.requireId(a10), this.request({ method: "PATCH", path: cf(cK, a10), bodyParams: b10 });
+        }
+        async updateOrganizationLogo(a10, b10) {
+          this.requireId(a10);
+          let c10 = new bH.FormData();
+          return c10.append("file", b10?.file), b10?.uploaderUserId && c10.append("uploader_user_id", b10?.uploaderUserId), this.request({ method: "PUT", path: cf(cK, a10, "logo"), formData: c10 });
+        }
+        async deleteOrganizationLogo(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cK, a10, "logo") });
+        }
+        async updateOrganizationMetadata(a10, b10) {
+          return this.requireId(a10), this.request({ method: "PATCH", path: cf(cK, a10, "metadata"), bodyParams: b10 });
+        }
+        async deleteOrganization(a10) {
+          return this.request({ method: "DELETE", path: cf(cK, a10) });
+        }
+        async getOrganizationMembershipList(a10) {
+          let { organizationId: b10, ...c10 } = a10;
+          return this.requireId(b10), this.request({ method: "GET", path: cf(cK, b10, "memberships"), queryParams: c10 });
+        }
+        async getInstanceOrganizationMembershipList(a10) {
+          return this.request({ method: "GET", path: "/organization_memberships", queryParams: a10 });
+        }
+        async createOrganizationMembership(a10) {
+          let { organizationId: b10, ...c10 } = a10;
+          return this.requireId(b10), this.request({ method: "POST", path: cf(cK, b10, "memberships"), bodyParams: c10 });
+        }
+        async updateOrganizationMembership(a10) {
+          let { organizationId: b10, userId: c10, ...d10 } = a10;
+          return this.requireId(b10), this.request({ method: "PATCH", path: cf(cK, b10, "memberships", c10), bodyParams: d10 });
+        }
+        async updateOrganizationMembershipMetadata(a10) {
+          let { organizationId: b10, userId: c10, ...d10 } = a10;
+          return this.request({ method: "PATCH", path: cf(cK, b10, "memberships", c10, "metadata"), bodyParams: d10 });
+        }
+        async deleteOrganizationMembership(a10) {
+          let { organizationId: b10, userId: c10 } = a10;
+          return this.requireId(b10), this.request({ method: "DELETE", path: cf(cK, b10, "memberships", c10) });
+        }
+        async getOrganizationInvitationList(a10) {
+          let { organizationId: b10, ...c10 } = a10;
+          return this.requireId(b10), this.request({ method: "GET", path: cf(cK, b10, "invitations"), queryParams: c10 });
+        }
+        async createOrganizationInvitation(a10) {
+          let { organizationId: b10, ...c10 } = a10;
+          return this.requireId(b10), this.request({ method: "POST", path: cf(cK, b10, "invitations"), bodyParams: c10 });
+        }
+        async createOrganizationInvitationBulk(a10, b10) {
+          return this.requireId(a10), this.request({ method: "POST", path: cf(cK, a10, "invitations", "bulk"), bodyParams: b10 });
+        }
+        async getOrganizationInvitation(a10) {
+          let { organizationId: b10, invitationId: c10 } = a10;
+          return this.requireId(b10), this.requireId(c10), this.request({ method: "GET", path: cf(cK, b10, "invitations", c10) });
+        }
+        async revokeOrganizationInvitation(a10) {
+          let { organizationId: b10, invitationId: c10, ...d10 } = a10;
+          return this.requireId(b10), this.request({ method: "POST", path: cf(cK, b10, "invitations", c10, "revoke"), bodyParams: d10 });
+        }
+        async getOrganizationDomainList(a10) {
+          let { organizationId: b10, ...c10 } = a10;
+          return this.requireId(b10), this.request({ method: "GET", path: cf(cK, b10, "domains"), queryParams: c10 });
+        }
+        async createOrganizationDomain(a10) {
+          let { organizationId: b10, ...c10 } = a10;
+          return this.requireId(b10), this.request({ method: "POST", path: cf(cK, b10, "domains"), bodyParams: { ...c10, verified: c10.verified ?? true } });
+        }
+        async updateOrganizationDomain(a10) {
+          let { organizationId: b10, domainId: c10, ...d10 } = a10;
+          return this.requireId(b10), this.requireId(c10), this.request({ method: "PATCH", path: cf(cK, b10, "domains", c10), bodyParams: d10 });
+        }
+        async deleteOrganizationDomain(a10) {
+          let { organizationId: b10, domainId: c10 } = a10;
+          return this.requireId(b10), this.requireId(c10), this.request({ method: "DELETE", path: cf(cK, b10, "domains", c10) });
+        }
+      }, cM = "/oauth_applications", cN = class extends cg {
+        async list(a10 = {}) {
+          return this.request({ method: "GET", path: cM, queryParams: a10 });
+        }
+        async get(a10) {
+          return this.requireId(a10), this.request({ method: "GET", path: cf(cM, a10) });
+        }
+        async create(a10) {
+          return this.request({ method: "POST", path: cM, bodyParams: a10 });
+        }
+        async update(a10) {
+          let { oauthApplicationId: b10, ...c10 } = a10;
+          return this.requireId(b10), this.request({ method: "PATCH", path: cf(cM, b10), bodyParams: c10 });
+        }
+        async delete(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cM, a10) });
+        }
+        async rotateSecret(a10) {
+          return this.requireId(a10), this.request({ method: "POST", path: cf(cM, a10, "rotate_secret") });
+        }
+      }, cO = "/phone_numbers", cP = class extends cg {
+        async getPhoneNumber(a10) {
+          return this.requireId(a10), this.request({ method: "GET", path: cf(cO, a10) });
+        }
+        async createPhoneNumber(a10) {
+          return this.request({ method: "POST", path: cO, bodyParams: a10 });
+        }
+        async updatePhoneNumber(a10, b10 = {}) {
+          return this.requireId(a10), this.request({ method: "PATCH", path: cf(cO, a10), bodyParams: b10 });
+        }
+        async deletePhoneNumber(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cO, a10) });
+        }
+      }, cQ = class extends cg {
+        async verify(a10) {
+          return this.request({ method: "POST", path: "/proxy_checks", bodyParams: a10 });
+        }
+      }, cR = "/redirect_urls", cS = class extends cg {
+        async getRedirectUrlList() {
+          return this.request({ method: "GET", path: cR, queryParams: { paginated: true } });
+        }
+        async getRedirectUrl(a10) {
+          return this.requireId(a10), this.request({ method: "GET", path: cf(cR, a10) });
+        }
+        async createRedirectUrl(a10) {
+          return this.request({ method: "POST", path: cR, bodyParams: a10 });
+        }
+        async deleteRedirectUrl(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cR, a10) });
+        }
+      }, cT = "/saml_connections", cU = class extends cg {
+        async getSamlConnectionList(a10 = {}) {
+          return this.request({ method: "GET", path: cT, queryParams: a10 });
+        }
+        async createSamlConnection(a10) {
+          return this.request({ method: "POST", path: cT, bodyParams: a10, options: { deepSnakecaseBodyParamKeys: true } });
+        }
+        async getSamlConnection(a10) {
+          return this.requireId(a10), this.request({ method: "GET", path: cf(cT, a10) });
+        }
+        async updateSamlConnection(a10, b10 = {}) {
+          return this.requireId(a10), this.request({ method: "PATCH", path: cf(cT, a10), bodyParams: b10, options: { deepSnakecaseBodyParamKeys: true } });
+        }
+        async deleteSamlConnection(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(cT, a10) });
+        }
+      }, cV = "/sessions", cW = class extends cg {
+        async getSessionList(a10 = {}) {
+          return this.request({ method: "GET", path: cV, queryParams: { ...a10, paginated: true } });
+        }
+        async getSession(a10) {
+          return this.requireId(a10), this.request({ method: "GET", path: cf(cV, a10) });
+        }
+        async createSession(a10) {
+          return this.request({ method: "POST", path: cV, bodyParams: a10 });
+        }
+        async revokeSession(a10) {
+          return this.requireId(a10), this.request({ method: "POST", path: cf(cV, a10, "revoke") });
+        }
+        async verifySession(a10, b10) {
+          return this.requireId(a10), this.request({ method: "POST", path: cf(cV, a10, "verify"), bodyParams: { token: b10 } });
+        }
+        async getToken(a10, b10, c10) {
+          this.requireId(a10);
+          let d10 = { method: "POST", path: b10 ? cf(cV, a10, "tokens", b10) : cf(cV, a10, "tokens") };
+          return void 0 !== c10 && (d10.bodyParams = { expires_in_seconds: c10 }), this.request(d10);
+        }
+        async refreshSession(a10, b10) {
+          this.requireId(a10);
+          let { suffixed_cookies: c10, ...d10 } = b10;
+          return this.request({ method: "POST", path: cf(cV, a10, "refresh"), bodyParams: d10, queryParams: { suffixed_cookies: c10 } });
+        }
+      }, cX = "/sign_in_tokens", cY = class extends cg {
+        async createSignInToken(a10) {
+          return this.request({ method: "POST", path: cX, bodyParams: a10 });
+        }
+        async revokeSignInToken(a10) {
+          return this.requireId(a10), this.request({ method: "POST", path: cf(cX, a10, "revoke") });
+        }
+      }, cZ = "/sign_ups", c$ = class extends cg {
+        async get(a10) {
+          return this.requireId(a10), this.request({ method: "GET", path: cf(cZ, a10) });
+        }
+        async update(a10) {
+          let { signUpAttemptId: b10, ...c10 } = a10;
+          return this.request({ method: "PATCH", path: cf(cZ, b10), bodyParams: c10 });
+        }
+      }, c_ = class extends cg {
+        async createTestingToken() {
+          return this.request({ method: "POST", path: "/testing_tokens" });
+        }
+      }, c0 = "/users", c1 = class extends cg {
+        async getUserList(a10 = {}) {
+          let { limit: b10, offset: c10, orderBy: d10, ...e10 } = a10, [f10, g10] = await Promise.all([this.request({ method: "GET", path: c0, queryParams: a10 }), this.getCount(e10)]);
+          return { data: f10, totalCount: g10 };
+        }
+        async getUser(a10) {
+          return this.requireId(a10), this.request({ method: "GET", path: cf(c0, a10) });
+        }
+        async createUser(a10) {
+          return this.request({ method: "POST", path: c0, bodyParams: a10 });
+        }
+        async updateUser(a10, b10 = {}) {
+          return this.requireId(a10), this.request({ method: "PATCH", path: cf(c0, a10), bodyParams: b10 });
+        }
+        async updateUserProfileImage(a10, b10) {
+          this.requireId(a10);
+          let c10 = new bH.FormData();
+          return c10.append("file", b10?.file), this.request({ method: "POST", path: cf(c0, a10, "profile_image"), formData: c10 });
+        }
+        async updateUserMetadata(a10, b10) {
+          return this.requireId(a10), this.request({ method: "PATCH", path: cf(c0, a10, "metadata"), bodyParams: b10 });
+        }
+        async deleteUser(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(c0, a10) });
+        }
+        async getCount(a10 = {}) {
+          return this.request({ method: "GET", path: cf(c0, "count"), queryParams: a10 });
+        }
+        async getUserOauthAccessToken(a10, b10) {
+          this.requireId(a10);
+          let c10 = b10.startsWith("oauth_"), d10 = c10 ? b10 : `oauth_${b10}`;
+          return c10 && ((a11, b11, c11) => {
+            let d11 = a7(), e10 = c11 ?? a11;
+            a8.has(e10) || d11 || (a8.add(e10), console.warn(`Clerk - DEPRECATION WARNING: "${a11}" is deprecated and will be removed in the next major release.
+${b11}`));
+          })("getUserOauthAccessToken(userId, provider)", "Remove the `oauth_` prefix from the `provider` argument."), this.request({ method: "GET", path: cf(c0, a10, "oauth_access_tokens", d10), queryParams: { paginated: true } });
+        }
+        async disableUserMFA(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(c0, a10, "mfa") });
+        }
+        async getOrganizationMembershipList(a10) {
+          let { userId: b10, limit: c10, offset: d10 } = a10;
+          return this.requireId(b10), this.request({ method: "GET", path: cf(c0, b10, "organization_memberships"), queryParams: { limit: c10, offset: d10 } });
+        }
+        async getOrganizationInvitationList(a10) {
+          let { userId: b10, ...c10 } = a10;
+          return this.requireId(b10), this.request({ method: "GET", path: cf(c0, b10, "organization_invitations"), queryParams: c10 });
+        }
+        async verifyPassword(a10) {
+          let { userId: b10, password: c10 } = a10;
+          return this.requireId(b10), this.request({ method: "POST", path: cf(c0, b10, "verify_password"), bodyParams: { password: c10 } });
+        }
+        async verifyTOTP(a10) {
+          let { userId: b10, code: c10 } = a10;
+          return this.requireId(b10), this.request({ method: "POST", path: cf(c0, b10, "verify_totp"), bodyParams: { code: c10 } });
+        }
+        async banUser(a10) {
+          return this.requireId(a10), this.request({ method: "POST", path: cf(c0, a10, "ban") });
+        }
+        async unbanUser(a10) {
+          return this.requireId(a10), this.request({ method: "POST", path: cf(c0, a10, "unban") });
+        }
+        async lockUser(a10) {
+          return this.requireId(a10), this.request({ method: "POST", path: cf(c0, a10, "lock") });
+        }
+        async unlockUser(a10) {
+          return this.requireId(a10), this.request({ method: "POST", path: cf(c0, a10, "unlock") });
+        }
+        async deleteUserProfileImage(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(c0, a10, "profile_image") });
+        }
+        async deleteUserPasskey(a10) {
+          return this.requireId(a10.userId), this.requireId(a10.passkeyIdentificationId), this.request({ method: "DELETE", path: cf(c0, a10.userId, "passkeys", a10.passkeyIdentificationId) });
+        }
+        async deleteUserWeb3Wallet(a10) {
+          return this.requireId(a10.userId), this.requireId(a10.web3WalletIdentificationId), this.request({ method: "DELETE", path: cf(c0, a10.userId, "web3_wallets", a10.web3WalletIdentificationId) });
+        }
+        async deleteUserExternalAccount(a10) {
+          return this.requireId(a10.userId), this.requireId(a10.externalAccountId), this.request({ method: "DELETE", path: cf(c0, a10.userId, "external_accounts", a10.externalAccountId) });
+        }
+        async deleteUserBackupCodes(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(c0, a10, "backup_code") });
+        }
+        async deleteUserTOTP(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(c0, a10, "totp") });
+        }
+      }, c2 = "/waitlist_entries", c3 = class extends cg {
+        async list(a10 = {}) {
+          return this.request({ method: "GET", path: c2, queryParams: a10 });
+        }
+        async create(a10) {
+          return this.request({ method: "POST", path: c2, bodyParams: a10 });
+        }
+        async invite(a10, b10 = {}) {
+          return this.requireId(a10), this.request({ method: "POST", path: cf(c2, a10, "invite"), bodyParams: b10 });
+        }
+        async reject(a10) {
+          return this.requireId(a10), this.request({ method: "POST", path: cf(c2, a10, "reject") });
+        }
+        async delete(a10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(c2, a10) });
+        }
+      }, c4 = "/webhooks", c5 = class extends cg {
+        async createSvixApp() {
+          return this.request({ method: "POST", path: cf(c4, "svix") });
+        }
+        async generateSvixAuthURL() {
+          return this.request({ method: "POST", path: cf(c4, "svix_url") });
+        }
+        async deleteSvixApp() {
+          return this.request({ method: "DELETE", path: cf(c4, "svix") });
+        }
+      }, c6 = "/billing", c7 = class extends cg {
+        async getPlanList(a10) {
+          return this.request({ method: "GET", path: cf(c6, "plans"), queryParams: a10 });
+        }
+        async cancelSubscriptionItem(a10, b10) {
+          return this.requireId(a10), this.request({ method: "DELETE", path: cf(c6, "subscription_items", a10), queryParams: b10 });
+        }
+        async extendSubscriptionItemFreeTrial(a10, b10) {
+          return this.requireId(a10), this.request({ method: "POST", path: cf("/billing", "subscription_items", a10, "extend_free_trial"), bodyParams: b10 });
+        }
+        async getOrganizationBillingSubscription(a10) {
+          return this.requireId(a10), this.request({ method: "GET", path: cf("/organizations", a10, "billing", "subscription") });
+        }
+        async getUserBillingSubscription(a10) {
+          return this.requireId(a10), this.request({ method: "GET", path: cf("/users", a10, "billing", "subscription") });
+        }
+      }, c8 = (a10) => "object" == typeof a10 && null !== a10, c9 = (a10) => c8(a10) && !(a10 instanceof RegExp) && !(a10 instanceof Error) && !(a10 instanceof Date) && !(globalThis.Blob && a10 instanceof globalThis.Blob), da = Symbol("mapObjectSkip"), db = (a10, b10, c10, d10 = /* @__PURE__ */ new WeakMap()) => {
+        if (c10 = { deep: false, target: {}, ...c10 }, d10.has(a10)) return d10.get(a10);
+        d10.set(a10, c10.target);
+        let { target: e10 } = c10;
+        delete c10.target;
+        let f10 = (a11) => a11.map((a12) => c9(a12) ? db(a12, b10, c10, d10) : a12);
+        if (Array.isArray(a10)) return f10(a10);
+        for (let [g10, h2] of Object.entries(a10)) {
+          let i2 = b10(g10, h2, a10);
+          if (i2 === da) continue;
+          let [j2, k2, { shouldRecurse: l2 = true } = {}] = i2;
+          "__proto__" !== j2 && (c10.deep && l2 && c9(k2) && (k2 = Array.isArray(k2) ? f10(k2) : db(k2, b10, c10, d10)), e10[j2] = k2);
+        }
+        return e10;
+      };
+      function dc(a10, b10, c10) {
+        if (!c8(a10)) throw TypeError(`Expected an object, got \`${a10}\` (${typeof a10})`);
+        if (Array.isArray(a10)) throw TypeError("Expected an object, got an array");
+        return db(a10, b10, c10);
+      }
+      var dd = /([\p{Ll}\d])(\p{Lu})/gu, de = /(\p{Lu})([\p{Lu}][\p{Ll}])/gu, df = /(\d)\p{Ll}|(\p{L})\d/u, dg = /[^\p{L}\d]+/giu, dh = "$1\0$2";
+      function di(a10) {
+        let b10 = a10.trim();
+        b10 = (b10 = b10.replace(dd, dh).replace(de, dh)).replace(dg, "\0");
+        let c10 = 0, d10 = b10.length;
+        for (; "\0" === b10.charAt(c10); ) c10++;
+        if (c10 === d10) return [];
+        for (; "\0" === b10.charAt(d10 - 1); ) d10--;
+        return b10.slice(c10, d10).split(/\0/g);
+      }
+      function dj(a10) {
+        let b10 = di(a10);
+        for (let a11 = 0; a11 < b10.length; a11++) {
+          let c10 = b10[a11], d10 = df.exec(c10);
+          if (d10) {
+            let e10 = d10.index + (d10[1] ?? d10[2]).length;
+            b10.splice(a11, 1, c10.slice(0, e10), c10.slice(e10));
+          }
+        }
+        return b10;
+      }
+      function dk(a10, b10) {
+        var c10, d10 = { delimiter: "_", ...b10 };
+        let [e10, f10, g10] = function(a11, b11 = {}) {
+          let c11 = b11.split ?? (b11.separateNumbers ? dj : di), d11 = b11.prefixCharacters ?? "", e11 = b11.suffixCharacters ?? "", f11 = 0, g11 = a11.length;
+          for (; f11 < a11.length; ) {
+            let b12 = a11.charAt(f11);
+            if (!d11.includes(b12)) break;
+            f11++;
+          }
+          for (; g11 > f11; ) {
+            let b12 = g11 - 1, c12 = a11.charAt(b12);
+            if (!e11.includes(c12)) break;
+            g11 = b12;
+          }
+          return [a11.slice(0, f11), c11(a11.slice(f11, g11)), a11.slice(g11)];
+        }(a10, d10);
+        return e10 + f10.map(false === (c10 = d10?.locale) ? (a11) => a11.toLowerCase() : (a11) => a11.toLocaleLowerCase(c10)).join(d10?.delimiter ?? " ") + g10;
+      }
+      var dl = {}.constructor;
+      function dm(a10, b10) {
+        return a10.some((a11) => "string" == typeof a11 ? a11 === b10 : a11.test(b10));
+      }
+      function dn(a10, b10, c10) {
+        return c10.shouldRecurse ? { shouldRecurse: c10.shouldRecurse(a10, b10) } : void 0;
+      }
+      var dp = function(a10, b10) {
+        if (Array.isArray(a10)) {
+          if (a10.some((a11) => a11.constructor !== dl)) throw Error("obj must be array of plain objects");
+          let c11 = (b10 = { deep: true, exclude: [], parsingOptions: {}, ...b10 }).snakeCase || ((a11) => dk(a11, b10.parsingOptions));
+          return a10.map((a11) => dc(a11, (a12, d10) => [dm(b10.exclude, a12) ? a12 : c11(a12), d10, dn(a12, d10, b10)], b10));
+        }
+        if (a10.constructor !== dl) throw Error("obj must be an plain object");
+        let c10 = (b10 = { deep: true, exclude: [], parsingOptions: {}, ...b10 }).snakeCase || ((a11) => dk(a11, b10.parsingOptions));
+        return dc(a10, (a11, d10) => [dm(b10.exclude, a11) ? a11 : c10(a11), d10, dn(a11, d10, b10)], b10);
+      }, dq = class a10 {
+        constructor(a11, b10, c10, d10) {
+          this.publishableKey = a11, this.secretKey = b10, this.claimUrl = c10, this.apiKeysUrl = d10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.publishable_key, b10.secret_key, b10.claim_url, b10.api_keys_url);
+        }
+      }, dr = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2) {
+          this.id = a11, this.status = b10, this.userId = c10, this.actor = d10, this.token = e10, this.url = f10, this.createdAt = g10, this.updatedAt = h2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.status, b10.user_id, b10.actor, b10.token, b10.url, b10.created_at, b10.updated_at);
+        }
+      }, ds = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10) {
+          this.id = a11, this.identifier = b10, this.identifierType = c10, this.createdAt = d10, this.updatedAt = e10, this.instanceId = f10, this.invitationId = g10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.identifier, b10.identifier_type, b10.created_at, b10.updated_at, b10.instance_id, b10.invitation_id);
+        }
+      }, dt = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2, n2, o2, p2) {
+          this.id = a11, this.type = b10, this.name = c10, this.subject = d10, this.scopes = e10, this.claims = f10, this.revoked = g10, this.revocationReason = h2, this.expired = i2, this.expiration = j2, this.createdBy = k2, this.description = l2, this.lastUsedAt = m2, this.createdAt = n2, this.updatedAt = o2, this.secret = p2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.type, b10.name, b10.subject, b10.scopes, b10.claims, b10.revoked, b10.revocation_reason, b10.expired, b10.expiration, b10.created_by, b10.description, b10.last_used_at, b10.created_at, b10.updated_at, b10.secret);
+        }
+      }, du = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10) {
+          this.id = a11, this.identifier = b10, this.identifierType = c10, this.createdAt = d10, this.updatedAt = e10, this.instanceId = f10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.identifier, b10.identifier_type, b10.created_at, b10.updated_at, b10.instance_id);
+        }
+      }, dv = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2) {
+          this.id = a11, this.isMobile = b10, this.ipAddress = c10, this.city = d10, this.country = e10, this.browserVersion = f10, this.browserName = g10, this.deviceType = h2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.is_mobile, b10.ip_address, b10.city, b10.country, b10.browser_version, b10.browser_name, b10.device_type);
+        }
+      }, dw = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2 = null) {
+          this.id = a11, this.clientId = b10, this.userId = c10, this.status = d10, this.lastActiveAt = e10, this.expireAt = f10, this.abandonAt = g10, this.createdAt = h2, this.updatedAt = i2, this.lastActiveOrganizationId = j2, this.latestActivity = k2, this.actor = l2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.client_id, b10.user_id, b10.status, b10.last_active_at, b10.expire_at, b10.abandon_at, b10.created_at, b10.updated_at, b10.last_active_organization_id, b10.latest_activity && dv.fromJSON(b10.latest_activity), b10.actor);
+        }
+      }, dx = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2) {
+          this.id = a11, this.sessionIds = b10, this.sessions = c10, this.signInId = d10, this.signUpId = e10, this.lastActiveSessionId = f10, this.lastAuthenticationStrategy = g10, this.createdAt = h2, this.updatedAt = i2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.session_ids, b10.sessions.map((a11) => dw.fromJSON(a11)), b10.sign_in_id, b10.sign_up_id, b10.last_active_session_id, b10.last_authentication_strategy, b10.created_at, b10.updated_at);
+        }
+      }, dy = class a10 {
+        constructor(a11, b10, c10) {
+          this.host = a11, this.value = b10, this.required = c10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.host, b10.value, b10.required);
+        }
+      }, dz = class a10 {
+        constructor(a11) {
+          this.cookies = a11;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.cookies);
+        }
+      }, dA = class a10 {
+        constructor(a11, b10, c10, d10) {
+          this.object = a11, this.id = b10, this.slug = c10, this.deleted = d10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.object, b10.id || null, b10.slug || null, b10.deleted);
+        }
+      }, dB = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2) {
+          this.id = a11, this.name = b10, this.isSatellite = c10, this.frontendApiUrl = d10, this.developmentOrigin = e10, this.cnameTargets = f10, this.accountsPortalUrl = g10, this.proxyUrl = h2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.name, b10.is_satellite, b10.frontend_api_url, b10.development_origin, b10.cname_targets && b10.cname_targets.map((a11) => dy.fromJSON(a11)), b10.accounts_portal_url, b10.proxy_url);
+        }
+      }, dC = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2) {
+          this.id = a11, this.fromEmailName = b10, this.emailAddressId = c10, this.toEmailAddress = d10, this.subject = e10, this.body = f10, this.bodyPlain = g10, this.status = h2, this.slug = i2, this.data = j2, this.deliveredByClerk = k2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.from_email_name, b10.email_address_id, b10.to_email_address, b10.subject, b10.body, b10.body_plain, b10.status, b10.slug, b10.data, b10.delivered_by_clerk);
+        }
+      }, dD = class a10 {
+        constructor(a11, b10) {
+          this.id = a11, this.type = b10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.type);
+        }
+      }, dE = class a10 {
+        constructor(a11, b10, c10 = null, d10 = null, e10 = null, f10 = null, g10 = null) {
+          this.status = a11, this.strategy = b10, this.externalVerificationRedirectURL = c10, this.attempts = d10, this.expireAt = e10, this.nonce = f10, this.message = g10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.status, b10.strategy, b10.external_verification_redirect_url ? new URL(b10.external_verification_redirect_url) : null, b10.attempts, b10.expire_at, b10.nonce);
+        }
+      }, dF = class a10 {
+        constructor(a11, b10, c10, d10) {
+          this.id = a11, this.emailAddress = b10, this.verification = c10, this.linkedTo = d10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.email_address, b10.verification && dE.fromJSON(b10.verification), b10.linked_to.map((a11) => dD.fromJSON(a11)));
+        }
+      }, dG = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2 = {}, m2, n2) {
+          this.id = a11, this.provider = b10, this.identificationId = c10, this.externalId = d10, this.approvedScopes = e10, this.emailAddress = f10, this.firstName = g10, this.lastName = h2, this.imageUrl = i2, this.username = j2, this.phoneNumber = k2, this.publicMetadata = l2, this.label = m2, this.verification = n2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.provider, b10.identification_id, b10.provider_user_id, b10.approved_scopes, b10.email_address, b10.first_name, b10.last_name, b10.image_url || "", b10.username, b10.phone_number, b10.public_metadata, b10.label, b10.verification && dE.fromJSON(b10.verification));
+        }
+      }, dH = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2) {
+          this.id = a11, this.clientId = b10, this.type = c10, this.subject = d10, this.scopes = e10, this.revoked = f10, this.revocationReason = g10, this.expired = h2, this.expiration = i2, this.createdAt = j2, this.updatedAt = k2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.client_id, b10.type, b10.subject, b10.scopes, b10.revoked, b10.revocation_reason, b10.expired, b10.expiration, b10.created_at, b10.updated_at);
+        }
+      }, dI = class a10 {
+        constructor(a11, b10, c10) {
+          this.id = a11, this.environmentType = b10, this.allowedOrigins = c10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.environment_type, b10.allowed_origins);
+        }
+      }, dJ = class a10 {
+        constructor(a11, b10, c10, d10, e10) {
+          this.allowlist = a11, this.blocklist = b10, this.blockEmailSubaddresses = c10, this.blockDisposableEmailDomains = d10, this.ignoreDotsForGmailAddresses = e10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.allowlist, b10.blocklist, b10.block_email_subaddresses, b10.block_disposable_email_domains, b10.ignore_dots_for_gmail_addresses);
+        }
+      }, dK = class a10 {
+        constructor(a11, b10, c10, d10, e10) {
+          this.id = a11, this.restrictedToAllowlist = b10, this.fromEmailAddress = c10, this.progressiveSignUp = d10, this.enhancedEmailDeliverability = e10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.restricted_to_allowlist, b10.from_email_address, b10.progressive_sign_up, b10.enhanced_email_deliverability);
+        }
+      }, dL = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2) {
+          this.id = a11, this.emailAddress = b10, this.publicMetadata = c10, this.createdAt = d10, this.updatedAt = e10, this.status = f10, this.url = g10, this.revoked = h2, this._raw = null;
+        }
+        get raw() {
+          return this._raw;
+        }
+        static fromJSON(b10) {
+          let c10 = new a10(b10.id, b10.email_address, b10.public_metadata, b10.created_at, b10.updated_at, b10.status, b10.url, b10.revoked);
+          return c10._raw = b10, c10;
+        }
+      }, dM = { AccountlessApplication: "accountless_application", ActorToken: "actor_token", AllowlistIdentifier: "allowlist_identifier", ApiKey: "api_key", BlocklistIdentifier: "blocklist_identifier", Client: "client", Cookies: "cookies", Domain: "domain", Email: "email", EmailAddress: "email_address", Instance: "instance", InstanceRestrictions: "instance_restrictions", InstanceSettings: "instance_settings", Invitation: "invitation", Machine: "machine", MachineScope: "machine_scope", MachineSecretKey: "machine_secret_key", M2MToken: "machine_to_machine_token", JwtTemplate: "jwt_template", OauthAccessToken: "oauth_access_token", IdpOAuthAccessToken: "clerk_idp_oauth_access_token", OAuthApplication: "oauth_application", Organization: "organization", OrganizationInvitation: "organization_invitation", OrganizationMembership: "organization_membership", OrganizationSettings: "organization_settings", PhoneNumber: "phone_number", ProxyCheck: "proxy_check", RedirectUrl: "redirect_url", SamlConnection: "saml_connection", Session: "session", SignInToken: "sign_in_token", SignUpAttempt: "sign_up_attempt", SmsMessage: "sms_message", User: "user", WaitlistEntry: "waitlist_entry", Token: "token", TotalCount: "total_count", BillingSubscription: "commerce_subscription", BillingSubscriptionItem: "commerce_subscription_item", BillingPlan: "commerce_plan", Feature: "feature" }, dN = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2) {
+          this.id = a11, this.name = b10, this.instanceId = c10, this.createdAt = d10, this.updatedAt = e10, this.scopedMachines = f10, this.defaultTokenTtl = g10, this.secretKey = h2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.name, b10.instance_id, b10.created_at, b10.updated_at, b10.scoped_machines.map((b11) => new a10(b11.id, b11.name, b11.instance_id, b11.created_at, b11.updated_at, [], b11.default_token_ttl)), b10.default_token_ttl, b10.secret_key);
+        }
+      }, dO = class a10 {
+        constructor(a11, b10, c10, d10) {
+          this.fromMachineId = a11, this.toMachineId = b10, this.createdAt = c10, this.deleted = d10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.from_machine_id, b10.to_machine_id, b10.created_at, b10.deleted);
+        }
+      }, dP = class a10 {
+        constructor(a11) {
+          this.secret = a11;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.secret);
+        }
+      }, dQ = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2) {
+          this.id = a11, this.subject = b10, this.scopes = c10, this.claims = d10, this.revoked = e10, this.revocationReason = f10, this.expired = g10, this.expiration = h2, this.createdAt = i2, this.updatedAt = j2, this.token = k2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.subject, b10.scopes, b10.claims, b10.revoked, b10.revocation_reason, b10.expired, b10.expiration, b10.created_at, b10.updated_at, b10.token);
+        }
+      }, dR = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2) {
+          this.id = a11, this.name = b10, this.claims = c10, this.lifetime = d10, this.allowedClockSkew = e10, this.customSigningKey = f10, this.signingAlgorithm = g10, this.createdAt = h2, this.updatedAt = i2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.name, b10.claims, b10.lifetime, b10.allowed_clock_skew, b10.custom_signing_key, b10.signing_algorithm, b10.created_at, b10.updated_at);
+        }
+      }, dS = class a10 {
+        constructor(a11, b10, c10, d10 = {}, e10, f10, g10, h2) {
+          this.externalAccountId = a11, this.provider = b10, this.token = c10, this.publicMetadata = d10, this.label = e10, this.scopes = f10, this.tokenSecret = g10, this.expiresAt = h2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.external_account_id, b10.provider, b10.token, b10.public_metadata, b10.label || "", b10.scopes, b10.token_secret, b10.expires_at);
+        }
+      }, dT = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2, n2, o2, p2, q2, r2, s2, t2) {
+          this.id = a11, this.instanceId = b10, this.name = c10, this.clientId = d10, this.clientUri = e10, this.clientImageUrl = f10, this.dynamicallyRegistered = g10, this.consentScreenEnabled = h2, this.pkceRequired = i2, this.isPublic = j2, this.scopes = k2, this.redirectUris = l2, this.authorizeUrl = m2, this.tokenFetchUrl = n2, this.userInfoUrl = o2, this.discoveryUrl = p2, this.tokenIntrospectionUrl = q2, this.createdAt = r2, this.updatedAt = s2, this.clientSecret = t2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.instance_id, b10.name, b10.client_id, b10.client_uri, b10.client_image_url, b10.dynamically_registered, b10.consent_screen_enabled, b10.pkce_required, b10.public, b10.scopes, b10.redirect_uris, b10.authorize_url, b10.token_fetch_url, b10.user_info_url, b10.discovery_url, b10.token_introspection_url, b10.created_at, b10.updated_at, b10.client_secret);
+        }
+      }, dU = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2 = {}, i2 = {}, j2, k2, l2, m2) {
+          this.id = a11, this.name = b10, this.slug = c10, this.imageUrl = d10, this.hasImage = e10, this.createdAt = f10, this.updatedAt = g10, this.publicMetadata = h2, this.privateMetadata = i2, this.maxAllowedMemberships = j2, this.adminDeleteEnabled = k2, this.membersCount = l2, this.createdBy = m2, this._raw = null;
+        }
+        get raw() {
+          return this._raw;
+        }
+        static fromJSON(b10) {
+          let c10 = new a10(b10.id, b10.name, b10.slug, b10.image_url || "", b10.has_image, b10.created_at, b10.updated_at, b10.public_metadata, b10.private_metadata, b10.max_allowed_memberships, b10.admin_delete_enabled, b10.members_count, b10.created_by);
+          return c10._raw = b10, c10;
+        }
+      }, dV = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2 = {}, l2 = {}, m2) {
+          this.id = a11, this.emailAddress = b10, this.role = c10, this.roleName = d10, this.organizationId = e10, this.createdAt = f10, this.updatedAt = g10, this.expiresAt = h2, this.url = i2, this.status = j2, this.publicMetadata = k2, this.privateMetadata = l2, this.publicOrganizationData = m2, this._raw = null;
+        }
+        get raw() {
+          return this._raw;
+        }
+        static fromJSON(b10) {
+          let c10 = new a10(b10.id, b10.email_address, b10.role, b10.role_name, b10.organization_id, b10.created_at, b10.updated_at, b10.expires_at, b10.url, b10.status, b10.public_metadata, b10.private_metadata, b10.public_organization_data);
+          return c10._raw = b10, c10;
+        }
+      }, dW = class a10 {
+        constructor(a11, b10, c10, d10 = {}, e10 = {}, f10, g10, h2, i2) {
+          this.id = a11, this.role = b10, this.permissions = c10, this.publicMetadata = d10, this.privateMetadata = e10, this.createdAt = f10, this.updatedAt = g10, this.organization = h2, this.publicUserData = i2, this._raw = null;
+        }
+        get raw() {
+          return this._raw;
+        }
+        static fromJSON(b10) {
+          let c10 = new a10(b10.id, b10.role, b10.permissions, b10.public_metadata, b10.private_metadata, b10.created_at, b10.updated_at, dU.fromJSON(b10.organization), dX.fromJSON(b10.public_user_data));
+          return c10._raw = b10, c10;
+        }
+      }, dX = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10) {
+          this.identifier = a11, this.firstName = b10, this.lastName = c10, this.imageUrl = d10, this.hasImage = e10, this.userId = f10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.identifier, b10.first_name, b10.last_name, b10.image_url, b10.has_image, b10.user_id);
+        }
+      }, dY = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2) {
+          this.enabled = a11, this.maxAllowedMemberships = b10, this.maxAllowedRoles = c10, this.maxAllowedPermissions = d10, this.creatorRole = e10, this.adminDeleteEnabled = f10, this.domainsEnabled = g10, this.slugDisabled = h2, this.domainsEnrollmentModes = i2, this.domainsDefaultRole = j2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.enabled, b10.max_allowed_memberships, b10.max_allowed_roles, b10.max_allowed_permissions, b10.creator_role, b10.admin_delete_enabled, b10.domains_enabled, b10.slug_disabled, b10.domains_enrollment_modes, b10.domains_default_role);
+        }
+      }, dZ = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10) {
+          this.id = a11, this.phoneNumber = b10, this.reservedForSecondFactor = c10, this.defaultSecondFactor = d10, this.verification = e10, this.linkedTo = f10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.phone_number, b10.reserved_for_second_factor, b10.default_second_factor, b10.verification && dE.fromJSON(b10.verification), b10.linked_to.map((a11) => dD.fromJSON(a11)));
+        }
+      }, d$ = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10) {
+          this.id = a11, this.domainId = b10, this.lastRunAt = c10, this.proxyUrl = d10, this.successful = e10, this.createdAt = f10, this.updatedAt = g10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.domain_id, b10.last_run_at, b10.proxy_url, b10.successful, b10.created_at, b10.updated_at);
+        }
+      }, d_ = class a10 {
+        constructor(a11, b10, c10, d10) {
+          this.id = a11, this.url = b10, this.createdAt = c10, this.updatedAt = d10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.url, b10.created_at, b10.updated_at);
+        }
+      }, d0 = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2, n2, o2, p2, q2, r2, s2, t2, u2) {
+          this.id = a11, this.name = b10, this.domain = c10, this.organizationId = d10, this.idpEntityId = e10, this.idpSsoUrl = f10, this.idpCertificate = g10, this.idpMetadataUrl = h2, this.idpMetadata = i2, this.acsUrl = j2, this.spEntityId = k2, this.spMetadataUrl = l2, this.active = m2, this.provider = n2, this.userCount = o2, this.syncUserAttributes = p2, this.allowSubdomains = q2, this.allowIdpInitiated = r2, this.createdAt = s2, this.updatedAt = t2, this.attributeMapping = u2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.name, b10.domain, b10.organization_id, b10.idp_entity_id, b10.idp_sso_url, b10.idp_certificate, b10.idp_metadata_url, b10.idp_metadata, b10.acs_url, b10.sp_entity_id, b10.sp_metadata_url, b10.active, b10.provider, b10.user_count, b10.sync_user_attributes, b10.allow_subdomains, b10.allow_idp_initiated, b10.created_at, b10.updated_at, b10.attribute_mapping && d2.fromJSON(b10.attribute_mapping));
+        }
+      }, d1 = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2) {
+          this.id = a11, this.name = b10, this.domain = c10, this.active = d10, this.provider = e10, this.syncUserAttributes = f10, this.allowSubdomains = g10, this.allowIdpInitiated = h2, this.createdAt = i2, this.updatedAt = j2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.name, b10.domain, b10.active, b10.provider, b10.sync_user_attributes, b10.allow_subdomains, b10.allow_idp_initiated, b10.created_at, b10.updated_at);
+        }
+      }, d2 = class a10 {
+        constructor(a11, b10, c10, d10) {
+          this.userId = a11, this.emailAddress = b10, this.firstName = c10, this.lastName = d10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.user_id, b10.email_address, b10.first_name, b10.last_name);
+        }
+      }, d3 = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2) {
+          this.id = a11, this.provider = b10, this.providerUserId = c10, this.active = d10, this.emailAddress = e10, this.firstName = f10, this.lastName = g10, this.verification = h2, this.samlConnection = i2, this.lastAuthenticatedAt = j2, this.enterpriseConnectionId = k2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.provider, b10.provider_user_id, b10.active, b10.email_address, b10.first_name, b10.last_name, b10.verification && dE.fromJSON(b10.verification), b10.saml_connection && d1.fromJSON(b10.saml_connection), b10.last_authenticated_at ?? null, b10.enterprise_connection_id);
+        }
+      }, d4 = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10) {
+          this.id = a11, this.userId = b10, this.token = c10, this.status = d10, this.url = e10, this.createdAt = f10, this.updatedAt = g10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.user_id, b10.token, b10.status, b10.url, b10.created_at, b10.updated_at);
+        }
+      }, d5 = class a10 {
+        constructor(a11, b10) {
+          this.nextAction = a11, this.supportedStrategies = b10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.next_action, b10.supported_strategies);
+        }
+      }, d6 = class a10 {
+        constructor(a11, b10, c10, d10) {
+          this.emailAddress = a11, this.phoneNumber = b10, this.web3Wallet = c10, this.externalAccount = d10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.email_address && d5.fromJSON(b10.email_address), b10.phone_number && d5.fromJSON(b10.phone_number), b10.web3_wallet && d5.fromJSON(b10.web3_wallet), b10.external_account);
+        }
+      }, d7 = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2, n2, o2, p2, q2, r2, s2, t2, u2, v2) {
+          this.id = a11, this.status = b10, this.requiredFields = c10, this.optionalFields = d10, this.missingFields = e10, this.unverifiedFields = f10, this.verifications = g10, this.username = h2, this.emailAddress = i2, this.phoneNumber = j2, this.web3Wallet = k2, this.passwordEnabled = l2, this.firstName = m2, this.lastName = n2, this.customAction = o2, this.externalId = p2, this.createdSessionId = q2, this.createdUserId = r2, this.abandonAt = s2, this.legalAcceptedAt = t2, this.publicMetadata = u2, this.unsafeMetadata = v2;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.status, b10.required_fields, b10.optional_fields, b10.missing_fields, b10.unverified_fields, b10.verifications ? d6.fromJSON(b10.verifications) : null, b10.username, b10.email_address, b10.phone_number, b10.web3_wallet, b10.password_enabled, b10.first_name, b10.last_name, b10.custom_action, b10.external_id, b10.created_session_id, b10.created_user_id, b10.abandon_at, b10.legal_accepted_at, b10.public_metadata, b10.unsafe_metadata);
+        }
+      }, d8 = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10) {
+          this.id = a11, this.fromPhoneNumber = b10, this.toPhoneNumber = c10, this.message = d10, this.status = e10, this.phoneNumberId = f10, this.data = g10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.from_phone_number, b10.to_phone_number, b10.message, b10.status, b10.phone_number_id, b10.data);
+        }
+      }, d9 = class a10 {
+        constructor(a11) {
+          this.jwt = a11;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.jwt);
+        }
+      }, ea = class a10 {
+        constructor(a11, b10, c10) {
+          this.id = a11, this.web3Wallet = b10, this.verification = c10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.web3_wallet, b10.verification && dE.fromJSON(b10.verification));
+        }
+      }, eb = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2, n2, o2, p2, q2, r2, s2, t2 = {}, u2 = {}, v2 = {}, w2 = [], x2 = [], y2 = [], z2 = [], A2 = [], B2, C2, D2 = null, E2, F2, G2) {
+          this.id = a11, this.passwordEnabled = b10, this.totpEnabled = c10, this.backupCodeEnabled = d10, this.twoFactorEnabled = e10, this.banned = f10, this.locked = g10, this.createdAt = h2, this.updatedAt = i2, this.imageUrl = j2, this.hasImage = k2, this.primaryEmailAddressId = l2, this.primaryPhoneNumberId = m2, this.primaryWeb3WalletId = n2, this.lastSignInAt = o2, this.externalId = p2, this.username = q2, this.firstName = r2, this.lastName = s2, this.publicMetadata = t2, this.privateMetadata = u2, this.unsafeMetadata = v2, this.emailAddresses = w2, this.phoneNumbers = x2, this.web3Wallets = y2, this.externalAccounts = z2, this.samlAccounts = A2, this.lastActiveAt = B2, this.createOrganizationEnabled = C2, this.createOrganizationsLimit = D2, this.deleteSelfEnabled = E2, this.legalAcceptedAt = F2, this.locale = G2, this._raw = null;
+        }
+        get raw() {
+          return this._raw;
+        }
+        static fromJSON(b10) {
+          let c10 = new a10(b10.id, b10.password_enabled, b10.totp_enabled, b10.backup_code_enabled, b10.two_factor_enabled, b10.banned, b10.locked, b10.created_at, b10.updated_at, b10.image_url, b10.has_image, b10.primary_email_address_id, b10.primary_phone_number_id, b10.primary_web3_wallet_id, b10.last_sign_in_at, b10.external_id, b10.username, b10.first_name, b10.last_name, b10.public_metadata, b10.private_metadata, b10.unsafe_metadata, (b10.email_addresses || []).map((a11) => dF.fromJSON(a11)), (b10.phone_numbers || []).map((a11) => dZ.fromJSON(a11)), (b10.web3_wallets || []).map((a11) => ea.fromJSON(a11)), (b10.external_accounts || []).map((a11) => dG.fromJSON(a11)), (b10.saml_accounts || []).map((a11) => d3.fromJSON(a11)), b10.last_active_at, b10.create_organization_enabled, b10.create_organizations_limit, b10.delete_self_enabled, b10.legal_accepted_at, b10.locale);
+          return c10._raw = b10, c10;
+        }
+        get primaryEmailAddress() {
+          return this.emailAddresses.find(({ id: a11 }) => a11 === this.primaryEmailAddressId) ?? null;
+        }
+        get primaryPhoneNumber() {
+          return this.phoneNumbers.find(({ id: a11 }) => a11 === this.primaryPhoneNumberId) ?? null;
+        }
+        get primaryWeb3Wallet() {
+          return this.web3Wallets.find(({ id: a11 }) => a11 === this.primaryWeb3WalletId) ?? null;
+        }
+        get fullName() {
+          return [this.firstName, this.lastName].join(" ").trim() || null;
+        }
+      }, ec = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10) {
+          this.id = a11, this.emailAddress = b10, this.status = c10, this.invitation = d10, this.createdAt = e10, this.updatedAt = f10, this.isLocked = g10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.email_address, b10.status, b10.invitation && dL.fromJSON(b10.invitation), b10.created_at, b10.updated_at, b10.is_locked);
+        }
+      }, ed = class a10 {
+        constructor(a11, b10, c10, d10, e10) {
+          this.id = a11, this.name = b10, this.description = c10, this.slug = d10, this.avatarUrl = e10;
+        }
+        static fromJSON(b10) {
+          return new a10(b10.id, b10.name, b10.description ?? null, b10.slug, b10.avatar_url ?? null);
+        }
+      }, ee = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2) {
+          this.id = a11, this.name = b10, this.slug = c10, this.description = d10, this.isDefault = e10, this.isRecurring = f10, this.hasBaseFee = g10, this.publiclyVisible = h2, this.fee = i2, this.annualFee = j2, this.annualMonthlyFee = k2, this.forPayerType = l2, this.features = m2;
+        }
+        static fromJSON(b10) {
+          let c10 = (a11) => a11 ? { amount: a11.amount, amountFormatted: a11.amount_formatted, currency: a11.currency, currencySymbol: a11.currency_symbol } : null;
+          return new a10(b10.id, b10.name, b10.slug, b10.description ?? null, b10.is_default, b10.is_recurring, b10.has_base_fee, b10.publicly_visible, c10(b10.fee), c10(b10.annual_fee), c10(b10.annual_monthly_fee), b10.for_payer_type, (b10.features ?? []).map((a11) => ed.fromJSON(a11)));
+        }
+      }, ef = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2, k2, l2, m2, n2, o2, p2, q2) {
+          this.id = a11, this.status = b10, this.planPeriod = c10, this.periodStart = d10, this.nextPayment = e10, this.amount = f10, this.plan = g10, this.planId = h2, this.createdAt = i2, this.updatedAt = j2, this.periodEnd = k2, this.canceledAt = l2, this.pastDueAt = m2, this.endedAt = n2, this.payerId = o2, this.isFreeTrial = p2, this.lifetimePaid = q2;
+        }
+        static fromJSON(b10) {
+          function c10(a11) {
+            return a11 ? { amount: a11.amount, amountFormatted: a11.amount_formatted, currency: a11.currency, currencySymbol: a11.currency_symbol } : a11;
+          }
+          return new a10(b10.id, b10.status, b10.plan_period, b10.period_start, b10.next_payment, c10(b10.amount) ?? void 0, b10.plan ? ee.fromJSON(b10.plan) : null, b10.plan_id ?? null, b10.created_at, b10.updated_at, b10.period_end, b10.canceled_at, b10.past_due_at, b10.ended_at, b10.payer_id, b10.is_free_trial, c10(b10.lifetime_paid) ?? void 0);
+        }
+      }, eg = class a10 {
+        constructor(a11, b10, c10, d10, e10, f10, g10, h2, i2, j2) {
+          this.id = a11, this.status = b10, this.payerId = c10, this.createdAt = d10, this.updatedAt = e10, this.activeAt = f10, this.pastDueAt = g10, this.subscriptionItems = h2, this.nextPayment = i2, this.eligibleForFreeTrial = j2;
+        }
+        static fromJSON(b10) {
+          let c10 = b10.next_payment ? { date: b10.next_payment.date, amount: { amount: b10.next_payment.amount.amount, amountFormatted: b10.next_payment.amount.amount_formatted, currency: b10.next_payment.amount.currency, currencySymbol: b10.next_payment.amount.currency_symbol } } : null;
+          return new a10(b10.id, b10.status, b10.payer_id, b10.created_at, b10.updated_at, b10.active_at ?? null, b10.past_due_at ?? null, (b10.subscription_items ?? []).map((a11) => ef.fromJSON(a11)), c10, b10.eligible_for_free_trial ?? false);
+        }
+      };
+      function eh(a10) {
+        if ("string" != typeof a10 && "object" in a10 && "deleted" in a10) return dA.fromJSON(a10);
+        switch (a10.object) {
+          case dM.AccountlessApplication:
+            return dq.fromJSON(a10);
+          case dM.ActorToken:
+            return dr.fromJSON(a10);
+          case dM.AllowlistIdentifier:
+            return ds.fromJSON(a10);
+          case dM.ApiKey:
+            return dt.fromJSON(a10);
+          case dM.BlocklistIdentifier:
+            return du.fromJSON(a10);
+          case dM.Client:
+            return dx.fromJSON(a10);
+          case dM.Cookies:
+            return dz.fromJSON(a10);
+          case dM.Domain:
+            return dB.fromJSON(a10);
+          case dM.EmailAddress:
+            return dF.fromJSON(a10);
+          case dM.Email:
+            return dC.fromJSON(a10);
+          case dM.IdpOAuthAccessToken:
+            return dH.fromJSON(a10);
+          case dM.Instance:
+            return dI.fromJSON(a10);
+          case dM.InstanceRestrictions:
+            return dJ.fromJSON(a10);
+          case dM.InstanceSettings:
+            return dK.fromJSON(a10);
+          case dM.Invitation:
+            return dL.fromJSON(a10);
+          case dM.JwtTemplate:
+            return dR.fromJSON(a10);
+          case dM.Machine:
+            return dN.fromJSON(a10);
+          case dM.MachineScope:
+            return dO.fromJSON(a10);
+          case dM.MachineSecretKey:
+            return dP.fromJSON(a10);
+          case dM.M2MToken:
+            return dQ.fromJSON(a10);
+          case dM.OauthAccessToken:
+            return dS.fromJSON(a10);
+          case dM.OAuthApplication:
+            return dT.fromJSON(a10);
+          case dM.Organization:
+            return dU.fromJSON(a10);
+          case dM.OrganizationInvitation:
+            return dV.fromJSON(a10);
+          case dM.OrganizationMembership:
+            return dW.fromJSON(a10);
+          case dM.OrganizationSettings:
+            return dY.fromJSON(a10);
+          case dM.PhoneNumber:
+            return dZ.fromJSON(a10);
+          case dM.ProxyCheck:
+            return d$.fromJSON(a10);
+          case dM.RedirectUrl:
+            return d_.fromJSON(a10);
+          case dM.SamlConnection:
+            return d0.fromJSON(a10);
+          case dM.SignInToken:
+            return d4.fromJSON(a10);
+          case dM.SignUpAttempt:
+            return d7.fromJSON(a10);
+          case dM.Session:
+            return dw.fromJSON(a10);
+          case dM.SmsMessage:
+            return d8.fromJSON(a10);
+          case dM.Token:
+            return d9.fromJSON(a10);
+          case dM.TotalCount:
+            return a10.total_count;
+          case dM.User:
+            return eb.fromJSON(a10);
+          case dM.WaitlistEntry:
+            return ec.fromJSON(a10);
+          case dM.BillingPlan:
+            return ee.fromJSON(a10);
+          case dM.BillingSubscription:
+            return eg.fromJSON(a10);
+          case dM.BillingSubscriptionItem:
+            return ef.fromJSON(a10);
+          case dM.Feature:
+            return ed.fromJSON(a10);
+          default:
+            return a10;
+        }
+      }
+      function ei(a10) {
+        var b10;
+        return b10 = async (b11) => {
+          let c10, { secretKey: d10, machineSecretKey: e10, useMachineSecretKey: f10 = false, requireSecretKey: g10 = true, apiUrl: h2 = b1, apiVersion: i2 = "v1", userAgent: j2 = b2, skipApiVersionInUrl: k2 = false } = a10, { path: l2, method: m2, queryParams: n2, headerParams: o2, bodyParams: p2, formData: q2, options: r2 } = b11, { deepSnakecaseBodyParamKeys: s2 = false } = r2 || {};
+          g10 && ca(d10);
+          let t2 = new URL(k2 ? cf(h2, l2) : cf(h2, i2, l2));
+          if (n2) for (let [a11, b12] of Object.entries(dp({ ...n2 }))) b12 && [b12].flat().forEach((b13) => t2.searchParams.append(a11, b13));
+          let u2 = new Headers({ "Clerk-API-Version": b3, [b6.Headers.UserAgent]: j2, ...o2 }), v2 = b6.Headers.Authorization;
+          !u2.has(v2) && (f10 && e10 ? u2.set(v2, `Bearer ${e10}`) : d10 && u2.set(v2, `Bearer ${d10}`));
+          try {
+            var w2;
+            q2 ? c10 = await bH.fetch(t2.href, { method: m2, headers: u2, body: q2 }) : (u2.set("Content-Type", "application/json"), c10 = await bH.fetch(t2.href, { method: m2, headers: u2, ...(() => {
+              if (!("GET" !== m2 && p2 && Object.keys(p2).length > 0)) return null;
+              let a12 = (a13) => dp(a13, { deep: s2 });
+              return { body: JSON.stringify(Array.isArray(p2) ? p2.map(a12) : a12(p2)) };
+            })() }));
+            let a11 = c10?.headers && c10.headers?.get(b6.Headers.ContentType) === b6.ContentTypes.Json, b12 = await (a11 ? c10.json() : c10.text());
+            if (!c10.ok) return { data: null, errors: el(b12), status: c10?.status, statusText: c10?.statusText, clerkTraceId: ej(b12, c10?.headers), retryAfter: ek(c10?.headers) };
+            return { ...Array.isArray(b12) ? { data: b12.map((a12) => eh(a12)) } : (w2 = b12) && "object" == typeof w2 && "data" in w2 && Array.isArray(w2.data) && void 0 !== w2.data ? { data: b12.data.map((a12) => eh(a12)), totalCount: b12.total_count } : { data: eh(b12) }, errors: null };
+          } catch (a11) {
+            if (a11 instanceof Error) return { data: null, errors: [{ code: "unexpected_error", message: a11.message || "Unexpected error" }], clerkTraceId: ej(a11, c10?.headers) };
+            return { data: null, errors: el(a11), status: c10?.status, statusText: c10?.statusText, clerkTraceId: ej(a11, c10?.headers), retryAfter: ek(c10?.headers) };
+          }
+        }, async (...a11) => {
+          let { data: c10, errors: d10, totalCount: e10, status: f10, statusText: g10, clerkTraceId: h2, retryAfter: i2 } = await b10(...a11);
+          if (d10) {
+            let a12 = new bu(g10 || "", { data: [], status: f10, clerkTraceId: h2, retryAfter: i2 });
+            throw a12.errors = d10, a12;
+          }
+          return void 0 !== e10 ? { data: c10, totalCount: e10 } : c10;
+        };
+      }
+      function ej(a10, b10) {
+        return a10 && "object" == typeof a10 && "clerk_trace_id" in a10 && "string" == typeof a10.clerk_trace_id ? a10.clerk_trace_id : b10?.get("cf-ray") || "";
+      }
+      function ek(a10) {
+        let b10 = a10?.get("Retry-After");
+        if (!b10) return;
+        let c10 = parseInt(b10, 10);
+        if (!isNaN(c10)) return c10;
+      }
+      function el(a10) {
+        if (a10 && "object" == typeof a10 && "errors" in a10) {
+          let b10 = a10.errors;
+          return b10.length > 0 ? b10.map(bs) : [];
+        }
+        return [];
+      }
+      function em(a10) {
+        let b10 = ei(a10);
+        return { __experimental_accountlessApplications: new ck(ei({ ...a10, requireSecretKey: false })), actorTokens: new ci(b10), allowlistIdentifiers: new cm(b10), apiKeys: new co(ei({ ...a10, skipApiVersionInUrl: true })), betaFeatures: new cp(b10), blocklistIdentifiers: new cr(b10), billing: new c7(b10), clients: new ct(b10), domains: new cv(b10), emailAddresses: new cx(b10), idPOAuthAccessToken: new cy(ei({ ...a10, skipApiVersionInUrl: true })), instance: new cA(b10), invitations: new cC(b10), jwks: new cH(b10), jwtTemplates: new cJ(b10), machines: new cE(b10), m2m: new cG(ei({ ...a10, skipApiVersionInUrl: true, requireSecretKey: false, useMachineSecretKey: true })), oauthApplications: new cN(b10), organizations: new cL(b10), phoneNumbers: new cP(b10), proxyChecks: new cQ(b10), redirectUrls: new cS(b10), samlConnections: new cU(b10), sessions: new cW(b10), signInTokens: new cY(b10), signUps: new c$(b10), testingTokens: new c_(b10), users: new c1(b10), waitlistEntries: new c3(b10), webhooks: new c5(b10) };
+      }
+      var en = "oat_", eo = ["mt_", en, "ak_"];
+      function ep(a10) {
+        return eo.some((b10) => a10.startsWith(b10));
+      }
+      function eq(a10) {
+        if (a10.startsWith("mt_")) return cb.M2MToken;
+        if (a10.startsWith(en)) return cb.OAuthToken;
+        if (a10.startsWith("ak_")) return cb.ApiKey;
+        throw Error("Unknown machine token type");
+      }
+      var er = (a10, b10) => !!a10 && ("any" === b10 || (Array.isArray(b10) ? b10 : [b10]).includes(a10)), es = (a10) => () => {
+        let b10 = { ...a10 };
+        return b10.secretKey = (b10.secretKey || "").substring(0, 7), b10.jwtKey = (b10.jwtKey || "").substring(0, 7), { ...b10 };
+      };
+      function et(a10, b10) {
+        return { tokenType: cb.SessionToken, sessionClaims: null, sessionId: null, sessionStatus: b10 ?? null, userId: null, actor: null, orgId: null, orgRole: null, orgSlug: null, orgPermissions: null, factorVerificationAge: null, getToken: () => Promise.resolve(null), has: () => false, debug: es(a10), isAuthenticated: false };
+      }
+      function eu(a10, b10) {
+        let c10 = { id: null, subject: null, scopes: null, has: () => false, getToken: () => Promise.resolve(null), debug: es(b10), isAuthenticated: false };
+        switch (a10) {
+          case cb.ApiKey:
+            return { ...c10, tokenType: a10, name: null, claims: null, scopes: null, userId: null, orgId: null };
+          case cb.M2MToken:
+            return { ...c10, tokenType: a10, claims: null, scopes: null, machineId: null };
+          case cb.OAuthToken:
+            return { ...c10, tokenType: a10, scopes: null, userId: null, clientId: null };
+          default:
+            throw Error(`Invalid token type: ${a10}`);
+        }
+      }
+      function ev() {
+        return { isAuthenticated: false, tokenType: null, getToken: () => Promise.resolve(null), has: () => false, debug: () => ({}) };
+      }
+      var ew = ({ authObject: a10, acceptsToken: b10 = cb.SessionToken }) => "any" === b10 ? a10 : Array.isArray(b10) ? er(a10.tokenType, b10) ? a10 : ev() : er(a10.tokenType, b10) ? a10 : !function(a11) {
+        return a11 === cb.ApiKey || a11 === cb.M2MToken || a11 === cb.OAuthToken;
+      }(b10) ? et(a10.debug) : eu(b10, a10.debug), ex = { SignedIn: "signed-in", SignedOut: "signed-out", Handshake: "handshake" }, ey = { ClientUATWithoutSessionToken: "client-uat-but-no-session-token", DevBrowserMissing: "dev-browser-missing", DevBrowserSync: "dev-browser-sync", PrimaryRespondsToSyncing: "primary-responds-to-syncing", PrimaryDomainCrossOriginSync: "primary-domain-cross-origin-sync", SatelliteCookieNeedsSyncing: "satellite-needs-syncing", SessionTokenAndUATMissing: "session-token-and-uat-missing", SessionTokenMissing: "session-token-missing", SessionTokenExpired: "session-token-expired", SessionTokenIATBeforeClientUAT: "session-token-iat-before-client-uat", SessionTokenNBF: "session-token-nbf", SessionTokenIatInTheFuture: "session-token-iat-in-the-future", SessionTokenWithoutClientUAT: "session-token-but-no-client-uat", ActiveOrganizationMismatch: "active-organization-mismatch", TokenTypeMismatch: "token-type-mismatch", UnexpectedError: "unexpected-error" };
+      function ez(a10) {
+        let { authenticateContext: b10, headers: c10 = new Headers(), token: d10 } = a10;
+        return { status: ex.SignedIn, reason: null, message: null, proxyUrl: b10.proxyUrl || "", publishableKey: b10.publishableKey || "", isSatellite: b10.isSatellite || false, domain: b10.domain || "", signInUrl: b10.signInUrl || "", signUpUrl: b10.signUpUrl || "", afterSignInUrl: b10.afterSignInUrl || "", afterSignUpUrl: b10.afterSignUpUrl || "", isSignedIn: true, isAuthenticated: true, tokenType: a10.tokenType, toAuth: ({ treatPendingAsSignedOut: c11 = true } = {}) => {
+          if (a10.tokenType === cb.SessionToken) {
+            let { sessionClaims: e11 } = a10, f11 = function(a11, b11, c12) {
+              let d11, { actor: e12, sessionId: f12, sessionStatus: g11, userId: h2, orgId: i2, orgRole: j2, orgSlug: k2, orgPermissions: l2, factorVerificationAge: m2 } = ((a12) => {
+                let b12, c13, d12, e13, f13 = a12.fva ?? null, g12 = a12.sts ?? null;
+                if (2 === a12.v) {
+                  if (a12.o) {
+                    b12 = a12.o?.id, d12 = a12.o?.slg, a12.o?.rol && (c13 = `org:${a12.o?.rol}`);
+                    let { org: f14 } = b_(a12.fea), { permissions: g13, featurePermissionMap: h3 } = (({ per: a13, fpm: b13 }) => {
+                      if (!a13 || !b13) return { permissions: [], featurePermissionMap: [] };
+                      let c14 = a13.split(",").map((a14) => a14.trim());
+                      return { permissions: c14, featurePermissionMap: b13.split(",").map((a14) => Number.parseInt(a14.trim(), 10)).map((a14) => a14.toString(2).padStart(c14.length, "0").split("").map((a15) => Number.parseInt(a15, 10)).reverse()).filter(Boolean) };
+                    })({ per: a12.o?.per, fpm: a12.o?.fpm });
+                    e13 = function({ features: a13, permissions: b13, featurePermissionMap: c14 }) {
+                      if (!a13 || !b13 || !c14) return [];
+                      let d13 = [];
+                      for (let e14 = 0; e14 < a13.length; e14++) {
+                        let f15 = a13[e14];
+                        if (e14 >= c14.length) continue;
+                        let g14 = c14[e14];
+                        if (g14) for (let a14 = 0; a14 < g14.length; a14++) 1 === g14[a14] && d13.push(`org:${f15}:${b13[a14]}`);
+                      }
+                      return d13;
+                    }({ features: f14, featurePermissionMap: h3, permissions: g13 });
+                  }
+                } else b12 = a12.org_id, c13 = a12.org_role, d12 = a12.org_slug, e13 = a12.org_permissions;
+                return { sessionClaims: a12, sessionId: a12.sid, sessionStatus: g12, actor: a12.act, userId: a12.sub, orgId: b12, orgRole: c13, orgSlug: d12, orgPermissions: e13, factorVerificationAge: f13 };
+              })(c12), n2 = em(a11), o2 = ((a12) => {
+                let { fetcher: b12, sessionToken: c13, sessionId: d12 } = a12 || {};
+                return async (a13 = {}) => d12 ? a13.template || void 0 !== a13.expiresInSeconds ? b12(d12, a13.template, a13.expiresInSeconds) : c13 : null;
+              })({ sessionId: f12, sessionToken: b11, fetcher: async (a12, b12, c13) => (await n2.sessions.getToken(a12, b12 || "", c13)).jwt });
+              return { tokenType: cb.SessionToken, actor: e12, sessionClaims: c12, sessionId: f12, sessionStatus: g11, userId: h2, orgId: i2, orgRole: j2, orgSlug: k2, orgPermissions: l2, factorVerificationAge: m2, getToken: o2, has: (d11 = { orgId: i2, orgRole: j2, orgPermissions: l2, userId: h2, factorVerificationAge: m2, features: c12.fea || "", plans: c12.pla || "" }, (a12) => {
+                if (!d11.userId) return false;
+                let b12 = ((a13, b13) => {
+                  let { features: c14, plans: d12 } = b13;
+                  return a13.feature && c14 ? b$(c14, a13.feature) : a13.plan && d12 ? b$(d12, a13.plan) : null;
+                })(a12, d11), c13 = ((a13, b13) => {
+                  let { orgId: c14, orgRole: d12, orgPermissions: e14 } = b13;
+                  return (a13.role || a13.permission) && c14 && d12 && e14 ? a13.permission ? e14.includes(bZ(a13.permission)) : a13.role ? bZ(d12) === bZ(a13.role) : null : null;
+                })(a12, d11), e13 = ((a13, { factorVerificationAge: b13 }) => {
+                  if (!a13.reverification || !b13) return null;
+                  let c14 = ((a14) => {
+                    let b14, c15;
+                    if (!a14) return false;
+                    let d13 = "string" == typeof a14 && bY.has(a14), e15 = "object" == typeof a14 && (b14 = a14.level, bX.has(b14)) && "number" == typeof (c15 = a14.afterMinutes) && c15 > 0;
+                    return (!!d13 || !!e15) && ((a15) => "string" == typeof a15 ? bW[a15] : a15).bind(null, a14);
+                  })(a13.reverification);
+                  if (!c14) return null;
+                  let { level: d12, afterMinutes: e14 } = c14(), [f13, g12] = b13, h3 = -1 !== f13 ? e14 > f13 : null, i3 = -1 !== g12 ? e14 > g12 : null;
+                  switch (d12) {
+                    case "first_factor":
+                      return h3;
+                    case "second_factor":
+                      return -1 !== g12 ? i3 : h3;
+                    case "multi_factor":
+                      return -1 === g12 ? h3 : h3 && i3;
+                  }
+                })(a12, d11);
+                return [b12 || c13, e13].some((a13) => null === a13) ? [b12 || c13, e13].some((a13) => true === a13) : [b12 || c13, e13].every((a13) => true === a13);
+              }), debug: es({ ...a11, sessionToken: b11 }), isAuthenticated: true };
+            }(b10, d10, e11);
+            return c11 && "pending" === f11.sessionStatus ? et(void 0, f11.sessionStatus) : f11;
+          }
+          let { machineData: e10 } = a10;
+          var f10 = a10.tokenType;
+          let g10 = { id: e10.id, subject: e10.subject, getToken: () => Promise.resolve(d10), has: () => false, debug: es(b10), isAuthenticated: true };
+          switch (f10) {
+            case cb.ApiKey:
+              return { ...g10, tokenType: f10, name: e10.name, claims: e10.claims, scopes: e10.scopes, userId: e10.subject.startsWith("user_") ? e10.subject : null, orgId: e10.subject.startsWith("org_") ? e10.subject : null };
+            case cb.M2MToken:
+              return { ...g10, tokenType: f10, claims: e10.claims, scopes: e10.scopes, machineId: e10.subject };
+            case cb.OAuthToken:
+              return { ...g10, tokenType: f10, scopes: e10.scopes, userId: e10.subject, clientId: e10.clientId };
+            default:
+              throw Error(`Invalid token type: ${f10}`);
+          }
+        }, headers: c10, token: d10 };
+      }
+      function eA(a10) {
+        let { authenticateContext: b10, headers: c10 = new Headers(), reason: d10, message: e10 = "", tokenType: f10 } = a10;
+        return eB({ status: ex.SignedOut, reason: d10, message: e10, proxyUrl: b10.proxyUrl || "", publishableKey: b10.publishableKey || "", isSatellite: b10.isSatellite || false, domain: b10.domain || "", signInUrl: b10.signInUrl || "", signUpUrl: b10.signUpUrl || "", afterSignInUrl: b10.afterSignInUrl || "", afterSignUpUrl: b10.afterSignUpUrl || "", isSignedIn: false, isAuthenticated: false, tokenType: f10, toAuth: () => f10 === cb.SessionToken ? et({ ...b10, status: ex.SignedOut, reason: d10, message: e10 }) : eu(f10, { reason: d10, message: e10, headers: c10 }), headers: c10, token: null });
+      }
+      var eB = (a10) => {
+        let b10 = new Headers(a10.headers || {});
+        if (a10.message) try {
+          b10.set(b6.Headers.AuthMessage, a10.message);
+        } catch {
+        }
+        if (a10.reason) try {
+          b10.set(b6.Headers.AuthReason, a10.reason);
+        } catch {
+        }
+        if (a10.status) try {
+          b10.set(b6.Headers.AuthStatus, a10.status);
+        } catch {
+        }
+        return a10.headers = b10, a10;
+      }, eC = class extends URL {
+        isCrossOrigin(a10) {
+          return this.origin !== new URL(a10.toString()).origin;
+        }
+      }, eD = (...a10) => new eC(...a10), eE = class extends Request {
+        constructor(a10, b10) {
+          super("string" != typeof a10 && "url" in a10 ? a10.url : String(a10), b10 || "string" == typeof a10 ? void 0 : a10), this.clerkUrl = this.deriveUrlFromHeaders(this), this.cookies = this.parseCookies(this);
+        }
+        toJSON() {
+          return { url: this.clerkUrl.href, method: this.method, headers: JSON.stringify(Object.fromEntries(this.headers)), clerkUrl: this.clerkUrl.toString(), cookies: JSON.stringify(Object.fromEntries(this.cookies)) };
+        }
+        deriveUrlFromHeaders(a10) {
+          let b10 = new URL(a10.url), c10 = a10.headers.get(b6.Headers.ForwardedProto), d10 = a10.headers.get(b6.Headers.ForwardedHost), e10 = a10.headers.get(b6.Headers.Host), f10 = b10.protocol, g10 = this.getFirstValueFromHeader(d10) ?? e10, h2 = this.getFirstValueFromHeader(c10) ?? f10?.replace(/[:/]/, ""), i2 = g10 && h2 ? `${h2}://${g10}` : b10.origin;
+          return i2 === b10.origin ? eD(b10) : eD(b10.pathname + b10.search, i2);
+        }
+        getFirstValueFromHeader(a10) {
+          return a10?.split(",")[0];
+        }
+        parseCookies(a10) {
+          return new Map(Object.entries((0, b0.qg)(this.decodeCookieValue(a10.headers.get("cookie") || ""))));
+        }
+        decodeCookieValue(a10) {
+          return a10 ? a10.replace(/(%[0-9A-Z]{2})+/g, decodeURIComponent) : a10;
+        }
+      }, eF = (...a10) => a10[0] instanceof eE ? a10[0] : new eE(...a10), eG = (a10) => a10.split(";")[0]?.split("=")[0], eH = (a10) => a10.split(";")[0]?.split("=")[1], eI = {}, eJ = 0;
+      function eK(a10, b10, c10 = true) {
+        eI[a10] = b10, eJ = c10 ? Date.now() : -1;
+      }
+      function eL(a10) {
+        let { kid: b10, pem: c10 } = a10, d10 = `local-${b10}`, e10 = eI[d10];
+        if (e10) return e10;
+        if (!c10) throw new bC({ action: bB.SetClerkJWTKey, message: "Missing local JWK.", reason: bA.LocalJWKMissing });
+        let f10 = { kid: d10, kty: "RSA", alg: "RS256", n: c10.replace(/\r\n|\n|\r/g, "").replace("-----BEGIN PUBLIC KEY-----", "").replace("-----END PUBLIC KEY-----", "").replace("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA", "").replace("IDAQAB", "").replace(/\+/g, "-").replace(/\//g, "_"), e: "AQAB" };
+        return eK(d10, f10, false), f10;
+      }
+      async function eM(a10) {
+        let { secretKey: b10, apiUrl: c10 = b1, apiVersion: d10 = "v1", kid: e10, skipJwksCache: f10 } = a10;
+        if (f10 || function() {
+          if (-1 === eJ) return false;
+          let a11 = Date.now() - eJ >= 3e5;
+          return a11 && (eI = {}), a11;
+        }() || !eI[e10]) {
+          if (!b10) throw new bC({ action: bB.ContactSupport, message: "Failed to load JWKS from Clerk Backend or Frontend API.", reason: bA.RemoteJWKFailedToLoad });
+          let { keys: a11 } = await bp(() => eN(c10, b10, d10));
+          if (!a11 || !a11.length) throw new bC({ action: bB.ContactSupport, message: "The JWKS endpoint did not contain any signing keys. Contact support@clerk.com.", reason: bA.RemoteJWKFailedToLoad });
+          a11.forEach((a12) => eK(a12.kid, a12));
+        }
+        let g10 = eI[e10];
+        if (!g10) {
+          let a11 = Object.values(eI).map((a12) => a12.kid).sort().join(", ");
+          throw new bC({ action: `Go to your Dashboard and validate your secret and public keys are correct. ${bB.ContactSupport} if the issue persists.`, message: `Unable to find a signing key in JWKS that matches the kid='${e10}' of the provided session token. Please make sure that the __session cookie or the HTTP authorization header contain a Clerk-generated session JWT. The following kid is available: ${a11}`, reason: bA.JWKKidMismatch });
+        }
+        return g10;
+      }
+      async function eN(a10, b10, c10) {
+        if (!b10) throw new bC({ action: bB.SetClerkSecretKey, message: "Missing Clerk Secret Key or API Key. Go to https://dashboard.clerk.com and get your key for your instance.", reason: bA.RemoteJWKFailedToLoad });
+        let d10 = new URL(a10);
+        d10.pathname = cf(d10.pathname, c10, "/jwks");
+        let e10 = await bH.fetch(d10.href, { headers: { Authorization: `Bearer ${b10}`, "Clerk-API-Version": b3, "Content-Type": "application/json", "User-Agent": b2 } });
+        if (!e10.ok) {
+          let a11 = await e10.json(), b11 = eO(a11?.errors, bz.InvalidSecretKey);
+          if (b11) {
+            let a12 = bA.InvalidSecretKey;
+            throw new bC({ action: bB.ContactSupport, message: b11.message, reason: a12 });
+          }
+          throw new bC({ action: bB.ContactSupport, message: `Error loading Clerk JWKS from ${d10.href} with code=${e10.status}`, reason: bA.RemoteJWKFailedToLoad });
+        }
+        return e10.json();
+      }
+      var eO = (a10, b10) => a10 ? a10.find((a11) => a11.code === b10) : null;
+      async function eP(a10, b10) {
+        let { data: c10, errors: d10 } = bR(a10);
+        if (d10) return { errors: d10 };
+        let { header: e10 } = c10, { kid: f10 } = e10;
+        try {
+          let c11;
+          if (b10.jwtKey) c11 = eL({ kid: f10, pem: b10.jwtKey });
+          else {
+            if (!b10.secretKey) return { errors: [new bC({ action: bB.SetClerkJWTKey, message: "Failed to resolve JWK during verification.", reason: bA.JWKFailedToResolve })] };
+            c11 = await eM({ ...b10, kid: f10 });
+          }
+          return await bS(a10, { ...b10, key: c11 });
+        } catch (a11) {
+          return { errors: [a11] };
+        }
+      }
+      function eQ(a10, b10, c10) {
+        if (b10 && "clerkError" in b10) {
+          let d10, e10;
+          switch (b10.status) {
+            case 401:
+              d10 = bD.InvalidSecretKey, e10 = b10.errors[0]?.message || "Invalid secret key";
+              break;
+            case 404:
+              d10 = bD.TokenInvalid, e10 = c10;
+              break;
+            default:
+              d10 = bD.UnexpectedError, e10 = "Unexpected error";
+          }
+          return { data: void 0, tokenType: a10, errors: [new bE({ message: e10, code: d10, status: b10.status })] };
+        }
+        return { data: void 0, tokenType: a10, errors: [new bE({ message: "Unexpected error", code: bD.UnexpectedError, status: b10.status })] };
+      }
+      async function eR(a10, b10) {
+        try {
+          let c10 = em(b10);
+          return { data: await c10.m2m.verifyToken({ token: a10 }), tokenType: cb.M2MToken, errors: void 0 };
+        } catch (a11) {
+          return eQ(cb.M2MToken, a11, "Machine token not found");
+        }
+      }
+      async function eS(a10, b10) {
+        try {
+          let c10 = em(b10);
+          return { data: await c10.idPOAuthAccessToken.verifyAccessToken(a10), tokenType: cb.OAuthToken, errors: void 0 };
+        } catch (a11) {
+          return eQ(cb.OAuthToken, a11, "OAuth token not found");
+        }
+      }
+      async function eT(a10, b10) {
+        try {
+          let c10 = em(b10);
+          return { data: await c10.apiKeys.verifySecret(a10), tokenType: cb.ApiKey, errors: void 0 };
+        } catch (a11) {
+          return eQ(cb.ApiKey, a11, "API key not found");
+        }
+      }
+      async function eU(a10, b10) {
+        if (a10.startsWith("mt_")) return eR(a10, b10);
+        if (a10.startsWith(en)) return eS(a10, b10);
+        if (a10.startsWith("ak_")) return eT(a10, b10);
+        throw Error("Unknown machine token type");
+      }
+      async function eV(a10, { key: b10 }) {
+        let { data: c10, errors: d10 } = bR(a10);
+        if (d10) throw d10[0];
+        let { header: e10, payload: f10 } = c10, { typ: g10, alg: h2 } = e10;
+        bO(g10), bP(h2);
+        let { data: i2, errors: j2 } = await bQ(c10, b10);
+        if (j2) throw new bC({ reason: bA.TokenVerificationFailed, message: `Error verifying handshake token. ${j2[0]}` });
+        if (!i2) throw new bC({ reason: bA.TokenInvalidSignature, message: "Handshake signature is invalid." });
+        return f10;
+      }
+      async function eW(a10, b10) {
+        let c10, { secretKey: d10, apiUrl: e10, apiVersion: f10, jwksCacheTtlInMs: g10, jwtKey: h2, skipJwksCache: i2 } = b10, { data: j2, errors: k2 } = bR(a10);
+        if (k2) throw k2[0];
+        let { kid: l2 } = j2.header;
+        if (h2) c10 = eL({ kid: l2, pem: h2 });
+        else if (d10) c10 = await eM({ secretKey: d10, apiUrl: e10, apiVersion: f10, kid: l2, jwksCacheTtlInMs: g10, skipJwksCache: i2 });
+        else throw new bC({ action: bB.SetClerkJWTKey, message: "Failed to resolve JWK during handshake verification.", reason: bA.JWKFailedToResolve });
+        return eV(a10, { key: c10 });
+      }
+      var eX = class {
+        constructor(a10, b10, c10) {
+          this.authenticateContext = a10, this.options = b10, this.organizationMatcher = c10;
+        }
+        isRequestEligibleForHandshake() {
+          let { accept: a10, secFetchDest: b10 } = this.authenticateContext;
+          return !!("document" === b10 || "iframe" === b10 || !b10 && a10?.startsWith("text/html"));
+        }
+        buildRedirectToHandshake(a10) {
+          if (!this.authenticateContext?.clerkUrl) throw Error("Missing clerkUrl in authenticateContext");
+          let b10 = this.removeDevBrowserFromURL(this.authenticateContext.clerkUrl), c10 = this.authenticateContext.frontendApi.startsWith("http") ? this.authenticateContext.frontendApi : `https://${this.authenticateContext.frontendApi}`, d10 = new URL("v1/client/handshake", c10 = c10.replace(/\/+$/, "") + "/");
+          d10.searchParams.append("redirect_url", b10?.href || ""), d10.searchParams.append("__clerk_api_version", b3), d10.searchParams.append(b6.QueryParameters.SuffixedCookies, this.authenticateContext.usesSuffixedCookies().toString()), d10.searchParams.append(b6.QueryParameters.HandshakeReason, a10), d10.searchParams.append(b6.QueryParameters.HandshakeFormat, "nonce"), "development" === this.authenticateContext.instanceType && this.authenticateContext.devBrowserToken && d10.searchParams.append(b6.QueryParameters.DevBrowser, this.authenticateContext.devBrowserToken);
+          let e10 = this.getOrganizationSyncTarget(this.authenticateContext.clerkUrl, this.organizationMatcher);
+          return e10 && this.getOrganizationSyncQueryParams(e10).forEach((a11, b11) => {
+            d10.searchParams.append(b11, a11);
+          }), new Headers({ [b6.Headers.Location]: d10.href });
+        }
+        async getCookiesFromHandshake() {
+          let a10 = [];
+          if (this.authenticateContext.handshakeNonce) try {
+            let b10 = await this.authenticateContext.apiClient?.clients.getHandshakePayload({ nonce: this.authenticateContext.handshakeNonce });
+            b10 && a10.push(...b10.directives);
+          } catch (a11) {
+            console.error("Clerk: HandshakeService: error getting handshake payload:", a11);
+          }
+          else if (this.authenticateContext.handshakeToken) {
+            let b10 = await eW(this.authenticateContext.handshakeToken, this.authenticateContext);
+            b10 && Array.isArray(b10.handshake) && a10.push(...b10.handshake);
+          }
+          return a10;
+        }
+        async resolveHandshake() {
+          let a10 = new Headers({ "Access-Control-Allow-Origin": "null", "Access-Control-Allow-Credentials": "true" }), b10 = await this.getCookiesFromHandshake(), c10 = "";
+          if (b10.forEach((b11) => {
+            a10.append("Set-Cookie", b11), eG(b11).startsWith(b6.Cookies.Session) && (c10 = eH(b11));
+          }), "development" === this.authenticateContext.instanceType) {
+            let b11 = new URL(this.authenticateContext.clerkUrl);
+            b11.searchParams.delete(b6.QueryParameters.Handshake), b11.searchParams.delete(b6.QueryParameters.HandshakeHelp), b11.searchParams.delete(b6.QueryParameters.DevBrowser), b11.searchParams.delete(b6.QueryParameters.HandshakeNonce), a10.append(b6.Headers.Location, b11.toString()), a10.set(b6.Headers.CacheControl, "no-store");
+          }
+          if ("" === c10) return eA({ tokenType: cb.SessionToken, authenticateContext: this.authenticateContext, reason: ey.SessionTokenMissing, message: "", headers: a10 });
+          let { data: d10, errors: [e10] = [] } = await eP(c10, this.authenticateContext);
+          if (d10) return ez({ tokenType: cb.SessionToken, authenticateContext: this.authenticateContext, sessionClaims: d10, headers: a10, token: c10 });
+          if ("development" === this.authenticateContext.instanceType && (e10?.reason === bA.TokenExpired || e10?.reason === bA.TokenNotActiveYet || e10?.reason === bA.TokenIatInTheFuture)) {
+            let b11 = new bC({ action: e10.action, message: e10.message, reason: e10.reason });
+            b11.tokenCarrier = "cookie", console.error(`Clerk: Clock skew detected. This usually means that your system clock is inaccurate. Clerk will attempt to account for the clock skew in development.
+
+To resolve this issue, make sure your system's clock is set to the correct time (e.g. turn off and on automatic time synchronization).
+
+---
+
+${b11.getFullMessage()}`);
+            let { data: d11, errors: [f10] = [] } = await eP(c10, { ...this.authenticateContext, clockSkewInMs: 864e5 });
+            if (d11) return ez({ tokenType: cb.SessionToken, authenticateContext: this.authenticateContext, sessionClaims: d11, headers: a10, token: c10 });
+            throw Error(f10?.message || "Clerk: Handshake retry failed.");
+          }
+          throw Error(e10?.message || "Clerk: Handshake failed.");
+        }
+        handleTokenVerificationErrorInDevelopment(a10) {
+          if (a10.reason === bA.TokenInvalidSignature) throw Error("Clerk: Handshake token verification failed due to an invalid signature. If you have switched Clerk keys locally, clear your cookies and try again.");
+          throw Error(`Clerk: Handshake token verification failed: ${a10.getFullMessage()}.`);
+        }
+        checkAndTrackRedirectLoop(a10) {
+          if (3 === this.authenticateContext.handshakeRedirectLoopCounter) return true;
+          let b10 = this.authenticateContext.handshakeRedirectLoopCounter + 1, c10 = b6.Cookies.RedirectCount;
+          return a10.append("Set-Cookie", `${c10}=${b10}; SameSite=Lax; HttpOnly; Max-Age=2`), false;
+        }
+        removeDevBrowserFromURL(a10) {
+          let b10 = new URL(a10);
+          return b10.searchParams.delete(b6.QueryParameters.DevBrowser), b10.searchParams.delete(b6.QueryParameters.LegacyDevBrowser), b10;
+        }
+        getOrganizationSyncTarget(a10, b10) {
+          return b10.findTarget(a10);
+        }
+        getOrganizationSyncQueryParams(a10) {
+          let b10 = /* @__PURE__ */ new Map();
+          return "personalAccount" === a10.type && b10.set("organization_id", ""), "organization" === a10.type && (a10.organizationId && b10.set("organization_id", a10.organizationId), a10.organizationSlug && b10.set("organization_id", a10.organizationSlug)), b10;
+        }
+      }, eY = class {
+        constructor(a10) {
+          this.organizationPattern = this.createMatcher(a10?.organizationPatterns), this.personalAccountPattern = this.createMatcher(a10?.personalAccountPatterns);
+        }
+        createMatcher(a10) {
+          if (!a10) return null;
+          try {
+            return function(a11, b10) {
+              try {
+                var c10, d10, e10, f10, g10, h2, i2;
+                return c10 = void 0, d10 = [], e10 = a6(a11, d10, c10), f10 = d10, g10 = c10, void 0 === g10 && (g10 = {}), h2 = g10.decode, i2 = void 0 === h2 ? function(a12) {
+                  return a12;
+                } : h2, function(a12) {
+                  var b11 = e10.exec(a12);
+                  if (!b11) return false;
+                  for (var c11 = b11[0], d11 = b11.index, g11 = /* @__PURE__ */ Object.create(null), h3 = 1; h3 < b11.length; h3++) !function(a13) {
+                    if (void 0 !== b11[a13]) {
+                      var c12 = f10[a13 - 1];
+                      "*" === c12.modifier || "+" === c12.modifier ? g11[c12.name] = b11[a13].split(c12.prefix + c12.suffix).map(function(a14) {
+                        return i2(a14, c12);
+                      }) : g11[c12.name] = i2(b11[a13], c12);
+                    }
+                  }(h3);
+                  return { path: c11, index: d11, params: g11 };
+                };
+              } catch (a12) {
+                throw Error(`Invalid path and options: Consult the documentation of path-to-regexp here: https://github.com/pillarjs/path-to-regexp/tree/6.x
+${a12.message}`);
+              }
+            }(a10);
+          } catch (b10) {
+            throw Error(`Invalid pattern "${a10}": ${b10}`);
+          }
+        }
+        findTarget(a10) {
+          let b10 = this.findOrganizationTarget(a10);
+          return b10 || this.findPersonalAccountTarget(a10);
+        }
+        findOrganizationTarget(a10) {
+          if (!this.organizationPattern) return null;
+          try {
+            let b10 = this.organizationPattern(a10.pathname);
+            if (!b10 || !("params" in b10)) return null;
+            let c10 = b10.params;
+            if (c10.id) return { type: "organization", organizationId: c10.id };
+            if (c10.slug) return { type: "organization", organizationSlug: c10.slug };
+            return null;
+          } catch (a11) {
+            return console.error("Failed to match organization pattern:", a11), null;
+          }
+        }
+        findPersonalAccountTarget(a10) {
+          if (!this.personalAccountPattern) return null;
+          try {
+            return this.personalAccountPattern(a10.pathname) ? { type: "personalAccount" } : null;
+          } catch (a11) {
+            return console.error("Failed to match personal account pattern:", a11), null;
+          }
+        }
+      }, eZ = { NonEligibleNoCookie: "non-eligible-no-refresh-cookie", NonEligibleNonGet: "non-eligible-non-get", InvalidSessionToken: "invalid-session-token", MissingApiClient: "missing-api-client", MissingSessionToken: "missing-session-token", MissingRefreshToken: "missing-refresh-token", ExpiredSessionTokenDecodeFailed: "expired-session-token-decode-failed", ExpiredSessionTokenMissingSidClaim: "expired-session-token-missing-sid-claim", FetchError: "fetch-error", UnexpectedSDKError: "unexpected-sdk-error", UnexpectedBAPIError: "unexpected-bapi-error" };
+      function e$(a10, b10, c10) {
+        return er(a10, b10) ? null : eA({ tokenType: "string" == typeof b10 ? b10 : a10, authenticateContext: c10, reason: ey.TokenTypeMismatch });
+      }
+      var e_ = async (a10, b10) => {
+        let c10 = await cd(eF(a10), b10), d10 = b10.acceptsToken ?? cb.SessionToken;
+        if (d10 !== cb.M2MToken && (ca(c10.secretKey), c10.isSatellite)) {
+          var e10 = c10.signInUrl, f10 = c10.secretKey;
+          if (!e10 && bk(f10)) throw Error("Missing signInUrl. Pass a signInUrl for dev instances if an app is satellite");
+          if (c10.signInUrl && c10.origin && function(a11, b11) {
+            let c11;
+            try {
+              c11 = new URL(a11);
+            } catch {
+              throw Error("The signInUrl needs to have a absolute url format.");
+            }
+            if (c11.origin === b11) throw Error("The signInUrl needs to be on a different origin than your satellite application.");
+          }(c10.signInUrl, c10.origin), !(c10.proxyUrl || c10.domain)) throw Error("Missing domain and proxyUrl. A satellite application needs to specify a domain or a proxyUrl");
+        }
+        d10 === cb.M2MToken && function(a11) {
+          if (!a11.machineSecretKey && !a11.secretKey) throw Error("Machine token authentication requires either a Machine secret key or a Clerk secret key. Ensure a Clerk secret key or Machine secret key is set.");
+        }(c10);
+        let g10 = new eY(b10.organizationSyncOptions), h2 = new eX(c10, { organizationSyncOptions: b10.organizationSyncOptions }, g10);
+        async function i2(c11) {
+          if (!b10.apiClient) return { data: null, error: { message: "An apiClient is needed to perform token refresh.", cause: { reason: eZ.MissingApiClient } } };
+          let { sessionToken: d11, refreshTokenInCookie: e11 } = c11;
+          if (!d11) return { data: null, error: { message: "Session token must be provided.", cause: { reason: eZ.MissingSessionToken } } };
+          if (!e11) return { data: null, error: { message: "Refresh token must be provided.", cause: { reason: eZ.MissingRefreshToken } } };
+          let { data: f11, errors: g11 } = bR(d11);
+          if (!f11 || g11) return { data: null, error: { message: "Unable to decode the expired session token.", cause: { reason: eZ.ExpiredSessionTokenDecodeFailed, errors: g11 } } };
+          if (!f11?.payload?.sid) return { data: null, error: { message: "Expired session token is missing the `sid` claim.", cause: { reason: eZ.ExpiredSessionTokenMissingSidClaim } } };
+          try {
+            return { data: (await b10.apiClient.sessions.refreshSession(f11.payload.sid, { format: "cookie", suffixed_cookies: c11.usesSuffixedCookies(), expired_token: d11 || "", refresh_token: e11 || "", request_origin: c11.clerkUrl.origin, request_headers: Object.fromEntries(Array.from(a10.headers.entries()).map(([a11, b11]) => [a11, [b11]])) })).cookies, error: null };
+          } catch (a11) {
+            if (!a11?.errors?.length) return { data: null, error: { message: "Unexpected Server/BAPI error", cause: { reason: eZ.UnexpectedBAPIError, errors: [a11] } } };
+            if ("unexpected_error" === a11.errors[0].code) return { data: null, error: { message: "Fetch unexpected error", cause: { reason: eZ.FetchError, errors: a11.errors } } };
+            return { data: null, error: { message: a11.errors[0].code, cause: { reason: a11.errors[0].code, errors: a11.errors } } };
+          }
+        }
+        async function j2(a11) {
+          let { data: b11, error: c11 } = await i2(a11);
+          if (!b11 || 0 === b11.length) return { data: null, error: c11 };
+          let d11 = new Headers(), e11 = "";
+          b11.forEach((a12) => {
+            d11.append("Set-Cookie", a12), eG(a12).startsWith(b6.Cookies.Session) && (e11 = eH(a12));
+          });
+          let { data: f11, errors: g11 } = await eP(e11, a11);
+          return g11 ? { data: null, error: { message: "Clerk: unable to verify refreshed session token.", cause: { reason: eZ.InvalidSessionToken, errors: g11 } } } : { data: { jwtPayload: f11, sessionToken: e11, headers: d11 }, error: null };
+        }
+        function k2(a11, b11, c11, d11) {
+          if (!h2.isRequestEligibleForHandshake()) return eA({ tokenType: cb.SessionToken, authenticateContext: a11, reason: b11, message: c11 });
+          let e11 = d11 ?? h2.buildRedirectToHandshake(b11);
+          return (e11.get(b6.Headers.Location) && e11.set(b6.Headers.CacheControl, "no-store"), h2.checkAndTrackRedirectLoop(e11)) ? (console.log("Clerk: Refreshing the session token resulted in an infinite redirect loop. This usually means that your Clerk instance keys do not match - make sure to copy the correct publishable and secret keys from the Clerk dashboard."), eA({ tokenType: cb.SessionToken, authenticateContext: a11, reason: b11, message: c11 })) : function(a12, b12, c12 = "", d12) {
+            return eB({ status: ex.Handshake, reason: b12, message: c12, publishableKey: a12.publishableKey || "", isSatellite: a12.isSatellite || false, domain: a12.domain || "", proxyUrl: a12.proxyUrl || "", signInUrl: a12.signInUrl || "", signUpUrl: a12.signUpUrl || "", afterSignInUrl: a12.afterSignInUrl || "", afterSignUpUrl: a12.afterSignUpUrl || "", isSignedIn: false, isAuthenticated: false, tokenType: cb.SessionToken, toAuth: () => null, headers: d12, token: null });
+          }(a11, b11, c11, e11);
+        }
+        async function l2() {
+          let { tokenInHeader: a11 } = c10;
+          try {
+            let { data: b11, errors: d11 } = await eP(a11, c10);
+            if (d11) throw d11[0];
+            return ez({ tokenType: cb.SessionToken, authenticateContext: c10, sessionClaims: b11, headers: new Headers(), token: a11 });
+          } catch (a12) {
+            return n2(a12, "header");
+          }
+        }
+        async function m2() {
+          let a11 = c10.clientUat, b11 = !!c10.sessionTokenInCookie, d11 = !!c10.devBrowserToken;
+          if (c10.handshakeNonce || c10.handshakeToken) try {
+            return await h2.resolveHandshake();
+          } catch (a12) {
+            a12 instanceof bC && "development" === c10.instanceType ? h2.handleTokenVerificationErrorInDevelopment(a12) : console.error("Clerk: unable to resolve handshake:", a12);
+          }
+          let e11 = c10.isSatellite && "document" === c10.secFetchDest;
+          if ("production" === c10.instanceType && e11) return k2(c10, ey.SatelliteCookieNeedsSyncing, "");
+          if ("development" === c10.instanceType && e11 && !c10.clerkUrl.searchParams.has(b6.QueryParameters.ClerkSynced)) {
+            let a12 = new URL(c10.signInUrl);
+            a12.searchParams.append(b6.QueryParameters.ClerkRedirectUrl, c10.clerkUrl.toString());
+            let b12 = new Headers({ [b6.Headers.Location]: a12.toString() });
+            return k2(c10, ey.SatelliteCookieNeedsSyncing, "", b12);
+          }
+          let f11 = new URL(c10.clerkUrl).searchParams.get(b6.QueryParameters.ClerkRedirectUrl);
+          if ("development" === c10.instanceType && !c10.isSatellite && f11) {
+            let a12 = new URL(f11);
+            c10.devBrowserToken && a12.searchParams.append(b6.QueryParameters.DevBrowser, c10.devBrowserToken), a12.searchParams.append(b6.QueryParameters.ClerkSynced, "true");
+            let b12 = new Headers({ [b6.Headers.Location]: a12.toString() });
+            return k2(c10, ey.PrimaryRespondsToSyncing, "", b12);
+          }
+          if ("development" === c10.instanceType && c10.clerkUrl.searchParams.has(b6.QueryParameters.DevBrowser)) return k2(c10, ey.DevBrowserSync, "");
+          if ("development" === c10.instanceType && !d11) return k2(c10, ey.DevBrowserMissing, "");
+          if (!a11 && !b11) return eA({ tokenType: cb.SessionToken, authenticateContext: c10, reason: ey.SessionTokenAndUATMissing });
+          if (!a11 && b11) return k2(c10, ey.SessionTokenWithoutClientUAT, "");
+          if (a11 && !b11) return k2(c10, ey.ClientUATWithoutSessionToken, "");
+          let { data: i3, errors: j3 } = bR(c10.sessionTokenInCookie);
+          if (j3) return n2(j3[0], "cookie");
+          if (i3.payload.iat < c10.clientUat) return k2(c10, ey.SessionTokenIATBeforeClientUAT, "");
+          try {
+            let { data: a12, errors: b12 } = await eP(c10.sessionTokenInCookie, c10);
+            if (b12) throw b12[0];
+            let d12 = ez({ tokenType: cb.SessionToken, authenticateContext: c10, sessionClaims: a12, headers: new Headers(), token: c10.sessionTokenInCookie });
+            if (!c10.isSatellite && "document" === c10.secFetchDest && c10.isCrossOriginReferrer() && !c10.isKnownClerkReferrer() && 0 === c10.handshakeRedirectLoopCounter) return k2(c10, ey.PrimaryDomainCrossOriginSync, "Cross-origin request from satellite domain requires handshake");
+            let e12 = d12.toAuth();
+            if (e12.userId) {
+              let a13 = function(a14, b13) {
+                let c11 = g10.findTarget(a14.clerkUrl);
+                if (!c11) return null;
+                let d13 = false;
+                if ("organization" === c11.type && (c11.organizationSlug && c11.organizationSlug !== b13.orgSlug && (d13 = true), c11.organizationId && c11.organizationId !== b13.orgId && (d13 = true)), "personalAccount" === c11.type && b13.orgId && (d13 = true), !d13) return null;
+                if (a14.handshakeRedirectLoopCounter >= 3) return console.warn("Clerk: Organization activation handshake loop detected. This is likely due to an invalid organization ID or slug. Skipping organization activation."), null;
+                let e13 = k2(a14, ey.ActiveOrganizationMismatch, "");
+                return "handshake" !== e13.status ? null : e13;
+              }(c10, e12);
+              if (a13) return a13;
+            }
+            return d12;
+          } catch (a12) {
+            return n2(a12, "cookie");
+          }
+        }
+        async function n2(b11, d11) {
+          let e11;
+          if (!(b11 instanceof bC)) return eA({ tokenType: cb.SessionToken, authenticateContext: c10, reason: ey.UnexpectedError });
+          if (b11.reason === bA.TokenExpired && c10.refreshTokenInCookie && "GET" === a10.method) {
+            let { data: a11, error: b12 } = await j2(c10);
+            if (a11) return ez({ tokenType: cb.SessionToken, authenticateContext: c10, sessionClaims: a11.jwtPayload, headers: a11.headers, token: a11.sessionToken });
+            e11 = b12?.cause?.reason ? b12.cause.reason : eZ.UnexpectedSDKError;
+          } else e11 = "GET" !== a10.method ? eZ.NonEligibleNonGet : c10.refreshTokenInCookie ? null : eZ.NonEligibleNoCookie;
+          return (b11.tokenCarrier = d11, [bA.TokenExpired, bA.TokenNotActiveYet, bA.TokenIatInTheFuture].includes(b11.reason)) ? k2(c10, e1({ tokenError: b11.reason, refreshError: e11 }), b11.getFullMessage()) : eA({ tokenType: cb.SessionToken, authenticateContext: c10, reason: b11.reason, message: b11.getFullMessage() });
+        }
+        function o2(a11, b11) {
+          return b11 instanceof bE ? eA({ tokenType: a11, authenticateContext: c10, reason: b11.code, message: b11.getFullMessage() }) : eA({ tokenType: a11, authenticateContext: c10, reason: ey.UnexpectedError });
+        }
+        async function p2() {
+          let { tokenInHeader: a11 } = c10;
+          if (!a11) return n2(Error("Missing token in header"), "header");
+          if (!ep(a11)) return eA({ tokenType: d10, authenticateContext: c10, reason: ey.TokenTypeMismatch, message: "" });
+          let b11 = e$(eq(a11), d10, c10);
+          if (b11) return b11;
+          let { data: e11, tokenType: f11, errors: g11 } = await eU(a11, c10);
+          return g11 ? o2(f11, g11[0]) : ez({ tokenType: f11, authenticateContext: c10, machineData: e11, token: a11 });
+        }
+        async function q2() {
+          let { tokenInHeader: a11 } = c10;
+          if (!a11) return n2(Error("Missing token in header"), "header");
+          if (ep(a11)) {
+            let b12 = e$(eq(a11), d10, c10);
+            if (b12) return b12;
+            let { data: e12, tokenType: f11, errors: g11 } = await eU(a11, c10);
+            return g11 ? o2(f11, g11[0]) : ez({ tokenType: f11, authenticateContext: c10, machineData: e12, token: a11 });
+          }
+          let { data: b11, errors: e11 } = await eP(a11, c10);
+          return e11 ? n2(e11[0], "header") : ez({ tokenType: cb.SessionToken, authenticateContext: c10, sessionClaims: b11, token: a11 });
+        }
+        return Array.isArray(d10) && !function(a11, b11) {
+          let c11 = null, { tokenInHeader: d11 } = b11;
+          return d11 && (c11 = ep(d11) ? eq(d11) : cb.SessionToken), er(c11 ?? cb.SessionToken, a11);
+        }(d10, c10) ? function() {
+          let a11 = ev();
+          return eB({ status: ex.SignedOut, reason: ey.TokenTypeMismatch, message: "", proxyUrl: "", publishableKey: "", isSatellite: false, domain: "", signInUrl: "", signUpUrl: "", afterSignInUrl: "", afterSignUpUrl: "", isSignedIn: false, isAuthenticated: false, tokenType: null, toAuth: () => a11, headers: new Headers(), token: null });
+        }() : c10.tokenInHeader ? "any" === d10 ? q2() : d10 === cb.SessionToken ? l2() : p2() : d10 === cb.OAuthToken || d10 === cb.ApiKey || d10 === cb.M2MToken ? eA({ tokenType: d10, authenticateContext: c10, reason: "No token in header" }) : m2();
+      }, e0 = (a10) => {
+        let { isSignedIn: b10, isAuthenticated: c10, proxyUrl: d10, reason: e10, message: f10, publishableKey: g10, isSatellite: h2, domain: i2 } = a10;
+        return { isSignedIn: b10, isAuthenticated: c10, proxyUrl: d10, reason: e10, message: f10, publishableKey: g10, isSatellite: h2, domain: i2 };
+      }, e1 = ({ tokenError: a10, refreshError: b10 }) => {
+        switch (a10) {
+          case bA.TokenExpired:
+            return `${ey.SessionTokenExpired}-refresh-${b10}`;
+          case bA.TokenNotActiveYet:
+            return ey.SessionTokenNBF;
+          case bA.TokenIatInTheFuture:
+            return ey.SessionTokenIatInTheFuture;
+          default:
+            return ey.UnexpectedError;
+        }
+      }, e2 = { secretKey: "", machineSecretKey: "", jwtKey: "", apiUrl: void 0, apiVersion: void 0, proxyUrl: "", publishableKey: "", isSatellite: false, domain: "", audience: "" };
+      c(378), c(944), c(918).s;
+      var e3 = c(66);
+      let e4 = "" + e3.s8 + ";404";
+      e3.s8, e3.s8, c(515).X, c(449), "undefined" == typeof URLPattern || URLPattern, c(107), c(979), c(770), c(823), c(918);
+      let { env: e5, stdout: e6 } = (null == (fX = globalThis) ? void 0 : fX.process) ?? {}, e7 = e5 && !e5.NO_COLOR && (e5.FORCE_COLOR || (null == e6 ? void 0 : e6.isTTY) && !e5.CI && "dumb" !== e5.TERM), e8 = (a10, b10, c10, d10) => {
+        let e10 = a10.substring(0, d10) + c10, f10 = a10.substring(d10 + b10.length), g10 = f10.indexOf(b10);
+        return ~g10 ? e10 + e8(f10, b10, c10, g10) : e10 + f10;
+      }, e9 = (a10, b10, c10 = a10) => e7 ? (d10) => {
+        let e10 = "" + d10, f10 = e10.indexOf(b10, a10.length);
+        return ~f10 ? a10 + e8(e10, b10, c10, f10) + b10 : a10 + e10 + b10;
+      } : String, fa = e9("\x1B[1m", "\x1B[22m", "\x1B[22m\x1B[1m");
+      e9("\x1B[2m", "\x1B[22m", "\x1B[22m\x1B[2m"), e9("\x1B[3m", "\x1B[23m"), e9("\x1B[4m", "\x1B[24m"), e9("\x1B[7m", "\x1B[27m"), e9("\x1B[8m", "\x1B[28m"), e9("\x1B[9m", "\x1B[29m"), e9("\x1B[30m", "\x1B[39m");
+      let fb = e9("\x1B[31m", "\x1B[39m"), fc = e9("\x1B[32m", "\x1B[39m"), fd = e9("\x1B[33m", "\x1B[39m");
+      e9("\x1B[34m", "\x1B[39m");
+      let fe = e9("\x1B[35m", "\x1B[39m");
+      e9("\x1B[38;2;173;127;168m", "\x1B[39m"), e9("\x1B[36m", "\x1B[39m");
+      let ff = e9("\x1B[37m", "\x1B[39m");
+      e9("\x1B[90m", "\x1B[39m"), e9("\x1B[40m", "\x1B[49m"), e9("\x1B[41m", "\x1B[49m"), e9("\x1B[42m", "\x1B[49m"), e9("\x1B[43m", "\x1B[49m"), e9("\x1B[44m", "\x1B[49m"), e9("\x1B[45m", "\x1B[49m"), e9("\x1B[46m", "\x1B[49m"), e9("\x1B[47m", "\x1B[49m"), ff(fa("\u25CB")), fb(fa("\u2A2F")), fd(fa("\u26A0")), ff(fa(" ")), fc(fa("\u2713")), fe(fa("\xBB")), new aJ(1e4, (a10) => a10.length), /* @__PURE__ */ new WeakMap();
+      let fg = { Headers: { NextRewrite: "x-middleware-rewrite", NextResume: "x-middleware-next", NextRedirect: "Location", NextUrl: "next-url", NextAction: "next-action", NextjsData: "x-nextjs-data" } }, fh = (a10, b10, c10) => (a10.headers.set(b10, c10), a10), fi = "__clerk_db_jwt", fj = { rE: "15.5.6" }, fk = (a10) => {
+        if (!a10 || "string" != typeof a10) return a10;
+        try {
+          return (a10 || "").replace(/^(sk_(live|test)_)(.+?)(.{3})$/, "$1*********$4");
+        } catch {
+          return "";
+        }
+      }, fl = (a10) => (Array.isArray(a10) ? a10 : [a10]).map((a11) => "string" == typeof a11 ? fk(a11) : JSON.stringify(Object.fromEntries(Object.entries(a11).map(([a12, b10]) => [a12, fk(b10)])), null, 2)).join(", "), fm = (a10) => {
+        let b10 = (c10) => {
+          if (!c10) return c10;
+          if (Array.isArray(c10)) return c10.map((a11) => "object" == typeof a11 || Array.isArray(a11) ? b10(a11) : a11);
+          let d10 = { ...c10 };
+          for (let c11 of Object.keys(d10)) {
+            let e10 = a10(c11.toString());
+            e10 !== c11 && (d10[e10] = d10[c11], delete d10[c11]), "object" == typeof d10[e10] && (d10[e10] = b10(d10[e10]));
+          }
+          return d10;
+        };
+        return b10;
+      };
+      function fn(a10) {
+        if ("boolean" == typeof a10) return a10;
+        if (null == a10) return false;
+        if ("string" == typeof a10) {
+          if ("true" === a10.toLowerCase()) return true;
+          if ("false" === a10.toLowerCase()) return false;
+        }
+        let b10 = parseInt(a10, 10);
+        return !isNaN(b10) && b10 > 0;
+      }
+      fm(function(a10) {
+        return a10 ? a10.replace(/[A-Z]/g, (a11) => `_${a11.toLowerCase()}`) : "";
+      }), fm(function(a10) {
+        return a10 ? a10.replace(/([-_][a-z])/g, (a11) => a11.toUpperCase().replace(/-|_/, "")) : "";
+      }), process.env.NEXT_PUBLIC_CLERK_JS_VERSION, process.env.NEXT_PUBLIC_CLERK_JS_URL;
+      let fo = process.env.CLERK_API_VERSION || "v1", fp = process.env.CLERK_SECRET_KEY || "", fq = process.env.CLERK_MACHINE_SECRET_KEY || "", fr = "pk_test_Y2hlZXJmdWwtbWFtbWFsLTc4LmNsZXJrLmFjY291bnRzLmRldiQ", fs = process.env.CLERK_ENCRYPTION_KEY || "", ft = process.env.CLERK_API_URL || ((a10) => {
+        let b10 = bi(a10)?.frontendApi;
+        return b10?.startsWith("clerk.") && a9.some((a11) => b10?.endsWith(a11)) ? be : bc.some((a11) => b10?.endsWith(a11)) ? "https://api.lclclerk.com" : bd.some((a11) => b10?.endsWith(a11)) ? "https://api.clerkstage.dev" : be;
+      })(fr), fu = process.env.NEXT_PUBLIC_CLERK_DOMAIN || "", fv = process.env.NEXT_PUBLIC_CLERK_PROXY_URL || "", fw = fn(process.env.NEXT_PUBLIC_CLERK_IS_SATELLITE) || false, fx = process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || "", fy = process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL || "", fz = fn(process.env.NEXT_PUBLIC_CLERK_TELEMETRY_DISABLED), fA = fn(process.env.NEXT_PUBLIC_CLERK_TELEMETRY_DEBUG), fB = fn(process.env.NEXT_PUBLIC_CLERK_KEYLESS_DISABLED) || false, fC = !(fj.rE.startsWith("13.") || fj.rE.startsWith("14.0")) && false, fD = (a10) => {
+        if (!(a10 instanceof Error) || !("message" in a10)) return false;
+        let { message: b10 } = a10, c10 = b10.toLowerCase(), d10 = c10.includes("dynamic server usage"), e10 = c10.includes("this page needs to bail out of prerendering");
+        return /Route .*? needs to bail out of prerendering at this point because it used .*?./.test(b10) || d10 || e10;
+      };
+      async function fE() {
+        try {
+          let { headers: a10 } = await Promise.resolve().then(c.bind(c, 924)), b10 = await a10();
+          return new M("https://placeholder.com", { headers: b10 });
+        } catch (a10) {
+          if (a10 && fD(a10)) throw a10;
+          throw Error(`Clerk: auth(), currentUser() and clerkClient(), are only supported in App Router (/app directory).
+If you're using /pages, try getAuth() instead.
+Original error: ${a10}`);
+        }
+      }
+      var fF = class {
+        #a;
+        #b = 864e5;
+        constructor(a10) {
+          this.#a = a10;
+        }
+        isEventThrottled(a10) {
+          let b10 = Date.now(), c10 = this.#c(a10), d10 = this.#a.getItem(c10);
+          return !!d10 && !(b10 - d10 > this.#b) || (this.#a.setItem(c10, b10), false);
+        }
+        #c(a10) {
+          let { sk: b10, pk: c10, payload: d10, ...e10 } = a10, f10 = { ...d10, ...e10 };
+          return JSON.stringify(Object.keys({ ...d10, ...e10 }).sort().map((a11) => f10[a11]));
+        }
+      }, fG = class {
+        #d = "clerk_telemetry_throttler";
+        getItem(a10) {
+          return this.#e()[a10];
+        }
+        setItem(a10, b10) {
+          try {
+            let c10 = this.#e();
+            c10[a10] = b10, localStorage.setItem(this.#d, JSON.stringify(c10));
+          } catch (a11) {
+            a11 instanceof DOMException && ("QuotaExceededError" === a11.name || "NS_ERROR_DOM_QUOTA_REACHED" === a11.name) && localStorage.length > 0 && localStorage.removeItem(this.#d);
+          }
+        }
+        removeItem(a10) {
+          try {
+            let b10 = this.#e();
+            delete b10[a10], localStorage.setItem(this.#d, JSON.stringify(b10));
+          } catch {
+          }
+        }
+        #e() {
+          try {
+            let a10 = localStorage.getItem(this.#d);
+            if (!a10) return {};
+            return JSON.parse(a10);
+          } catch {
+            return {};
+          }
+        }
+        static isSupported() {
+          return "undefined" != typeof window && !!window.localStorage;
+        }
+      }, fH = class {
+        #a = /* @__PURE__ */ new Map();
+        #f = 1e4;
+        getItem(a10) {
+          return this.#a.size > this.#f ? void this.#a.clear() : this.#a.get(a10);
+        }
+        setItem(a10, b10) {
+          this.#a.set(a10, b10);
+        }
+        removeItem(a10) {
+          this.#a.delete(a10);
+        }
+      };
+      let fI = /* @__PURE__ */ new Set(["error", "warn", "info", "debug", "trace"]), fJ = { samplingRate: 1, maxBufferSize: 5, endpoint: "https://clerk-telemetry.com" };
+      var fK = class {
+        #g;
+        #h;
+        #i = {};
+        #j = [];
+        #k = null;
+        constructor(a10) {
+          this.#g = { maxBufferSize: a10.maxBufferSize ?? fJ.maxBufferSize, samplingRate: a10.samplingRate ?? fJ.samplingRate, perEventSampling: a10.perEventSampling ?? true, disabled: a10.disabled ?? false, debug: a10.debug ?? false, endpoint: fJ.endpoint }, a10.clerkVersion || "undefined" != typeof window ? this.#i.clerkVersion = a10.clerkVersion ?? "" : this.#i.clerkVersion = "", this.#i.sdk = a10.sdk, this.#i.sdkVersion = a10.sdkVersion, this.#i.publishableKey = a10.publishableKey ?? "";
+          let b10 = bi(a10.publishableKey);
+          b10 && (this.#i.instanceType = b10.instanceType), a10.secretKey && (this.#i.secretKey = a10.secretKey.substring(0, 16)), this.#h = new fF(fG.isSupported() ? new fG() : new fH());
+        }
+        get isEnabled() {
+          return !("development" !== this.#i.instanceType || this.#g.disabled || "undefined" != typeof process && process.env && fn(process.env.CLERK_TELEMETRY_DISABLED) || "undefined" != typeof window && window?.navigator?.webdriver);
+        }
+        get isDebug() {
+          return this.#g.debug || "undefined" != typeof process && process.env && fn(process.env.CLERK_TELEMETRY_DEBUG);
+        }
+        record(a10) {
+          try {
+            let b10 = this.#l(a10.event, a10.payload);
+            if (this.#m(b10.event, b10), !this.#n(b10, a10.eventSamplingRate)) return;
+            this.#j.push({ kind: "event", value: b10 }), this.#o();
+          } catch (a11) {
+            console.error("[clerk/telemetry] Error recording telemetry event", a11);
+          }
+        }
+        recordLog(a10) {
+          try {
+            if (!this.#p(a10)) return;
+            let b10 = "string" == typeof a10?.level && fI.has(a10.level), c10 = "string" == typeof a10?.message && a10.message.trim().length > 0, d10 = null, e10 = a10?.timestamp;
+            if ("number" == typeof e10 || "string" == typeof e10) {
+              let a11 = new Date(e10);
+              Number.isNaN(a11.getTime()) || (d10 = a11);
+            }
+            if (!b10 || !c10 || null === d10) {
+              this.isDebug && "undefined" != typeof console && console.warn("[clerk/telemetry] Dropping invalid telemetry log entry", { levelIsValid: b10, messageIsValid: c10, timestampIsValid: null !== d10 });
+              return;
+            }
+            let f10 = this.#q(), g10 = { sdk: f10.name, sdkv: f10.version, cv: this.#i.clerkVersion ?? "", lvl: a10.level, msg: a10.message, ts: d10.toISOString(), pk: this.#i.publishableKey || null, payload: this.#r(a10.context) };
+            this.#j.push({ kind: "log", value: g10 }), this.#o();
+          } catch (a11) {
+            console.error("[clerk/telemetry] Error recording telemetry log entry", a11);
+          }
+        }
+        #n(a10, b10) {
+          return this.isEnabled && !this.isDebug && this.#s(a10, b10);
+        }
+        #p(a10) {
+          return true;
+        }
+        #s(a10, b10) {
+          let c10 = Math.random();
+          return !!(c10 <= this.#g.samplingRate && (false === this.#g.perEventSampling || void 0 === b10 || c10 <= b10)) && !this.#h.isEventThrottled(a10);
+        }
+        #o() {
+          if ("undefined" == typeof window) return void this.#t();
+          if (this.#j.length >= this.#g.maxBufferSize) {
+            this.#k && ("undefined" != typeof cancelIdleCallback ? cancelIdleCallback(Number(this.#k)) : clearTimeout(Number(this.#k))), this.#t();
+            return;
+          }
+          this.#k || ("requestIdleCallback" in window ? this.#k = requestIdleCallback(() => {
+            this.#t(), this.#k = null;
+          }) : this.#k = setTimeout(() => {
+            this.#t(), this.#k = null;
+          }, 0));
+        }
+        #t() {
+          let a10 = [...this.#j];
+          if (this.#j = [], this.#k = null, 0 === a10.length) return;
+          let b10 = a10.filter((a11) => "event" === a11.kind).map((a11) => a11.value), c10 = a10.filter((a11) => "log" === a11.kind).map((a11) => a11.value);
+          b10.length > 0 && fetch(new URL("/v1/event", this.#g.endpoint), { headers: { "Content-Type": "application/json" }, keepalive: true, method: "POST", body: JSON.stringify({ events: b10 }) }).catch(() => void 0), c10.length > 0 && fetch(new URL("/v1/logs", this.#g.endpoint), { headers: { "Content-Type": "application/json" }, keepalive: true, method: "POST", body: JSON.stringify({ logs: c10 }) }).catch(() => void 0);
+        }
+        #m(a10, b10) {
+          this.isDebug && (void 0 !== console.groupCollapsed ? (console.groupCollapsed("[clerk/telemetry]", a10), console.log(b10), console.groupEnd()) : console.log("[clerk/telemetry]", a10, b10));
+        }
+        #q() {
+          let a10 = { name: this.#i.sdk, version: this.#i.sdkVersion };
+          if ("undefined" != typeof window) {
+            let b10 = window;
+            if (b10.Clerk) {
+              let c10 = b10.Clerk;
+              if ("object" == typeof c10 && null !== c10 && "constructor" in c10 && "function" == typeof c10.constructor && c10.constructor.sdkMetadata) {
+                let { name: b11, version: d10 } = c10.constructor.sdkMetadata;
+                void 0 !== b11 && (a10.name = b11), void 0 !== d10 && (a10.version = d10);
+              }
+            }
+          }
+          return a10;
+        }
+        #l(a10, b10) {
+          let c10 = this.#q();
+          return { event: a10, cv: this.#i.clerkVersion ?? "", it: this.#i.instanceType ?? "", sdk: c10.name, sdkv: c10.version, ...this.#i.publishableKey ? { pk: this.#i.publishableKey } : {}, ...this.#i.secretKey ? { sk: this.#i.secretKey } : {}, payload: b10 };
+        }
+        #r(a10) {
+          if (null == a10 || "object" != typeof a10) return null;
+          try {
+            let b10 = JSON.parse(JSON.stringify(a10));
+            if (b10 && "object" == typeof b10 && !Array.isArray(b10)) return b10;
+            return null;
+          } catch {
+            return null;
+          }
+        }
+      };
+      let fL = { secretKey: fp, publishableKey: fr, apiUrl: ft, apiVersion: fo, userAgent: "@clerk/nextjs@6.35.2", proxyUrl: fv, domain: fu, isSatellite: fw, machineSecretKey: fq, sdkMetadata: { name: "@clerk/nextjs", version: "6.35.2", environment: "production" }, telemetry: { disabled: fz, debug: fA } }, fM = (a10) => function(a11) {
+        let b10 = { ...a11 }, c10 = em(b10), d10 = function(a12) {
+          let b11 = b9(e2, a12.options), c11 = a12.apiClient;
+          return { authenticateRequest: (a13, d11 = {}) => {
+            let { apiUrl: e11, apiVersion: f10 } = b11, g10 = b9(b11, d11);
+            return e_(a13, { ...d11, ...g10, apiUrl: e11, apiVersion: f10, apiClient: c11 });
+          }, debugRequestState: e0 };
+        }({ options: b10, apiClient: c10 }), e10 = new fK({ publishableKey: b10.publishableKey, secretKey: b10.secretKey, samplingRate: 0.1, ...b10.sdkMetadata ? { sdk: b10.sdkMetadata.name, sdkVersion: b10.sdkMetadata.version } : {}, ...b10.telemetry || {} });
+        return { ...c10, ...d10, telemetry: e10 };
+      }({ ...fL, ...a10 });
+      function fN(a10, b10) {
+        var c10, d10;
+        return function(a11) {
+          try {
+            let { headers: b11, nextUrl: c11, cookies: d11 } = a11 || {};
+            return "function" == typeof (null == b11 ? void 0 : b11.get) && "function" == typeof (null == c11 ? void 0 : c11.searchParams.get) && "function" == typeof (null == d11 ? void 0 : d11.get);
+          } catch {
+            return false;
+          }
+        }(a10) || function(a11) {
+          try {
+            let { headers: b11 } = a11 || {};
+            return "function" == typeof (null == b11 ? void 0 : b11.get);
+          } catch {
+            return false;
+          }
+        }(a10) ? a10.headers.get(b10) : a10.headers[b10] || a10.headers[b10.toLowerCase()] || (null == (d10 = null == (c10 = a10.socket) ? void 0 : c10._httpMessage) ? void 0 : d10.getHeader(b10));
+      }
+      var fO = c(521);
+      let fP = /* @__PURE__ */ new Map(), fQ = new fO.AsyncLocalStorage(), fR = /* @__PURE__ */ new Set(), fS = { warnOnce: (a10) => {
+        fR.has(a10) || (fR.add(a10), console.warn(a10));
+      } };
+      function fT(a10) {
+        return /^http(s)?:\/\//.test(a10 || "");
+      }
+      function fU(a10, b10, c10) {
+        return "function" == typeof a10 ? a10(b10) : void 0 !== a10 ? a10 : void 0 !== c10 ? c10 : void 0;
+      }
+      var fV, fW, fX, fY, fZ, f$, f_, f0, f1, f2, f3 = Object.defineProperty, f4 = (null == (fY = "undefined" != typeof globalThis ? globalThis : void 0) ? void 0 : fY.crypto) || (null == (fZ = void 0 !== c.g ? c.g : void 0) ? void 0 : fZ.crypto) || (null == (f$ = "undefined" != typeof window ? window : void 0) ? void 0 : f$.crypto) || (null == (f_ = "undefined" != typeof self ? self : void 0) ? void 0 : f_.crypto) || (null == (f1 = null == (f0 = "undefined" != typeof frames ? frames : void 0) ? void 0 : f0[0]) ? void 0 : f1.crypto);
+      f2 = f4 ? (a10) => {
+        let b10 = [];
+        for (let c10 = 0; c10 < a10; c10 += 4) b10.push(f4.getRandomValues(new Uint32Array(1))[0]);
+        return new f6(b10, a10);
+      } : (a10) => {
+        let b10 = [], c10 = (a11) => {
+          let b11 = a11, c11 = 987654321;
+          return () => {
+            let a12 = ((c11 = 36969 * (65535 & c11) + (c11 >> 16) | 0) << 16) + (b11 = 18e3 * (65535 & b11) + (b11 >> 16) | 0) | 0;
+            return a12 /= 4294967296, (a12 += 0.5) * (Math.random() > 0.5 ? 1 : -1);
+          };
+        };
+        for (let d10 = 0, e10; d10 < a10; d10 += 4) {
+          let a11 = c10(4294967296 * (e10 || Math.random()));
+          e10 = 987654071 * a11(), b10.push(4294967296 * a11() | 0);
+        }
+        return new f6(b10, a10);
+      };
+      var f5 = class {
+        static create(...a10) {
+          return new this(...a10);
+        }
+        mixIn(a10) {
+          return Object.assign(this, a10);
+        }
+        clone() {
+          let a10 = new this.constructor();
+          return Object.assign(a10, this), a10;
+        }
+      }, f6 = class extends f5 {
+        constructor(a10 = [], b10 = 4 * a10.length) {
+          super();
+          let c10 = a10;
+          if (c10 instanceof ArrayBuffer && (c10 = new Uint8Array(c10)), (c10 instanceof Int8Array || c10 instanceof Uint8ClampedArray || c10 instanceof Int16Array || c10 instanceof Uint16Array || c10 instanceof Int32Array || c10 instanceof Uint32Array || c10 instanceof Float32Array || c10 instanceof Float64Array) && (c10 = new Uint8Array(c10.buffer, c10.byteOffset, c10.byteLength)), c10 instanceof Uint8Array) {
+            let a11 = c10.byteLength, b11 = [];
+            for (let d10 = 0; d10 < a11; d10 += 1) b11[d10 >>> 2] |= c10[d10] << 24 - d10 % 4 * 8;
+            this.words = b11, this.sigBytes = a11;
+          } else this.words = a10, this.sigBytes = b10;
+        }
+        toString(a10 = f7) {
+          return a10.stringify(this);
+        }
+        concat(a10) {
+          let b10 = this.words, c10 = a10.words, d10 = this.sigBytes, e10 = a10.sigBytes;
+          if (this.clamp(), d10 % 4) for (let a11 = 0; a11 < e10; a11 += 1) {
+            let e11 = c10[a11 >>> 2] >>> 24 - a11 % 4 * 8 & 255;
+            b10[d10 + a11 >>> 2] |= e11 << 24 - (d10 + a11) % 4 * 8;
+          }
+          else for (let a11 = 0; a11 < e10; a11 += 4) b10[d10 + a11 >>> 2] = c10[a11 >>> 2];
+          return this.sigBytes += e10, this;
+        }
+        clamp() {
+          let { words: a10, sigBytes: b10 } = this;
+          a10[b10 >>> 2] &= 4294967295 << 32 - b10 % 4 * 8, a10.length = Math.ceil(b10 / 4);
+        }
+        clone() {
+          let a10 = super.clone.call(this);
+          return a10.words = this.words.slice(0), a10;
+        }
+      };
+      ((a10, b10, c10) => ((a11, b11, c11) => b11 in a11 ? f3(a11, b11, { enumerable: true, configurable: true, writable: true, value: c11 }) : a11[b11] = c11)(a10, "symbol" != typeof b10 ? b10 + "" : b10, c10))(f6, "random", f2);
+      var f7 = { stringify(a10) {
+        let { words: b10, sigBytes: c10 } = a10, d10 = [];
+        for (let a11 = 0; a11 < c10; a11 += 1) {
+          let c11 = b10[a11 >>> 2] >>> 24 - a11 % 4 * 8 & 255;
+          d10.push((c11 >>> 4).toString(16)), d10.push((15 & c11).toString(16));
+        }
+        return d10.join("");
+      }, parse(a10) {
+        let b10 = a10.length, c10 = [];
+        for (let d10 = 0; d10 < b10; d10 += 2) c10[d10 >>> 3] |= parseInt(a10.substr(d10, 2), 16) << 24 - d10 % 8 * 4;
+        return new f6(c10, b10 / 2);
+      } }, f8 = { stringify(a10) {
+        let { words: b10, sigBytes: c10 } = a10, d10 = [];
+        for (let a11 = 0; a11 < c10; a11 += 1) {
+          let c11 = b10[a11 >>> 2] >>> 24 - a11 % 4 * 8 & 255;
+          d10.push(String.fromCharCode(c11));
+        }
+        return d10.join("");
+      }, parse(a10) {
+        let b10 = a10.length, c10 = [];
+        for (let d10 = 0; d10 < b10; d10 += 1) c10[d10 >>> 2] |= (255 & a10.charCodeAt(d10)) << 24 - d10 % 4 * 8;
+        return new f6(c10, b10);
+      } }, f9 = { stringify(a10) {
+        try {
+          return decodeURIComponent(escape(f8.stringify(a10)));
+        } catch {
+          throw Error("Malformed UTF-8 data");
+        }
+      }, parse: (a10) => f8.parse(unescape(encodeURIComponent(a10))) }, ga = class extends f5 {
+        constructor() {
+          super(), this._minBufferSize = 0;
+        }
+        reset() {
+          this._data = new f6(), this._nDataBytes = 0;
+        }
+        _append(a10) {
+          let b10 = a10;
+          "string" == typeof b10 && (b10 = f9.parse(b10)), this._data.concat(b10), this._nDataBytes += b10.sigBytes;
+        }
+        _process(a10) {
+          let b10, { _data: c10, blockSize: d10 } = this, e10 = c10.words, f10 = c10.sigBytes, g10 = f10 / (4 * d10), h2 = (g10 = a10 ? Math.ceil(g10) : Math.max((0 | g10) - this._minBufferSize, 0)) * d10, i2 = Math.min(4 * h2, f10);
+          if (h2) {
+            for (let a11 = 0; a11 < h2; a11 += d10) this._doProcessBlock(e10, a11);
+            b10 = e10.splice(0, h2), c10.sigBytes -= i2;
+          }
+          return new f6(b10, i2);
+        }
+        clone() {
+          let a10 = super.clone.call(this);
+          return a10._data = this._data.clone(), a10;
+        }
+      }, gb = class extends ga {
+        constructor(a10) {
+          super(), this.blockSize = 16, this.cfg = Object.assign(new f5(), a10), this.reset();
+        }
+        static _createHelper(a10) {
+          return (b10, c10) => new a10(c10).finalize(b10);
+        }
+        static _createHmacHelper(a10) {
+          return (b10, c10) => new gc(a10, c10).finalize(b10);
+        }
+        reset() {
+          super.reset.call(this), this._doReset();
+        }
+        update(a10) {
+          return this._append(a10), this._process(), this;
+        }
+        finalize(a10) {
+          return a10 && this._append(a10), this._doFinalize();
+        }
+      }, gc = class extends f5 {
+        constructor(a10, b10) {
+          super();
+          let c10 = new a10();
+          this._hasher = c10;
+          let d10 = b10;
+          "string" == typeof d10 && (d10 = f9.parse(d10));
+          let e10 = c10.blockSize, f10 = 4 * e10;
+          d10.sigBytes > f10 && (d10 = c10.finalize(b10)), d10.clamp();
+          let g10 = d10.clone();
+          this._oKey = g10;
+          let h2 = d10.clone();
+          this._iKey = h2;
+          let i2 = g10.words, j2 = h2.words;
+          for (let a11 = 0; a11 < e10; a11 += 1) i2[a11] ^= 1549556828, j2[a11] ^= 909522486;
+          g10.sigBytes = f10, h2.sigBytes = f10, this.reset();
+        }
+        reset() {
+          let a10 = this._hasher;
+          a10.reset(), a10.update(this._iKey);
+        }
+        update(a10) {
+          return this._hasher.update(a10), this;
+        }
+        finalize(a10) {
+          let b10 = this._hasher, c10 = b10.finalize(a10);
+          return b10.reset(), b10.finalize(this._oKey.clone().concat(c10));
+        }
+      }, gd = { stringify(a10) {
+        let { words: b10, sigBytes: c10 } = a10, d10 = this._map;
+        a10.clamp();
+        let e10 = [];
+        for (let a11 = 0; a11 < c10; a11 += 3) {
+          let f11 = (b10[a11 >>> 2] >>> 24 - a11 % 4 * 8 & 255) << 16 | (b10[a11 + 1 >>> 2] >>> 24 - (a11 + 1) % 4 * 8 & 255) << 8 | b10[a11 + 2 >>> 2] >>> 24 - (a11 + 2) % 4 * 8 & 255;
+          for (let b11 = 0; b11 < 4 && a11 + 0.75 * b11 < c10; b11 += 1) e10.push(d10.charAt(f11 >>> 6 * (3 - b11) & 63));
+        }
+        let f10 = d10.charAt(64);
+        if (f10) for (; e10.length % 4; ) e10.push(f10);
+        return e10.join("");
+      }, parse(a10) {
+        let b10 = a10.length, c10 = this._map, d10 = this._reverseMap;
+        if (!d10) {
+          this._reverseMap = [], d10 = this._reverseMap;
+          for (let a11 = 0; a11 < c10.length; a11 += 1) d10[c10.charCodeAt(a11)] = a11;
+        }
+        let e10 = c10.charAt(64);
+        if (e10) {
+          let c11 = a10.indexOf(e10);
+          -1 !== c11 && (b10 = c11);
+        }
+        var f10 = b10, g10 = d10;
+        let h2 = [], i2 = 0;
+        for (let b11 = 0; b11 < f10; b11 += 1) if (b11 % 4) {
+          let c11 = g10[a10.charCodeAt(b11 - 1)] << b11 % 4 * 2 | g10[a10.charCodeAt(b11)] >>> 6 - b11 % 4 * 2;
+          h2[i2 >>> 2] |= c11 << 24 - i2 % 4 * 8, i2 += 1;
+        }
+        return f6.create(h2, i2);
+      }, _map: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=" }, ge = [];
+      for (let a10 = 0; a10 < 64; a10 += 1) ge[a10] = 4294967296 * Math.abs(Math.sin(a10 + 1)) | 0;
+      var gf = (a10, b10, c10, d10, e10, f10, g10) => {
+        let h2 = a10 + (b10 & c10 | ~b10 & d10) + e10 + g10;
+        return (h2 << f10 | h2 >>> 32 - f10) + b10;
+      }, gg = (a10, b10, c10, d10, e10, f10, g10) => {
+        let h2 = a10 + (b10 & d10 | c10 & ~d10) + e10 + g10;
+        return (h2 << f10 | h2 >>> 32 - f10) + b10;
+      }, gh = (a10, b10, c10, d10, e10, f10, g10) => {
+        let h2 = a10 + (b10 ^ c10 ^ d10) + e10 + g10;
+        return (h2 << f10 | h2 >>> 32 - f10) + b10;
+      }, gi = (a10, b10, c10, d10, e10, f10, g10) => {
+        let h2 = a10 + (c10 ^ (b10 | ~d10)) + e10 + g10;
+        return (h2 << f10 | h2 >>> 32 - f10) + b10;
+      }, gj = class extends gb {
+        _doReset() {
+          this._hash = new f6([1732584193, 4023233417, 2562383102, 271733878]);
+        }
+        _doProcessBlock(a10, b10) {
+          for (let c11 = 0; c11 < 16; c11 += 1) {
+            let d11 = b10 + c11, e11 = a10[d11];
+            a10[d11] = (e11 << 8 | e11 >>> 24) & 16711935 | (e11 << 24 | e11 >>> 8) & 4278255360;
+          }
+          let c10 = this._hash.words, d10 = a10[b10 + 0], e10 = a10[b10 + 1], f10 = a10[b10 + 2], g10 = a10[b10 + 3], h2 = a10[b10 + 4], i2 = a10[b10 + 5], j2 = a10[b10 + 6], k2 = a10[b10 + 7], l2 = a10[b10 + 8], m2 = a10[b10 + 9], n2 = a10[b10 + 10], o2 = a10[b10 + 11], p2 = a10[b10 + 12], q2 = a10[b10 + 13], r2 = a10[b10 + 14], s2 = a10[b10 + 15], t2 = c10[0], u2 = c10[1], v2 = c10[2], w2 = c10[3];
+          t2 = gf(t2, u2, v2, w2, d10, 7, ge[0]), w2 = gf(w2, t2, u2, v2, e10, 12, ge[1]), v2 = gf(v2, w2, t2, u2, f10, 17, ge[2]), u2 = gf(u2, v2, w2, t2, g10, 22, ge[3]), t2 = gf(t2, u2, v2, w2, h2, 7, ge[4]), w2 = gf(w2, t2, u2, v2, i2, 12, ge[5]), v2 = gf(v2, w2, t2, u2, j2, 17, ge[6]), u2 = gf(u2, v2, w2, t2, k2, 22, ge[7]), t2 = gf(t2, u2, v2, w2, l2, 7, ge[8]), w2 = gf(w2, t2, u2, v2, m2, 12, ge[9]), v2 = gf(v2, w2, t2, u2, n2, 17, ge[10]), u2 = gf(u2, v2, w2, t2, o2, 22, ge[11]), t2 = gf(t2, u2, v2, w2, p2, 7, ge[12]), w2 = gf(w2, t2, u2, v2, q2, 12, ge[13]), v2 = gf(v2, w2, t2, u2, r2, 17, ge[14]), u2 = gf(u2, v2, w2, t2, s2, 22, ge[15]), t2 = gg(t2, u2, v2, w2, e10, 5, ge[16]), w2 = gg(w2, t2, u2, v2, j2, 9, ge[17]), v2 = gg(v2, w2, t2, u2, o2, 14, ge[18]), u2 = gg(u2, v2, w2, t2, d10, 20, ge[19]), t2 = gg(t2, u2, v2, w2, i2, 5, ge[20]), w2 = gg(w2, t2, u2, v2, n2, 9, ge[21]), v2 = gg(v2, w2, t2, u2, s2, 14, ge[22]), u2 = gg(u2, v2, w2, t2, h2, 20, ge[23]), t2 = gg(t2, u2, v2, w2, m2, 5, ge[24]), w2 = gg(w2, t2, u2, v2, r2, 9, ge[25]), v2 = gg(v2, w2, t2, u2, g10, 14, ge[26]), u2 = gg(u2, v2, w2, t2, l2, 20, ge[27]), t2 = gg(t2, u2, v2, w2, q2, 5, ge[28]), w2 = gg(w2, t2, u2, v2, f10, 9, ge[29]), v2 = gg(v2, w2, t2, u2, k2, 14, ge[30]), u2 = gg(u2, v2, w2, t2, p2, 20, ge[31]), t2 = gh(t2, u2, v2, w2, i2, 4, ge[32]), w2 = gh(w2, t2, u2, v2, l2, 11, ge[33]), v2 = gh(v2, w2, t2, u2, o2, 16, ge[34]), u2 = gh(u2, v2, w2, t2, r2, 23, ge[35]), t2 = gh(t2, u2, v2, w2, e10, 4, ge[36]), w2 = gh(w2, t2, u2, v2, h2, 11, ge[37]), v2 = gh(v2, w2, t2, u2, k2, 16, ge[38]), u2 = gh(u2, v2, w2, t2, n2, 23, ge[39]), t2 = gh(t2, u2, v2, w2, q2, 4, ge[40]), w2 = gh(w2, t2, u2, v2, d10, 11, ge[41]), v2 = gh(v2, w2, t2, u2, g10, 16, ge[42]), u2 = gh(u2, v2, w2, t2, j2, 23, ge[43]), t2 = gh(t2, u2, v2, w2, m2, 4, ge[44]), w2 = gh(w2, t2, u2, v2, p2, 11, ge[45]), v2 = gh(v2, w2, t2, u2, s2, 16, ge[46]), u2 = gh(u2, v2, w2, t2, f10, 23, ge[47]), t2 = gi(t2, u2, v2, w2, d10, 6, ge[48]), w2 = gi(w2, t2, u2, v2, k2, 10, ge[49]), v2 = gi(v2, w2, t2, u2, r2, 15, ge[50]), u2 = gi(u2, v2, w2, t2, i2, 21, ge[51]), t2 = gi(t2, u2, v2, w2, p2, 6, ge[52]), w2 = gi(w2, t2, u2, v2, g10, 10, ge[53]), v2 = gi(v2, w2, t2, u2, n2, 15, ge[54]), u2 = gi(u2, v2, w2, t2, e10, 21, ge[55]), t2 = gi(t2, u2, v2, w2, l2, 6, ge[56]), w2 = gi(w2, t2, u2, v2, s2, 10, ge[57]), v2 = gi(v2, w2, t2, u2, j2, 15, ge[58]), u2 = gi(u2, v2, w2, t2, q2, 21, ge[59]), t2 = gi(t2, u2, v2, w2, h2, 6, ge[60]), w2 = gi(w2, t2, u2, v2, o2, 10, ge[61]), v2 = gi(v2, w2, t2, u2, f10, 15, ge[62]), u2 = gi(u2, v2, w2, t2, m2, 21, ge[63]), c10[0] = c10[0] + t2 | 0, c10[1] = c10[1] + u2 | 0, c10[2] = c10[2] + v2 | 0, c10[3] = c10[3] + w2 | 0;
+        }
+        _doFinalize() {
+          let a10 = this._data, b10 = a10.words, c10 = 8 * this._nDataBytes, d10 = 8 * a10.sigBytes;
+          b10[d10 >>> 5] |= 128 << 24 - d10 % 32;
+          let e10 = Math.floor(c10 / 4294967296);
+          b10[(d10 + 64 >>> 9 << 4) + 15] = (e10 << 8 | e10 >>> 24) & 16711935 | (e10 << 24 | e10 >>> 8) & 4278255360, b10[(d10 + 64 >>> 9 << 4) + 14] = (c10 << 8 | c10 >>> 24) & 16711935 | (c10 << 24 | c10 >>> 8) & 4278255360, a10.sigBytes = (b10.length + 1) * 4, this._process();
+          let f10 = this._hash, g10 = f10.words;
+          for (let a11 = 0; a11 < 4; a11 += 1) {
+            let b11 = g10[a11];
+            g10[a11] = (b11 << 8 | b11 >>> 24) & 16711935 | (b11 << 24 | b11 >>> 8) & 4278255360;
+          }
+          return f10;
+        }
+        clone() {
+          let a10 = super.clone.call(this);
+          return a10._hash = this._hash.clone(), a10;
+        }
+      };
+      gb._createHelper(gj), gb._createHmacHelper(gj);
+      var gk = class extends f5 {
+        constructor(a10) {
+          super(), this.cfg = Object.assign(new f5(), { keySize: 4, hasher: gj, iterations: 1 }, a10);
+        }
+        compute(a10, b10) {
+          let c10, { cfg: d10 } = this, e10 = d10.hasher.create(), f10 = f6.create(), g10 = f10.words, { keySize: h2, iterations: i2 } = d10;
+          for (; g10.length < h2; ) {
+            c10 && e10.update(c10), c10 = e10.update(a10).finalize(b10), e10.reset();
+            for (let a11 = 1; a11 < i2; a11 += 1) c10 = e10.finalize(c10), e10.reset();
+            f10.concat(c10);
+          }
+          return f10.sigBytes = 4 * h2, f10;
+        }
+      }, gl = class extends ga {
+        constructor(a10, b10, c10) {
+          super(), this.cfg = Object.assign(new f5(), c10), this._xformMode = a10, this._key = b10, this.reset();
+        }
+        static createEncryptor(a10, b10) {
+          return this.create(this._ENC_XFORM_MODE, a10, b10);
+        }
+        static createDecryptor(a10, b10) {
+          return this.create(this._DEC_XFORM_MODE, a10, b10);
+        }
+        static _createHelper(a10) {
+          let b10 = (a11) => "string" == typeof a11 ? gt : gs;
+          return { encrypt: (c10, d10, e10) => b10(d10).encrypt(a10, c10, d10, e10), decrypt: (c10, d10, e10) => b10(d10).decrypt(a10, c10, d10, e10) };
+        }
+        reset() {
+          super.reset.call(this), this._doReset();
+        }
+        process(a10) {
+          return this._append(a10), this._process();
+        }
+        finalize(a10) {
+          return a10 && this._append(a10), this._doFinalize();
+        }
+      };
+      gl._ENC_XFORM_MODE = 1, gl._DEC_XFORM_MODE = 2, gl.keySize = 4, gl.ivSize = 4;
+      var gm = class extends f5 {
+        constructor(a10, b10) {
+          super(), this._cipher = a10, this._iv = b10;
+        }
+        static createEncryptor(a10, b10) {
+          return this.Encryptor.create(a10, b10);
+        }
+        static createDecryptor(a10, b10) {
+          return this.Decryptor.create(a10, b10);
+        }
+      };
+      function gn(a10, b10, c10) {
+        let d10, e10 = this._iv;
+        e10 ? (d10 = e10, this._iv = void 0) : d10 = this._prevBlock;
+        for (let e11 = 0; e11 < c10; e11 += 1) a10[b10 + e11] ^= d10[e11];
+      }
+      var go = class extends gm {
+      };
+      go.Encryptor = class extends go {
+        processBlock(a10, b10) {
+          let c10 = this._cipher, { blockSize: d10 } = c10;
+          gn.call(this, a10, b10, d10), c10.encryptBlock(a10, b10), this._prevBlock = a10.slice(b10, b10 + d10);
+        }
+      }, go.Decryptor = class extends go {
+        processBlock(a10, b10) {
+          let c10 = this._cipher, { blockSize: d10 } = c10, e10 = a10.slice(b10, b10 + d10);
+          c10.decryptBlock(a10, b10), gn.call(this, a10, b10, d10), this._prevBlock = e10;
+        }
+      };
+      var gp = { pad(a10, b10) {
+        let c10 = 4 * b10, d10 = c10 - a10.sigBytes % c10, e10 = d10 << 24 | d10 << 16 | d10 << 8 | d10, f10 = [];
+        for (let a11 = 0; a11 < d10; a11 += 4) f10.push(e10);
+        let g10 = f6.create(f10, d10);
+        a10.concat(g10);
+      }, unpad(a10) {
+        let b10 = 255 & a10.words[a10.sigBytes - 1 >>> 2];
+        a10.sigBytes -= b10;
+      } }, gq = class extends gl {
+        constructor(a10, b10, c10) {
+          super(a10, b10, Object.assign({ mode: go, padding: gp }, c10)), this.blockSize = 4;
+        }
+        reset() {
+          let a10;
+          super.reset.call(this);
+          let { cfg: b10 } = this, { iv: c10, mode: d10 } = b10;
+          this._xformMode === this.constructor._ENC_XFORM_MODE ? a10 = d10.createEncryptor : (a10 = d10.createDecryptor, this._minBufferSize = 1), this._mode = a10.call(d10, this, c10 && c10.words), this._mode.__creator = a10;
+        }
+        _doProcessBlock(a10, b10) {
+          this._mode.processBlock(a10, b10);
+        }
+        _doFinalize() {
+          let a10, { padding: b10 } = this.cfg;
+          return this._xformMode === this.constructor._ENC_XFORM_MODE ? (b10.pad(this._data, this.blockSize), a10 = this._process(true)) : (a10 = this._process(true), b10.unpad(a10)), a10;
+        }
+      }, gr = class extends f5 {
+        constructor(a10) {
+          super(), this.mixIn(a10);
+        }
+        toString(a10) {
+          return (a10 || this.formatter).stringify(this);
+        }
+      }, gs = class extends f5 {
+        static encrypt(a10, b10, c10, d10) {
+          let e10 = Object.assign(new f5(), this.cfg, d10), f10 = a10.createEncryptor(c10, e10), g10 = f10.finalize(b10), h2 = f10.cfg;
+          return gr.create({ ciphertext: g10, key: c10, iv: h2.iv, algorithm: a10, mode: h2.mode, padding: h2.padding, blockSize: f10.blockSize, formatter: e10.format });
+        }
+        static decrypt(a10, b10, c10, d10) {
+          let e10 = b10, f10 = Object.assign(new f5(), this.cfg, d10);
+          return e10 = this._parse(e10, f10.format), a10.createDecryptor(c10, f10).finalize(e10.ciphertext);
+        }
+        static _parse(a10, b10) {
+          return "string" == typeof a10 ? b10.parse(a10, this) : a10;
+        }
+      };
+      gs.cfg = Object.assign(new f5(), { format: { stringify(a10) {
+        let { ciphertext: b10, salt: c10 } = a10;
+        return (c10 ? f6.create([1398893684, 1701076831]).concat(c10).concat(b10) : b10).toString(gd);
+      }, parse(a10) {
+        let b10, c10 = gd.parse(a10), d10 = c10.words;
+        return 1398893684 === d10[0] && 1701076831 === d10[1] && (b10 = f6.create(d10.slice(2, 4)), d10.splice(0, 4), c10.sigBytes -= 16), gr.create({ ciphertext: c10, salt: b10 });
+      } } });
+      var gt = class extends gs {
+        static encrypt(a10, b10, c10, d10) {
+          let e10 = Object.assign(new f5(), this.cfg, d10), f10 = e10.kdf.execute(c10, a10.keySize, a10.ivSize, e10.salt, e10.hasher);
+          e10.iv = f10.iv;
+          let g10 = gs.encrypt.call(this, a10, b10, f10.key, e10);
+          return g10.mixIn(f10), g10;
+        }
+        static decrypt(a10, b10, c10, d10) {
+          let e10 = b10, f10 = Object.assign(new f5(), this.cfg, d10);
+          e10 = this._parse(e10, f10.format);
+          let g10 = f10.kdf.execute(c10, a10.keySize, a10.ivSize, e10.salt, f10.hasher);
+          return f10.iv = g10.iv, gs.decrypt.call(this, a10, e10, g10.key, f10);
+        }
+      };
+      gt.cfg = Object.assign(gs.cfg, { kdf: { execute(a10, b10, c10, d10, e10) {
+        let f10, g10 = d10;
+        g10 || (g10 = f6.random(8)), f10 = e10 ? gk.create({ keySize: b10 + c10, hasher: e10 }).compute(a10, g10) : gk.create({ keySize: b10 + c10 }).compute(a10, g10);
+        let h2 = f6.create(f10.words.slice(b10), 4 * c10);
+        return f10.sigBytes = 4 * b10, gr.create({ key: f10, iv: h2, salt: g10 });
+      } } });
+      var gu = [], gv = [], gw = [], gx = [], gy = [], gz = [], gA = [], gB = [], gC = [], gD = [], gE = [];
+      for (let a10 = 0; a10 < 256; a10 += 1) a10 < 128 ? gE[a10] = a10 << 1 : gE[a10] = a10 << 1 ^ 283;
+      var gF = 0, gG = 0;
+      for (let a10 = 0; a10 < 256; a10 += 1) {
+        let a11 = gG ^ gG << 1 ^ gG << 2 ^ gG << 3 ^ gG << 4;
+        a11 = a11 >>> 8 ^ 255 & a11 ^ 99, gu[gF] = a11, gv[a11] = gF;
+        let b10 = gE[gF], c10 = gE[b10], d10 = gE[c10], e10 = 257 * gE[a11] ^ 16843008 * a11;
+        gw[gF] = e10 << 24 | e10 >>> 8, gx[gF] = e10 << 16 | e10 >>> 16, gy[gF] = e10 << 8 | e10 >>> 24, gz[gF] = e10, e10 = 16843009 * d10 ^ 65537 * c10 ^ 257 * b10 ^ 16843008 * gF, gA[a11] = e10 << 24 | e10 >>> 8, gB[a11] = e10 << 16 | e10 >>> 16, gC[a11] = e10 << 8 | e10 >>> 24, gD[a11] = e10, gF ? (gF = b10 ^ gE[gE[gE[d10 ^ b10]]], gG ^= gE[gE[gG]]) : gF = gG = 1;
+      }
+      var gH = [0, 1, 2, 4, 8, 16, 32, 64, 128, 27, 54], gI = class extends gq {
+        _doReset() {
+          let a10;
+          if (this._nRounds && this._keyPriorReset === this._key) return;
+          this._keyPriorReset = this._key;
+          let b10 = this._keyPriorReset, c10 = b10.words, d10 = b10.sigBytes / 4;
+          this._nRounds = d10 + 6;
+          let e10 = (this._nRounds + 1) * 4;
+          this._keySchedule = [];
+          let f10 = this._keySchedule;
+          for (let b11 = 0; b11 < e10; b11 += 1) b11 < d10 ? f10[b11] = c10[b11] : (a10 = f10[b11 - 1], b11 % d10 ? d10 > 6 && b11 % d10 == 4 && (a10 = gu[a10 >>> 24] << 24 | gu[a10 >>> 16 & 255] << 16 | gu[a10 >>> 8 & 255] << 8 | gu[255 & a10]) : a10 = (gu[(a10 = a10 << 8 | a10 >>> 24) >>> 24] << 24 | gu[a10 >>> 16 & 255] << 16 | gu[a10 >>> 8 & 255] << 8 | gu[255 & a10]) ^ gH[b11 / d10 | 0] << 24, f10[b11] = f10[b11 - d10] ^ a10);
+          this._invKeySchedule = [];
+          let g10 = this._invKeySchedule;
+          for (let b11 = 0; b11 < e10; b11 += 1) {
+            let c11 = e10 - b11;
+            a10 = b11 % 4 ? f10[c11] : f10[c11 - 4], b11 < 4 || c11 <= 4 ? g10[b11] = a10 : g10[b11] = gA[gu[a10 >>> 24]] ^ gB[gu[a10 >>> 16 & 255]] ^ gC[gu[a10 >>> 8 & 255]] ^ gD[gu[255 & a10]];
+          }
+        }
+        encryptBlock(a10, b10) {
+          this._doCryptBlock(a10, b10, this._keySchedule, gw, gx, gy, gz, gu);
+        }
+        decryptBlock(a10, b10) {
+          let c10 = a10[b10 + 1];
+          a10[b10 + 1] = a10[b10 + 3], a10[b10 + 3] = c10, this._doCryptBlock(a10, b10, this._invKeySchedule, gA, gB, gC, gD, gv), c10 = a10[b10 + 1], a10[b10 + 1] = a10[b10 + 3], a10[b10 + 3] = c10;
+        }
+        _doCryptBlock(a10, b10, c10, d10, e10, f10, g10, h2) {
+          let i2 = this._nRounds, j2 = a10[b10] ^ c10[0], k2 = a10[b10 + 1] ^ c10[1], l2 = a10[b10 + 2] ^ c10[2], m2 = a10[b10 + 3] ^ c10[3], n2 = 4;
+          for (let a11 = 1; a11 < i2; a11 += 1) {
+            let a12 = d10[j2 >>> 24] ^ e10[k2 >>> 16 & 255] ^ f10[l2 >>> 8 & 255] ^ g10[255 & m2] ^ c10[n2];
+            n2 += 1;
+            let b11 = d10[k2 >>> 24] ^ e10[l2 >>> 16 & 255] ^ f10[m2 >>> 8 & 255] ^ g10[255 & j2] ^ c10[n2];
+            n2 += 1;
+            let h3 = d10[l2 >>> 24] ^ e10[m2 >>> 16 & 255] ^ f10[j2 >>> 8 & 255] ^ g10[255 & k2] ^ c10[n2];
+            n2 += 1;
+            let i3 = d10[m2 >>> 24] ^ e10[j2 >>> 16 & 255] ^ f10[k2 >>> 8 & 255] ^ g10[255 & l2] ^ c10[n2];
+            n2 += 1, j2 = a12, k2 = b11, l2 = h3, m2 = i3;
+          }
+          let o2 = (h2[j2 >>> 24] << 24 | h2[k2 >>> 16 & 255] << 16 | h2[l2 >>> 8 & 255] << 8 | h2[255 & m2]) ^ c10[n2];
+          n2 += 1;
+          let p2 = (h2[k2 >>> 24] << 24 | h2[l2 >>> 16 & 255] << 16 | h2[m2 >>> 8 & 255] << 8 | h2[255 & j2]) ^ c10[n2];
+          n2 += 1;
+          let q2 = (h2[l2 >>> 24] << 24 | h2[m2 >>> 16 & 255] << 16 | h2[j2 >>> 8 & 255] << 8 | h2[255 & k2]) ^ c10[n2];
+          n2 += 1;
+          let r2 = (h2[m2 >>> 24] << 24 | h2[j2 >>> 16 & 255] << 16 | h2[k2 >>> 8 & 255] << 8 | h2[255 & l2]) ^ c10[n2];
+          n2 += 1, a10[b10] = o2, a10[b10 + 1] = p2, a10[b10 + 2] = q2, a10[b10 + 3] = r2;
+        }
+      };
+      gI.keySize = 8;
+      var gJ = gq._createHelper(gI), gK = [], gL = class extends gb {
+        _doReset() {
+          this._hash = new f6([1732584193, 4023233417, 2562383102, 271733878, 3285377520]);
+        }
+        _doProcessBlock(a10, b10) {
+          let c10 = this._hash.words, d10 = c10[0], e10 = c10[1], f10 = c10[2], g10 = c10[3], h2 = c10[4];
+          for (let c11 = 0; c11 < 80; c11 += 1) {
+            if (c11 < 16) gK[c11] = 0 | a10[b10 + c11];
+            else {
+              let a11 = gK[c11 - 3] ^ gK[c11 - 8] ^ gK[c11 - 14] ^ gK[c11 - 16];
+              gK[c11] = a11 << 1 | a11 >>> 31;
+            }
+            let i2 = (d10 << 5 | d10 >>> 27) + h2 + gK[c11];
+            c11 < 20 ? i2 += (e10 & f10 | ~e10 & g10) + 1518500249 : c11 < 40 ? i2 += (e10 ^ f10 ^ g10) + 1859775393 : c11 < 60 ? i2 += (e10 & f10 | e10 & g10 | f10 & g10) - 1894007588 : i2 += (e10 ^ f10 ^ g10) - 899497514, h2 = g10, g10 = f10, f10 = e10 << 30 | e10 >>> 2, e10 = d10, d10 = i2;
+          }
+          c10[0] = c10[0] + d10 | 0, c10[1] = c10[1] + e10 | 0, c10[2] = c10[2] + f10 | 0, c10[3] = c10[3] + g10 | 0, c10[4] = c10[4] + h2 | 0;
+        }
+        _doFinalize() {
+          let a10 = this._data, b10 = a10.words, c10 = 8 * this._nDataBytes, d10 = 8 * a10.sigBytes;
+          return b10[d10 >>> 5] |= 128 << 24 - d10 % 32, b10[(d10 + 64 >>> 9 << 4) + 14] = Math.floor(c10 / 4294967296), b10[(d10 + 64 >>> 9 << 4) + 15] = c10, a10.sigBytes = 4 * b10.length, this._process(), this._hash;
+        }
+        clone() {
+          let a10 = super.clone.call(this);
+          return a10._hash = this._hash.clone(), a10;
+        }
+      }, gM = (gb._createHelper(gL), gb._createHmacHelper(gL));
+      let gN = `
+Missing domain and proxyUrl. A satellite application needs to specify a domain or a proxyUrl.
+
+1) With middleware
+   e.g. export default clerkMiddleware({domain:'YOUR_DOMAIN',isSatellite:true});
+2) With environment variables e.g.
+   NEXT_PUBLIC_CLERK_DOMAIN='YOUR_DOMAIN'
+   NEXT_PUBLIC_CLERK_IS_SATELLITE='true'
+   `, gO = `
+Invalid signInUrl. A satellite application requires a signInUrl for development instances.
+Check if signInUrl is missing from your configuration or if it is not an absolute URL
+
+1) With middleware
+   e.g. export default clerkMiddleware({signInUrl:'SOME_URL', isSatellite:true});
+2) With environment variables e.g.
+   NEXT_PUBLIC_CLERK_SIGN_IN_URL='SOME_URL'
+   NEXT_PUBLIC_CLERK_IS_SATELLITE='true'`, gP = `Clerk: Unable to decrypt request data.
+
+Refresh the page if your .env file was just updated. If the issue persists, ensure the encryption key is valid and properly set.
+
+For more information, see: https://clerk.com/docs/reference/nextjs/clerk-middleware#dynamic-keys. (code=encryption_key_invalid)`, gQ = bw({ packageName: "@clerk/nextjs" }), gR = "x-middleware-override-headers", gS = "x-middleware-request", gT = (a10, b10, c10) => {
+        a10.headers.get(gR) || (a10.headers.set(gR, [...b10.headers.keys()]), b10.headers.forEach((b11, c11) => {
+          a10.headers.set(`${gS}-${c11}`, b11);
+        })), Object.entries(c10).forEach(([b11, c11]) => {
+          a10.headers.set(gR, `${a10.headers.get(gR)},${b11}`), a10.headers.set(`${gS}-${b11}`, c11);
+        });
+      }, gU = (a10) => R.redirect(a10, { headers: { [b6.Headers.ClerkRedirectTo]: "true" } }), gV = "clerk_keyless_dummy_key";
+      function gW() {
+        if (a7()) throw Error("Clerk: Unable to decrypt request data, this usually means the encryption key is invalid. Ensure the encryption key is properly set. For more information, see: https://clerk.com/docs/reference/nextjs/clerk-middleware#dynamic-keys. (code=encryption_key_invalid)");
+        throw Error(gP);
+      }
+      function gX(a10, b10) {
+        return JSON.parse(gJ.decrypt(a10, b10).toString(f9));
+      }
+      let gY = async () => {
+        var a10, b10;
+        let c10;
+        try {
+          let a11 = await fE(), b11 = fN(a11, b6.Headers.ClerkRequestData);
+          c10 = function(a12) {
+            if (!a12) return {};
+            let b12 = a7() ? fs || fp : fs || fp || gV;
+            try {
+              return gX(a12, b12);
+            } catch {
+              if (fC) try {
+                return gX(a12, gV);
+              } catch {
+                gW();
+              }
+              gW();
+            }
+          }(b11);
+        } catch (a11) {
+          if (a11 && fD(a11)) throw a11;
+        }
+        let d10 = null != (b10 = null == (a10 = fQ.getStore()) ? void 0 : a10.get("requestData")) ? b10 : c10;
+        return (null == d10 ? void 0 : d10.secretKey) || (null == d10 ? void 0 : d10.publishableKey) ? fM(d10) : fM({});
+      };
+      class gZ {
+        static createDefaultDirectives() {
+          return Object.entries(this.DEFAULT_DIRECTIVES).reduce((a10, [b10, c10]) => (a10[b10] = new Set(c10), a10), {});
+        }
+        static isKeyword(a10) {
+          return this.KEYWORDS.has(a10.replace(/^'|'$/g, ""));
+        }
+        static formatValue(a10) {
+          let b10 = a10.replace(/^'|'$/g, "");
+          return this.isKeyword(b10) ? `'${b10}'` : a10;
+        }
+        static handleDirectiveValues(a10) {
+          let b10 = /* @__PURE__ */ new Set();
+          return a10.includes("'none'") || a10.includes("none") ? b10.add("'none'") : a10.forEach((a11) => b10.add(this.formatValue(a11))), b10;
+        }
+      }
+      gZ.KEYWORDS = /* @__PURE__ */ new Set(["none", "self", "strict-dynamic", "unsafe-eval", "unsafe-hashes", "unsafe-inline"]), gZ.DEFAULT_DIRECTIVES = { "connect-src": ["self", "https://clerk-telemetry.com", "https://*.clerk-telemetry.com", "https://api.stripe.com", "https://maps.googleapis.com"], "default-src": ["self"], "form-action": ["self"], "frame-src": ["self", "https://challenges.cloudflare.com", "https://*.js.stripe.com", "https://js.stripe.com", "https://hooks.stripe.com"], "img-src": ["self", "https://img.clerk.com"], "script-src": ["self", "unsafe-inline", "https:", "http:", "https://*.js.stripe.com", "https://js.stripe.com", "https://maps.googleapis.com"], "style-src": ["self", "unsafe-inline"], "worker-src": ["self", "blob:"] };
+      let g$ = "__clerk_keys_";
+      async function g_(a10) {
+        let b10 = new TextEncoder().encode(a10);
+        return Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", b10))).map((a11) => a11.toString(16).padStart(2, "0")).join("").slice(0, 16);
+      }
+      async function g0() {
+        let a10 = process.env.PWD;
+        if (!a10) return `${g$}0`;
+        let b10 = a10.split("/").filter(Boolean).slice(-3).reverse().join("/"), c10 = await g_(b10);
+        return `${g$}${c10}`;
+      }
+      async function g1(a10) {
+        let b10;
+        if (!fC) return;
+        let c10 = await g0();
+        try {
+          c10 && (b10 = JSON.parse(a10(c10) || "{}"));
+        } catch {
+          b10 = void 0;
+        }
+        return b10;
+      }
+      let g2 = { REDIRECT_TO_URL: "CLERK_PROTECT_REDIRECT_TO_URL", REDIRECT_TO_SIGN_IN: "CLERK_PROTECT_REDIRECT_TO_SIGN_IN", REDIRECT_TO_SIGN_UP: "CLERK_PROTECT_REDIRECT_TO_SIGN_UP" }, g3 = { NOT_FOUND: 404, FORBIDDEN: 403, UNAUTHORIZED: 401 }, g4 = new Set(Object.values(g3)), g5 = "NEXT_HTTP_ERROR_FALLBACK";
+      function g6(a10) {
+        if (!function(a11) {
+          if ("object" != typeof a11 || null === a11 || !("digest" in a11) || "string" != typeof a11.digest) return false;
+          let [b11, c10] = a11.digest.split(";");
+          return b11 === g5 && g4.has(Number(c10));
+        }(a10)) return;
+        let [, b10] = a10.digest.split(";");
+        return Number(b10);
+      }
+      let g7 = "NEXT_REDIRECT";
+      function g8(a10, b10, c10 = "replace", d10 = 307) {
+        let e10 = Error(g7);
+        throw e10.digest = `${g7};${c10};${a10};${d10};`, e10.clerk_digest = g2.REDIRECT_TO_URL, Object.assign(e10, b10), e10;
+      }
+      function g9(a10, b10) {
+        return null === b10 ? "" : b10 || a10;
+      }
+      function ha(a10) {
+        if ("object" != typeof a10 || null === a10 || !("digest" in a10) || "string" != typeof a10.digest) return false;
+        let b10 = a10.digest.split(";"), [c10, d10] = b10, e10 = b10.slice(2, -2).join(";"), f10 = Number(b10.at(-2));
+        return c10 === g7 && ("replace" === d10 || "push" === d10) && "string" == typeof e10 && !isNaN(f10) && 307 === f10;
+      }
+      function hb() {
+        let a10 = Error(g5);
+        throw a10.digest = `${g5};${g3.UNAUTHORIZED}`, a10;
+      }
+      let hc = (a10) => !!a10.headers.get(fg.Headers.NextUrl) && !((a11) => {
+        var b10, c10;
+        return !!a11.headers.get(fg.Headers.NextUrl) && ((null == (b10 = a11.headers.get(b6.Headers.Accept)) ? void 0 : b10.includes("text/x-component")) || (null == (c10 = a11.headers.get(b6.Headers.ContentType)) ? void 0 : c10.includes("multipart/form-data")) || !!a11.headers.get(fg.Headers.NextAction));
+      })(a10) || hd(), hd = () => {
+        let a10 = globalThis.fetch;
+        if (!function(a11) {
+          return "__nextPatched" in a11 && true === a11.__nextPatched;
+        }(a10)) return false;
+        let { page: b10, pagePath: c10 } = a10.__nextGetStaticStore().getStore() || {};
+        return !!(c10 || b10);
+      }, he = (a10) => !!a10.headers.get(fg.Headers.NextjsData), hf = ((a10) => {
+        if ("function" == typeof a10) return (b11) => a10(b11);
+        let b10 = ((a11) => {
+          let b11 = [a11 || ""].flat().filter(Boolean).map((a12) => a12 instanceof RegExp ? a12 : ((a13) => {
+            try {
+              return a6(a13);
+            } catch (b12) {
+              throw Error(`Invalid path: ${a13}.
+Consult the documentation of path-to-regexp here: https://github.com/pillarjs/path-to-regexp/tree/6.x
+${b12.message}`);
+            }
+          })(a12));
+          return (a12) => b11.some((b12) => b12.test(a12));
+        })(a10);
+        return (a11) => b10(a11.nextUrl.pathname);
+      })(["/user/:id", "/admin/:path*"]), hg = ((...a10) => {
+        let [b10, c10] = ((a11) => [a11[0] instanceof Request ? a11[0] : void 0, a11[0] instanceof Request ? a11[1] : void 0])(a10), [d10, e10] = ((a11) => ["function" == typeof a11[0] ? a11[0] : void 0, (2 === a11.length ? a11[1] : "function" == typeof a11[0] ? {} : a11[0]) || {}])(a10);
+        return fQ.run(fP, () => {
+          let a11 = /* @__PURE__ */ ((a12, b11) => (...c11) => {
+            let d11 = ("string" == typeof a12 ? /* @__PURE__ */ ((a13, b12) => () => {
+              let c12 = [], d12 = false;
+              return { enable: () => {
+                d12 = true;
+              }, debug: (...a14) => {
+                d12 && c12.push(a14.map((a15) => "function" == typeof a15 ? a15() : a15));
+              }, commit: () => {
+                if (d12) {
+                  var e12, f11;
+                  for (let d13 of (console.log((e12 = a13, `[clerk debug start: ${e12}]`)), c12)) {
+                    let a14 = b12(d13);
+                    a14 = a14.split("\n").map((a15) => `  ${a15}`).join("\n"), process.env.VERCEL && (a14 = function(a15, b13) {
+                      let c13 = new TextEncoder(), d14 = new TextDecoder("utf-8"), e13 = c13.encode(a15).slice(0, 4096);
+                      return d14.decode(e13).replace(/\uFFFD/g, "");
+                    }(a14, 4096)), console.log(a14);
+                  }
+                  console.log((f11 = a13, `[clerk debug end: ${f11}] (@clerk/nextjs=6.35.2,next=${fj.rE},timestamp=${Math.round((/* @__PURE__ */ new Date()).getTime() / 1e3)})`));
+                }
+              } };
+            })(a12, fl) : a12)(), e11 = b11(d11);
+            try {
+              let a13 = e11(...c11);
+              if ("object" == typeof a13 && "then" in a13 && "function" == typeof a13.then) return a13.then((a14) => (d11.commit(), a14)).catch((a14) => {
+                throw d11.commit(), a14;
+              });
+              return d11.commit(), a13;
+            } catch (a13) {
+              throw d11.commit(), a13;
+            }
+          })("clerkMiddleware", (a12) => async (b11, c11) => {
+            var f11, g11;
+            let h2, i2, j2, k2, l2, m2, n2, o2, p2 = "function" == typeof e10 ? await e10(b11) : e10, q2 = await g1((a13) => {
+              var c12;
+              return null == (c12 = b11.cookies.get(a13)) ? void 0 : c12.value;
+            }), r2 = function(a13, b12) {
+              return a13 || b12(), a13;
+            }(p2.publishableKey || fr || (null == q2 ? void 0 : q2.publishableKey), () => gQ.throwMissingPublishableKeyError()), s2 = function(a13, b12) {
+              return a13 || b12(), a13;
+            }(p2.secretKey || fp || (null == q2 ? void 0 : q2.secretKey), () => gQ.throwMissingSecretKeyError()), t2 = { publishableKey: r2, secretKey: s2, signInUrl: p2.signInUrl || fx, signUpUrl: p2.signUpUrl || fy, ...p2 };
+            fP.set("requestData", t2);
+            let u2 = await gY();
+            t2.debug && a12.enable();
+            let v2 = eF(b11);
+            a12.debug("options", t2), a12.debug("url", () => v2.toJSON());
+            let w2 = b11.headers.get(b6.Headers.Authorization);
+            w2 && w2.startsWith("Basic ") && a12.debug("Basic Auth detected");
+            let x2 = b11.headers.get(b6.Headers.ContentSecurityPolicy);
+            x2 && a12.debug("Content-Security-Policy detected", () => ({ value: x2 }));
+            let y2 = await u2.authenticateRequest(v2, ((a13, b12) => ({ ...b12, ...((a14, b13) => {
+              let c12, d11 = fU(null == b13 ? void 0 : b13.proxyUrl, a14.clerkUrl, fv);
+              c12 = d11 && !fT(d11) ? new URL(d11, a14.clerkUrl).toString() : d11;
+              let e11 = fU(b13.isSatellite, new URL(a14.url), fw), f12 = fU(b13.domain, new URL(a14.url), fu), g12 = (null == b13 ? void 0 : b13.signInUrl) || fx;
+              if (e11 && !c12 && !f12) throw Error(gN);
+              if (e11 && !fT(g12) && bk(b13.secretKey || fp)) throw Error(gO);
+              return { proxyUrl: c12, isSatellite: e11, domain: f12, signInUrl: g12 };
+            })(a13, b12), acceptsToken: "any" }))(v2, t2));
+            a12.debug("requestState", () => ({ status: y2.status, headers: JSON.stringify(Object.fromEntries(y2.headers)), reason: y2.reason }));
+            let z2 = y2.headers.get(b6.Headers.Location);
+            if (z2) {
+              let a13 = R.redirect(z2);
+              return y2.headers.forEach((b12, c12) => {
+                c12 !== b6.Headers.Location && a13.headers.append(c12, b12);
+              }), a13;
+            }
+            if (y2.status === ex.Handshake) throw Error("Clerk: handshake status without redirect");
+            let A2 = y2.toAuth();
+            a12.debug("auth", () => ({ auth: A2, debug: A2.debug() }));
+            let B2 = (h2 = v2, (a13 = {}) => {
+              !function(a14, b12) {
+                g8(a14, { clerk_digest: g2.REDIRECT_TO_SIGN_IN, returnBackUrl: g9(a14, b12) });
+              }(h2.clerkUrl.toString(), a13.returnBackUrl);
+            }), C2 = (i2 = v2, (a13 = {}) => {
+              !function(a14, b12) {
+                g8(a14, { clerk_digest: g2.REDIRECT_TO_SIGN_UP, returnBackUrl: g9(a14, b12) });
+              }(i2.clerkUrl.toString(), a13.returnBackUrl);
+            }), D2 = await (j2 = v2, k2 = A2, l2 = B2, async (a13, b12) => function(a14) {
+              let { redirectToSignIn: b13, authObject: c12, redirect: d11, notFound: e11, request: f12, unauthorized: g12 } = a14;
+              return async (...a15) => {
+                var h3, i3, j3, k3, l3, m3, n3, o3;
+                let p3 = ((a16) => {
+                  if (a16 && !a16.unauthenticatedUrl && !a16.unauthorizedUrl && !a16.token && (1 !== Object.keys(a16).length || !("token" in a16))) return a16;
+                })(a15[0]), q3 = (null == (h3 = a15[0]) ? void 0 : h3.unauthenticatedUrl) || (null == (i3 = a15[1]) ? void 0 : i3.unauthenticatedUrl), r3 = (null == (j3 = a15[0]) ? void 0 : j3.unauthorizedUrl) || (null == (k3 = a15[1]) ? void 0 : k3.unauthorizedUrl), s3 = (null == (l3 = a15[0]) ? void 0 : l3.token) || (null == (m3 = a15[1]) ? void 0 : m3.token) || cb.SessionToken, t3 = () => c12.tokenType !== cb.SessionToken ? g12() : r3 ? d11(r3) : e11();
+                if (!er(c12.tokenType, s3)) return t3();
+                if (c12.tokenType !== cb.SessionToken) return c12.isAuthenticated ? c12 : t3();
+                if ("pending" === c12.sessionStatus || !c12.userId) {
+                  return q3 ? d11(q3) : "document" === (n3 = f12).headers.get(b6.Headers.SecFetchDest) || "iframe" === n3.headers.get(b6.Headers.SecFetchDest) || (null == (o3 = n3.headers.get(b6.Headers.Accept)) ? void 0 : o3.includes("text/html")) || hc(n3) || he(n3) ? b13() : e11();
+                }
+                return p3 ? "function" == typeof p3 ? p3(c12.has) ? c12 : t3() : c12.has(p3) ? c12 : t3() : c12;
+              };
+            }({ request: j2, redirect: (a14) => g8(a14, { redirectUrl: a14 }), notFound: () => function() {
+              let a14 = Object.defineProperty(Error(e4), "__NEXT_ERROR_CODE", { value: "E394", enumerable: false, configurable: true });
+              throw a14.digest = e4, a14;
+            }(), unauthorized: hb, authObject: ew({ authObject: k2, acceptsToken: (null == a13 ? void 0 : a13.token) || (null == b12 ? void 0 : b12.token) || cb.SessionToken }), redirectToSignIn: l2 })(a13, b12)), E2 = (m2 = y2, n2 = B2, o2 = C2, async (a13) => {
+              var b12;
+              let c12 = m2.toAuth({ treatPendingAsSignedOut: null == a13 ? void 0 : a13.treatPendingAsSignedOut }), d11 = null != (b12 = null == a13 ? void 0 : a13.acceptsToken) ? b12 : cb.SessionToken, e11 = ew({ authObject: c12, acceptsToken: d11 });
+              return e11.tokenType === cb.SessionToken && er(cb.SessionToken, d11) ? Object.assign(e11, { redirectToSignIn: n2, redirectToSignUp: o2 }) : e11;
+            });
+            E2.protect = D2;
+            let F2 = R.next();
+            try {
+              F2 = await fQ.run(fP, async () => null == d10 ? void 0 : d10(E2, b11, c11)) || F2;
+            } catch (a13) {
+              F2 = ((a14, b12, c12, d11) => {
+                var e11;
+                if (g6(a14) === g3.UNAUTHORIZED) {
+                  let a15 = new R(null, { status: 401 }), b13 = d11.toAuth();
+                  if (b13 && b13.tokenType === cb.OAuthToken) {
+                    let b14 = bi(d11.publishableKey);
+                    return fh(a15, "WWW-Authenticate", `Bearer resource_metadata="https://${null == b14 ? void 0 : b14.frontendApi}/.well-known/oauth-protected-resource"`);
+                  }
+                  return a15;
+                }
+                if (function(a15) {
+                  return "object" == typeof a15 && null !== a15 && "digest" in a15 && "NEXT_NOT_FOUND" === a15.digest || g6(a15) === g3.NOT_FOUND;
+                }(a14)) return fh(R.rewrite(new URL(`/clerk_${Date.now()}`, c12.url)), b6.Headers.AuthReason, "protect-rewrite");
+                let f12 = function(a15) {
+                  return !!ha(a15) && "clerk_digest" in a15 && a15.clerk_digest === g2.REDIRECT_TO_SIGN_IN;
+                }(a14), g12 = function(a15) {
+                  return !!ha(a15) && "clerk_digest" in a15 && a15.clerk_digest === g2.REDIRECT_TO_SIGN_UP;
+                }(a14);
+                if (f12 || g12) {
+                  let c13 = ((a15) => {
+                    let { publishableKey: b13, redirectAdapter: c14, signInUrl: d12, signUpUrl: e12, baseUrl: f13, sessionStatus: g14 } = a15, h3 = bi(b13), i3 = h3?.frontendApi, j3 = h3?.instanceType === "development", k3 = bV(i3), l3 = "pending" === g14, m3 = (b14, { returnBackUrl: d13 }) => c14(b7(f13, `${b14}/tasks`, d13, j3 ? a15.devBrowserToken : null));
+                    return { redirectToSignUp: ({ returnBackUrl: b14 } = {}) => {
+                      e12 || k3 || bx.throwMissingPublishableKeyError();
+                      let g15 = `${k3}/sign-up`, h4 = e12 || function(a16) {
+                        if (!a16) return;
+                        let b15 = new URL(a16, f13);
+                        return b15.pathname = `${b15.pathname}/create`, b15.toString();
+                      }(d12) || g15;
+                      return l3 ? m3(h4, { returnBackUrl: b14 }) : c14(b7(f13, h4, b14, j3 ? a15.devBrowserToken : null));
+                    }, redirectToSignIn: ({ returnBackUrl: b14 } = {}) => {
+                      d12 || k3 || bx.throwMissingPublishableKeyError();
+                      let e13 = `${k3}/sign-in`, g15 = d12 || e13;
+                      return l3 ? m3(g15, { returnBackUrl: b14 }) : c14(b7(f13, g15, b14, j3 ? a15.devBrowserToken : null));
+                    } };
+                  })({ redirectAdapter: gU, baseUrl: b12.clerkUrl, signInUrl: d11.signInUrl, signUpUrl: d11.signUpUrl, publishableKey: d11.publishableKey, sessionStatus: null == (e11 = d11.toAuth()) ? void 0 : e11.sessionStatus }), { returnBackUrl: g13 } = a14;
+                  return c13[f12 ? "redirectToSignIn" : "redirectToSignUp"]({ returnBackUrl: g13 });
+                }
+                if (ha(a14)) return gU(a14.redirectUrl);
+                throw a14;
+              })(a13, v2, b11, y2);
+            }
+            if (t2.contentSecurityPolicy) {
+              let { headers: b12 } = function(a13, b13) {
+                var c12;
+                let d11 = [], e11 = b13.strict ? function() {
+                  let a14 = new Uint8Array(16);
+                  return crypto.getRandomValues(a14), btoa(Array.from(a14, (a15) => String.fromCharCode(a15)).join(""));
+                }() : void 0, f12 = function(a14, b14, c13, d12) {
+                  let e12 = Object.entries(gZ.DEFAULT_DIRECTIVES).reduce((a15, [b15, c14]) => (a15[b15] = new Set(c14), a15), {});
+                  if (e12["connect-src"].add(b14), a14 && (e12["script-src"].delete("http:"), e12["script-src"].delete("https:"), e12["script-src"].add("'strict-dynamic'"), d12 && e12["script-src"].add(`'nonce-${d12}'`)), c13) {
+                    let a15 = /* @__PURE__ */ new Map();
+                    Object.entries(c13).forEach(([b15, c14]) => {
+                      let d13 = Array.isArray(c14) ? c14 : [c14];
+                      gZ.DEFAULT_DIRECTIVES[b15] ? function(a16, b16, c15) {
+                        if (c15.includes("'none'") || c15.includes("none")) {
+                          a16[b16] = /* @__PURE__ */ new Set(["'none'"]);
+                          return;
+                        }
+                        let d14 = /* @__PURE__ */ new Set();
+                        a16[b16].forEach((a17) => {
+                          d14.add(gZ.formatValue(a17));
+                        }), c15.forEach((a17) => {
+                          d14.add(gZ.formatValue(a17));
+                        }), a16[b16] = d14;
+                      }(e12, b15, d13) : function(a16, b16, c15) {
+                        if (c15.includes("'none'") || c15.includes("none")) return a16.set(b16, /* @__PURE__ */ new Set(["'none'"]));
+                        let d14 = /* @__PURE__ */ new Set();
+                        c15.forEach((a17) => {
+                          let b17 = gZ.formatValue(a17);
+                          d14.add(b17);
+                        }), a16.set(b16, d14);
+                      }(a15, b15, d13);
+                    }), a15.forEach((a16, b15) => {
+                      e12[b15] = a16;
+                    });
+                  }
+                  return Object.entries(e12).sort(([a15], [b15]) => a15.localeCompare(b15)).map(([a15, b15]) => {
+                    let c14 = Array.from(b15).map((a16) => ({ raw: a16, formatted: gZ.formatValue(a16) }));
+                    return `${a15} ${c14.map((a16) => a16.formatted).join(" ")}`;
+                  }).join("; ");
+                }(null != (c12 = b13.strict) && c12, a13, b13.directives, e11);
+                return b13.reportTo && (f12 += "; report-to csp-endpoint", d11.push([b6.Headers.ReportingEndpoints, `csp-endpoint="${b13.reportTo}"`])), b13.reportOnly ? d11.push([b6.Headers.ContentSecurityPolicyReportOnly, f12]) : d11.push([b6.Headers.ContentSecurityPolicy, f12]), e11 && d11.push([b6.Headers.Nonce, e11]), { headers: d11 };
+              }((null != (g11 = null == (f11 = bi(r2)) ? void 0 : f11.frontendApi) ? g11 : "").replace("$", ""), t2.contentSecurityPolicy);
+              b12.forEach(([a13, b13]) => {
+                fh(F2, a13, b13);
+              }), a12.debug("Clerk generated CSP", () => ({ headers: b12 }));
+            }
+            if (y2.headers && y2.headers.forEach((b12, c12) => {
+              c12 === b6.Headers.ContentSecurityPolicy && a12.debug("Content-Security-Policy detected", () => ({ value: b12 })), F2.headers.append(c12, b12);
+            }), F2.headers.get(fg.Headers.NextRedirect)) return a12.debug("handlerResult is redirect"), ((a13, b12, c12) => {
+              let d11 = b12.headers.get("location");
+              if ("true" === b12.headers.get(b6.Headers.ClerkRedirectTo) && d11 && bk(c12.secretKey) && a13.clerkUrl.isCrossOrigin(d11)) {
+                let c13 = a13.cookies.get(fi) || "", e11 = function(a14, b13) {
+                  let c14 = new URL(a14), d12 = c14.searchParams.get(fi);
+                  c14.searchParams.delete(fi);
+                  let e12 = d12 || b13;
+                  return e12 && c14.searchParams.set(fi, e12), c14;
+                }(new URL(d11), c13);
+                return R.redirect(e11.href, b12);
+              }
+              return b12;
+            })(v2, F2, t2);
+            t2.debug && gT(F2, v2, { [b6.Headers.EnableDebug]: "true" });
+            let G2 = s2 === (null == q2 ? void 0 : q2.secretKey) ? { publishableKey: null == q2 ? void 0 : q2.publishableKey, secretKey: null == q2 ? void 0 : q2.secretKey } : {};
+            return !function(a13, b12, c12, d11, e11, f12) {
+              let g12, { reason: h3, message: i3, status: j3, token: k3 } = c12;
+              if (b12 || (b12 = R.next()), b12.headers.get(fg.Headers.NextRedirect)) return;
+              "1" === b12.headers.get(fg.Headers.NextResume) && (b12.headers.delete(fg.Headers.NextResume), g12 = new URL(a13.url));
+              let l3 = b12.headers.get(fg.Headers.NextRewrite);
+              if (l3) {
+                let b13 = new URL(a13.url);
+                if ((g12 = new URL(l3)).origin !== b13.origin) return;
+              }
+              if (g12) {
+                let c13 = function(a14, b13, c14) {
+                  var d12;
+                  let e12 = (a15) => !a15 || !Object.values(a15).some((a16) => void 0 !== a16);
+                  if (e12(a14) && e12(b13) && !c14) return;
+                  if (a14.secretKey && !fs) return void fS.warnOnce("Clerk: Missing `CLERK_ENCRYPTION_KEY`. Required for propagating `secretKey` middleware option. See docs: https://clerk.com/docs/reference/nextjs/clerk-middleware#dynamic-keys");
+                  let f13 = a7() ? fs || (d12 = () => gQ.throwMissingSecretKeyError(), fp || d12(), fp) : fs || fp || gV;
+                  return gJ.encrypt(JSON.stringify({ ...b13, ...a14, machineAuthObject: null != c14 ? c14 : void 0 }), f13).toString();
+                }(d11, e11, f12);
+                gT(b12, a13, { [b6.Headers.AuthStatus]: j3, [b6.Headers.AuthToken]: k3 || "", [b6.Headers.AuthSignature]: k3 ? gM(k3, (null == d11 ? void 0 : d11.secretKey) || fp || e11.secretKey || "").toString() : "", [b6.Headers.AuthMessage]: i3 || "", [b6.Headers.AuthReason]: h3 || "", [b6.Headers.ClerkUrl]: a13.clerkUrl.toString(), ...c13 ? { [b6.Headers.ClerkRequestData]: c13 } : {} }), b12.headers.set(fg.Headers.NextRewrite, g12.href);
+              }
+            }(v2, F2, y2, p2, G2, "session_token" === A2.tokenType ? null : ((a13) => {
+              let { debug: b12, getToken: c12, has: d11, ...e11 } = a13;
+              return e11;
+            })(A2)), F2;
+          }), f10 = async (b11, c11) => {
+            var d11, f11;
+            if ("/clerk-sync-keyless" === b11.nextUrl.pathname) return ((a12) => {
+              let b12 = a12.nextUrl.searchParams.get("returnUrl"), c12 = new URL(a12.url);
+              return c12.pathname = "", R.redirect(b12 || c12.toString());
+            })(b11);
+            let g11 = "function" == typeof e10 ? await e10(b11) : e10, h2 = await g1((a12) => {
+              var c12;
+              return null == (c12 = b11.cookies.get(a12)) ? void 0 : c12.value;
+            }), i2 = !(g11.publishableKey || fr || (null == h2 ? void 0 : h2.publishableKey)), j2 = null != (f11 = null == (d11 = fN(b11, b6.Headers.Authorization)) ? void 0 : d11.replace("Bearer ", "")) ? f11 : "";
+            if (i2 && !ep(j2)) {
+              let a12 = R.next();
+              return gT(a12, b11, { [b6.Headers.AuthStatus]: "signed-out" }), a12;
+            }
+            return a11(b11, c11);
+          }, g10 = async (b11, c11) => fC ? f10(b11, c11) : a11(b11, c11);
+          return b10 && c10 ? g10(b10, c10) : g10;
+        });
+      })(async (a10, b10) => {
+        let { userId: c10, redirectToSignIn: d10 } = await a10();
+        if (hf(b10) && !c10) {
+          let a11 = new URL("/user", b10.url);
+          return a11.searchParams.set("redirectTo", b10.nextUrl.pathname), R.redirect(a11);
+        }
+        return R.next();
+      }), hh = { matcher: ["/user/:path*"] };
+      c(747);
+      let hi = { ...e }, hj = hi.middleware || hi.default, hk = "/src/middleware";
+      if ("function" != typeof hj) throw Object.defineProperty(Error(`The Middleware "${hk}" must export a \`middleware\` or a \`default\` function`), "__NEXT_ERROR_CODE", { value: "E120", enumerable: false, configurable: true });
+      function hl(a10) {
+        return a3({ ...a10, page: hk, handler: async (...a11) => {
+          try {
+            return await hj(...a11);
+          } catch (e10) {
+            let b10 = a11[0], c10 = new URL(b10.url), d10 = c10.pathname + c10.search;
+            throw await i(e10, { path: d10, method: b10.method, headers: Object.fromEntries(b10.headers.entries()) }, { routerKind: "Pages Router", routePath: "/middleware", routeType: "middleware", revalidateReason: void 0 }), e10;
+          }
+        } });
+      }
     }, 918: (a, b, c) => {
       "use strict";
       c.d(b, { s: () => d });
@@ -7370,7 +7359,7 @@ ${b12.message}`);
         }
       }
     } }, (a) => {
-      var b = a(a.s = 176);
+      var b = a(a.s = 843);
       (_ENTRIES = "undefined" == typeof _ENTRIES ? {} : _ENTRIES)["middleware_src/middleware"] = b;
     }]);
   }
@@ -7406,7 +7395,7 @@ var init_edgeFunctionHandler = __esm({
   "node_modules/@opennextjs/aws/dist/core/edgeFunctionHandler.js"() {
     globalThis._ENTRIES = {};
     globalThis.self = globalThis;
-    globalThis._ROUTES = [{ "name": "src/middleware", "page": "/", "regex": ["^\\/app(?:\\/(_next\\/data\\/[^/]{1,}))?\\/user(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json)?[\\/#\\?]?$", "^\\/app(?:\\/(_next\\/data\\/[^/]{1,}))?\\/admin(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json)?[\\/#\\?]?$"] }];
+    globalThis._ROUTES = [{ "name": "src/middleware", "page": "/", "regex": ["^\\/app(?:\\/(_next\\/data\\/[^/]{1,}))?\\/user(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json)?[\\/#\\?]?$"] }];
     require_edge_runtime_webpack();
     require_middleware();
   }
@@ -7559,14 +7548,14 @@ globalThis.__dirname ??= "";
 var NEXT_DIR = path.join(__dirname, ".next");
 var OPEN_NEXT_DIR = path.join(__dirname, ".open-next");
 debug({ NEXT_DIR, OPEN_NEXT_DIR });
-var NextConfig = { "env": {}, "webpack": null, "eslint": { "ignoreDuringBuilds": false }, "typescript": { "ignoreBuildErrors": false, "tsconfigPath": "tsconfig.json" }, "typedRoutes": false, "distDir": ".next", "cleanDistDir": true, "assetPrefix": "/app", "cacheMaxMemorySize": 52428800, "configOrigin": "next.config.js", "useFileSystemPublicRoutes": true, "generateEtags": true, "pageExtensions": ["tsx", "ts", "jsx", "js"], "poweredByHeader": true, "compress": true, "images": { "deviceSizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840], "imageSizes": [16, 32, 48, 64, 96, 128, 256, 384], "path": "/app/_next/image", "loader": "default", "loaderFile": "", "domains": [], "disableStaticImages": false, "minimumCacheTTL": 60, "formats": ["image/webp"], "dangerouslyAllowSVG": false, "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;", "contentDispositionType": "attachment", "remotePatterns": [], "unoptimized": false }, "devIndicators": { "position": "bottom-left" }, "onDemandEntries": { "maxInactiveAge": 6e4, "pagesBufferLength": 5 }, "amp": { "canonicalBase": "/app" }, "basePath": "/app", "sassOptions": {}, "trailingSlash": false, "i18n": null, "productionBrowserSourceMaps": false, "excludeDefaultMomentLocales": true, "serverRuntimeConfig": {}, "publicRuntimeConfig": {}, "reactProductionProfiling": false, "reactStrictMode": null, "reactMaxHeadersLength": 6e3, "httpAgentOptions": { "keepAlive": true }, "logging": {}, "compiler": {}, "expireTime": 31536e3, "staticPageGenerationTimeout": 60, "output": "standalone", "modularizeImports": { "@mui/icons-material": { "transform": "@mui/icons-material/{{member}}" }, "lodash": { "transform": "lodash/{{member}}" } }, "outputFileTracingRoot": "/Users/zamani/Desktop/booking-main", "experimental": { "useSkewCookie": false, "cacheLife": { "default": { "stale": 300, "revalidate": 900, "expire": 4294967294 }, "seconds": { "stale": 30, "revalidate": 1, "expire": 60 }, "minutes": { "stale": 300, "revalidate": 60, "expire": 3600 }, "hours": { "stale": 300, "revalidate": 3600, "expire": 86400 }, "days": { "stale": 300, "revalidate": 86400, "expire": 604800 }, "weeks": { "stale": 300, "revalidate": 604800, "expire": 2592e3 }, "max": { "stale": 300, "revalidate": 2592e3, "expire": 4294967294 } }, "cacheHandlers": {}, "cssChunking": true, "multiZoneDraftMode": false, "appNavFailHandling": false, "prerenderEarlyExit": true, "serverMinification": true, "serverSourceMaps": false, "linkNoTouchStart": false, "caseSensitiveRoutes": false, "clientSegmentCache": false, "clientParamParsing": false, "dynamicOnHover": false, "preloadEntriesOnStart": true, "clientRouterFilter": true, "clientRouterFilterRedirects": false, "fetchCacheKeyPrefix": "", "middlewarePrefetch": "flexible", "optimisticClientCache": true, "manualClientBasePath": false, "cpus": 7, "memoryBasedWorkersCount": false, "imgOptConcurrency": null, "imgOptTimeoutInSeconds": 7, "imgOptMaxInputPixels": 268402689, "imgOptSequentialRead": null, "imgOptSkipMetadata": null, "isrFlushToDisk": true, "workerThreads": false, "optimizeCss": false, "nextScriptWorkers": false, "scrollRestoration": false, "externalDir": false, "disableOptimizedLoading": false, "gzipSize": true, "craCompat": false, "esmExternals": true, "fullySpecified": false, "swcTraceProfiling": false, "forceSwcTransforms": false, "largePageDataBytes": 128e3, "typedEnv": false, "parallelServerCompiles": false, "parallelServerBuildTraces": false, "ppr": false, "authInterrupts": false, "webpackMemoryOptimizations": false, "optimizeServerReact": true, "viewTransition": false, "routerBFCache": false, "removeUncaughtErrorAndRejectionListeners": false, "validateRSCRequestHeaders": false, "staleTimes": { "dynamic": 0, "static": 300 }, "serverComponentsHmrCache": true, "staticGenerationMaxConcurrency": 8, "staticGenerationMinPagesPerWorker": 25, "cacheComponents": false, "inlineCss": false, "useCache": false, "globalNotFound": false, "devtoolSegmentExplorer": true, "browserDebugInfoInTerminal": false, "optimizeRouterScrolling": false, "middlewareClientMaxBodySize": 10485760, "optimizePackageImports": ["lucide-react", "date-fns", "lodash-es", "ramda", "antd", "react-bootstrap", "ahooks", "@ant-design/icons", "@headlessui/react", "@headlessui-float/react", "@heroicons/react/20/solid", "@heroicons/react/24/solid", "@heroicons/react/24/outline", "@visx/visx", "@tremor/react", "rxjs", "@mui/material", "@mui/icons-material", "recharts", "react-use", "effect", "@effect/schema", "@effect/platform", "@effect/platform-node", "@effect/platform-browser", "@effect/platform-bun", "@effect/sql", "@effect/sql-mssql", "@effect/sql-mysql2", "@effect/sql-pg", "@effect/sql-sqlite-node", "@effect/sql-sqlite-bun", "@effect/sql-sqlite-wasm", "@effect/sql-sqlite-react-native", "@effect/rpc", "@effect/rpc-http", "@effect/typeclass", "@effect/experimental", "@effect/opentelemetry", "@material-ui/core", "@material-ui/icons", "@tabler/icons-react", "mui-core", "react-icons/ai", "react-icons/bi", "react-icons/bs", "react-icons/cg", "react-icons/ci", "react-icons/di", "react-icons/fa", "react-icons/fa6", "react-icons/fc", "react-icons/fi", "react-icons/gi", "react-icons/go", "react-icons/gr", "react-icons/hi", "react-icons/hi2", "react-icons/im", "react-icons/io", "react-icons/io5", "react-icons/lia", "react-icons/lib", "react-icons/lu", "react-icons/md", "react-icons/pi", "react-icons/ri", "react-icons/rx", "react-icons/si", "react-icons/sl", "react-icons/tb", "react-icons/tfi", "react-icons/ti", "react-icons/vsc", "react-icons/wi"], "trustHostHeader": false, "isExperimentalCompile": false }, "htmlLimitedBots": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight", "bundlePagesRouterDependencies": false, "configFileName": "next.config.js", "turbopack": { "root": "/Users/zamani/Desktop/booking-main" } };
-var BuildId = "O3FPcNtajrIevrdtuQQzb";
+var NextConfig = { "env": {}, "webpack": null, "eslint": { "ignoreDuringBuilds": false }, "typescript": { "ignoreBuildErrors": false, "tsconfigPath": "tsconfig.json" }, "typedRoutes": false, "distDir": ".next", "cleanDistDir": true, "assetPrefix": "/app", "cacheMaxMemorySize": 52428800, "configOrigin": "next.config.js", "useFileSystemPublicRoutes": true, "generateEtags": true, "pageExtensions": ["tsx", "ts", "jsx", "js"], "poweredByHeader": true, "compress": true, "images": { "deviceSizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840], "imageSizes": [16, 32, 48, 64, 96, 128, 256, 384], "path": "/app/_next/image", "loader": "default", "loaderFile": "", "domains": [], "disableStaticImages": false, "minimumCacheTTL": 60, "formats": ["image/webp"], "dangerouslyAllowSVG": false, "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;", "contentDispositionType": "attachment", "remotePatterns": [], "unoptimized": true }, "devIndicators": { "position": "bottom-left" }, "onDemandEntries": { "maxInactiveAge": 6e4, "pagesBufferLength": 5 }, "amp": { "canonicalBase": "/app" }, "basePath": "/app", "sassOptions": {}, "trailingSlash": false, "i18n": null, "productionBrowserSourceMaps": false, "excludeDefaultMomentLocales": true, "serverRuntimeConfig": {}, "publicRuntimeConfig": {}, "reactProductionProfiling": false, "reactStrictMode": null, "reactMaxHeadersLength": 6e3, "httpAgentOptions": { "keepAlive": true }, "logging": {}, "compiler": {}, "expireTime": 31536e3, "staticPageGenerationTimeout": 60, "output": "standalone", "modularizeImports": { "@mui/icons-material": { "transform": "@mui/icons-material/{{member}}" }, "lodash": { "transform": "lodash/{{member}}" } }, "outputFileTracingRoot": "/Users/zamani/Desktop/booking-main", "experimental": { "useSkewCookie": false, "cacheLife": { "default": { "stale": 300, "revalidate": 900, "expire": 4294967294 }, "seconds": { "stale": 30, "revalidate": 1, "expire": 60 }, "minutes": { "stale": 300, "revalidate": 60, "expire": 3600 }, "hours": { "stale": 300, "revalidate": 3600, "expire": 86400 }, "days": { "stale": 300, "revalidate": 86400, "expire": 604800 }, "weeks": { "stale": 300, "revalidate": 604800, "expire": 2592e3 }, "max": { "stale": 300, "revalidate": 2592e3, "expire": 4294967294 } }, "cacheHandlers": {}, "cssChunking": true, "multiZoneDraftMode": false, "appNavFailHandling": false, "prerenderEarlyExit": true, "serverMinification": true, "serverSourceMaps": false, "linkNoTouchStart": false, "caseSensitiveRoutes": false, "clientSegmentCache": false, "clientParamParsing": false, "dynamicOnHover": false, "preloadEntriesOnStart": true, "clientRouterFilter": true, "clientRouterFilterRedirects": false, "fetchCacheKeyPrefix": "", "middlewarePrefetch": "flexible", "optimisticClientCache": true, "manualClientBasePath": false, "cpus": 7, "memoryBasedWorkersCount": false, "imgOptConcurrency": null, "imgOptTimeoutInSeconds": 7, "imgOptMaxInputPixels": 268402689, "imgOptSequentialRead": null, "imgOptSkipMetadata": null, "isrFlushToDisk": true, "workerThreads": false, "optimizeCss": false, "nextScriptWorkers": false, "scrollRestoration": false, "externalDir": false, "disableOptimizedLoading": false, "gzipSize": true, "craCompat": false, "esmExternals": true, "fullySpecified": false, "swcTraceProfiling": false, "forceSwcTransforms": false, "largePageDataBytes": 128e3, "typedEnv": false, "parallelServerCompiles": false, "parallelServerBuildTraces": false, "ppr": false, "authInterrupts": false, "webpackMemoryOptimizations": false, "optimizeServerReact": true, "viewTransition": false, "routerBFCache": false, "removeUncaughtErrorAndRejectionListeners": false, "validateRSCRequestHeaders": false, "staleTimes": { "dynamic": 0, "static": 300 }, "serverComponentsHmrCache": true, "staticGenerationMaxConcurrency": 8, "staticGenerationMinPagesPerWorker": 25, "cacheComponents": false, "inlineCss": false, "useCache": false, "globalNotFound": false, "devtoolSegmentExplorer": true, "browserDebugInfoInTerminal": false, "optimizeRouterScrolling": false, "middlewareClientMaxBodySize": 10485760, "optimizePackageImports": ["lucide-react", "date-fns", "lodash-es", "ramda", "antd", "react-bootstrap", "ahooks", "@ant-design/icons", "@headlessui/react", "@headlessui-float/react", "@heroicons/react/20/solid", "@heroicons/react/24/solid", "@heroicons/react/24/outline", "@visx/visx", "@tremor/react", "rxjs", "@mui/material", "@mui/icons-material", "recharts", "react-use", "effect", "@effect/schema", "@effect/platform", "@effect/platform-node", "@effect/platform-browser", "@effect/platform-bun", "@effect/sql", "@effect/sql-mssql", "@effect/sql-mysql2", "@effect/sql-pg", "@effect/sql-sqlite-node", "@effect/sql-sqlite-bun", "@effect/sql-sqlite-wasm", "@effect/sql-sqlite-react-native", "@effect/rpc", "@effect/rpc-http", "@effect/typeclass", "@effect/experimental", "@effect/opentelemetry", "@material-ui/core", "@material-ui/icons", "@tabler/icons-react", "mui-core", "react-icons/ai", "react-icons/bi", "react-icons/bs", "react-icons/cg", "react-icons/ci", "react-icons/di", "react-icons/fa", "react-icons/fa6", "react-icons/fc", "react-icons/fi", "react-icons/gi", "react-icons/go", "react-icons/gr", "react-icons/hi", "react-icons/hi2", "react-icons/im", "react-icons/io", "react-icons/io5", "react-icons/lia", "react-icons/lib", "react-icons/lu", "react-icons/md", "react-icons/pi", "react-icons/ri", "react-icons/rx", "react-icons/si", "react-icons/sl", "react-icons/tb", "react-icons/tfi", "react-icons/ti", "react-icons/vsc", "react-icons/wi"], "trustHostHeader": false, "isExperimentalCompile": false }, "htmlLimitedBots": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight", "bundlePagesRouterDependencies": false, "configFileName": "next.config.js", "turbopack": { "root": "/Users/zamani/Desktop/booking-main" } };
+var BuildId = "WJjp2LTBHViu6hZrVywsE";
 var RoutesManifest = { "basePath": "/app", "rewrites": { "beforeFiles": [], "afterFiles": [], "fallback": [] }, "redirects": [{ "source": "/app/", "destination": "/app", "basePath": false, "internal": true, "statusCode": 308, "regex": "^/app/$" }, { "source": "/:path+/", "destination": "/:path+", "internal": true, "statusCode": 308, "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$" }], "routes": { "static": [{ "page": "/", "regex": "^/(?:/)?$", "routeKeys": {}, "namedRegex": "^/(?:/)?$" }, { "page": "/_not-found", "regex": "^/_not\\-found(?:/)?$", "routeKeys": {}, "namedRegex": "^/_not\\-found(?:/)?$" }, { "page": "/about", "regex": "^/about(?:/)?$", "routeKeys": {}, "namedRegex": "^/about(?:/)?$" }, { "page": "/admin", "regex": "^/admin(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin(?:/)?$" }, { "page": "/admin/ContentManagement", "regex": "^/admin/ContentManagement(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/ContentManagement(?:/)?$" }, { "page": "/admin/OperatingHours", "regex": "^/admin/OperatingHours(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/OperatingHours(?:/)?$" }, { "page": "/admin/Reports", "regex": "^/admin/Reports(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/Reports(?:/)?$" }, { "page": "/admin/Services", "regex": "^/admin/Services(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/Services(?:/)?$" }, { "page": "/admin/Team", "regex": "^/admin/Team(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/Team(?:/)?$" }, { "page": "/booking", "regex": "^/booking(?:/)?$", "routeKeys": {}, "namedRegex": "^/booking(?:/)?$" }, { "page": "/client", "regex": "^/client(?:/)?$", "routeKeys": {}, "namedRegex": "^/client(?:/)?$" }, { "page": "/contact", "regex": "^/contact(?:/)?$", "routeKeys": {}, "namedRegex": "^/contact(?:/)?$" }, { "page": "/favicon.ico", "regex": "^/favicon\\.ico(?:/)?$", "routeKeys": {}, "namedRegex": "^/favicon\\.ico(?:/)?$" }, { "page": "/user", "regex": "^/user(?:/)?$", "routeKeys": {}, "namedRegex": "^/user(?:/)?$" }], "dynamic": [{ "page": "/admin/booking/[id]", "regex": "^/admin/booking/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/admin/booking/(?<nxtPid>[^/]+?)(?:/)?$" }, { "page": "/api/booking/[id]", "regex": "^/api/booking/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/api/booking/(?<nxtPid>[^/]+?)(?:/)?$" }, { "page": "/api/booking-settings/[id]", "regex": "^/api/booking\\-settings/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/api/booking\\-settings/(?<nxtPid>[^/]+?)(?:/)?$" }, { "page": "/api/operating-hours/[id]", "regex": "^/api/operating\\-hours/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/api/operating\\-hours/(?<nxtPid>[^/]+?)(?:/)?$" }, { "page": "/user/[id]", "regex": "^/user/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/user/(?<nxtPid>[^/]+?)(?:/)?$" }], "data": { "static": [], "dynamic": [] } }, "locales": [] };
 var ConfigHeaders = [];
-var PrerenderManifest = { "version": 4, "routes": { "/favicon.ico": { "initialHeaders": { "cache-control": "public, max-age=0, must-revalidate", "content-type": "image/x-icon", "x-next-cache-tags": "_N_T_/layout,_N_T_/favicon.ico/layout,_N_T_/favicon.ico/route,_N_T_/favicon.ico" }, "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/favicon.ico", "dataRoute": null, "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/_not-found": { "initialStatus": 404, "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/_not-found", "dataRoute": "/_not-found.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/booking": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/booking", "dataRoute": "/booking.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/user": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/user", "dataRoute": "/user.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/client": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/client", "dataRoute": "/client.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/about": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/about", "dataRoute": "/about.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/contact": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/contact", "dataRoute": "/contact.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/", "dataRoute": "/index.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] } }, "dynamicRoutes": {}, "notFoundRoutes": [], "preview": { "previewModeId": "b8f70953b48aca022e519f5b58b730f7", "previewModeSigningKey": "31e633223abb0763a93e2a25d1f45937093b72e9ccea7b0e2539dd66448810c3", "previewModeEncryptionKey": "bf3e414b183e63d2158635cbad4dc2d81125c198bb5205329eef158a29f75219" } };
-var MiddlewareManifest = { "version": 3, "middleware": { "/": { "files": ["server/edge-runtime-webpack.js", "server/src/middleware.js"], "name": "src/middleware", "page": "/", "matchers": [{ "regexp": "^\\/app(?:\\/(_next\\/data\\/[^/]{1,}))?\\/user(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json)?[\\/#\\?]?$", "originalSource": "/user/:path*" }, { "regexp": "^\\/app(?:\\/(_next\\/data\\/[^/]{1,}))?\\/admin(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json)?[\\/#\\?]?$", "originalSource": "/admin/:path*" }], "wasm": [], "assets": [], "env": { "__NEXT_BUILD_ID": "O3FPcNtajrIevrdtuQQzb", "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "OyCrckLJylT0Q+Ip2T9wU5iG50yY7oppBwhFacrEWuU=", "__NEXT_PREVIEW_MODE_ID": "b8f70953b48aca022e519f5b58b730f7", "__NEXT_PREVIEW_MODE_SIGNING_KEY": "31e633223abb0763a93e2a25d1f45937093b72e9ccea7b0e2539dd66448810c3", "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "bf3e414b183e63d2158635cbad4dc2d81125c198bb5205329eef158a29f75219" } } }, "functions": {}, "sortedMiddleware": ["/"] };
-var AppPathRoutesManifest = { "/_not-found/page": "/_not-found", "/api/User/route": "/api/User", "/api/booking-settings/route": "/api/booking-settings", "/api/booking-settings/[id]/route": "/api/booking-settings/[id]", "/api/booking/[id]/route": "/api/booking/[id]", "/api/booking/route": "/api/booking", "/api/operating-hours/[id]/route": "/api/operating-hours/[id]", "/api/services/route": "/api/services", "/favicon.ico/route": "/favicon.ico", "/api/operating-hours/route": "/api/operating-hours", "/api/team/getActiveProvider/route": "/api/team/getActiveProvider", "/api/team/route": "/api/team", "/(public)/about/page": "/about", "/(public)/booking/page": "/booking", "/(public)/contact/page": "/contact", "/(public)/client/page": "/client", "/(public)/user/page": "/user", "/(public)/page": "/", "/admin/OperatingHours/page": "/admin/OperatingHours", "/admin/Reports/page": "/admin/Reports", "/admin/Team/page": "/admin/Team", "/admin/Services/page": "/admin/Services", "/admin/booking/[id]/page": "/admin/booking/[id]", "/admin/page": "/admin", "/(public)/user/[id]/page": "/user/[id]", "/admin/ContentManagement/page": "/admin/ContentManagement" };
-var FunctionsConfigManifest = { "version": 1, "functions": {} };
+var PrerenderManifest = { "version": 4, "routes": { "/favicon.ico": { "initialHeaders": { "cache-control": "public, max-age=0, must-revalidate", "content-type": "image/x-icon", "x-next-cache-tags": "_N_T_/layout,_N_T_/favicon.ico/layout,_N_T_/favicon.ico/route,_N_T_/favicon.ico" }, "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/favicon.ico", "dataRoute": null, "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/_not-found": { "initialStatus": 404, "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/_not-found", "dataRoute": "/_not-found.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/booking": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/booking", "dataRoute": "/booking.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/contact": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/contact", "dataRoute": "/contact.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/", "dataRoute": "/index.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/admin/ContentManagement": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/admin/ContentManagement", "dataRoute": "/admin/ContentManagement.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/admin/OperatingHours": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/admin/OperatingHours", "dataRoute": "/admin/OperatingHours.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/admin/Reports": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/admin/Reports", "dataRoute": "/admin/Reports.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/admin/Services": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/admin/Services", "dataRoute": "/admin/Services.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/admin": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/admin", "dataRoute": "/admin.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/user": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/user", "dataRoute": "/user.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/about": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/about", "dataRoute": "/about.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/admin/Team": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/admin/Team", "dataRoute": "/admin/Team.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/client": { "experimentalBypassFor": [{ "type": "header", "key": "next-action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/client", "dataRoute": "/client.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] } }, "dynamicRoutes": {}, "notFoundRoutes": [], "preview": { "previewModeId": "99c5037e24fd9e760446932768573bca", "previewModeSigningKey": "1f3080dea302702a50b1881ed3d3770e2f864f51a1c299fa643943ded07fb8dc", "previewModeEncryptionKey": "cd4d09ac1205bfdc91311d4f51dd4566a5c8097e5d46c5428424683d887ba9c7" } };
+var MiddlewareManifest = { "version": 3, "middleware": { "/": { "files": ["server/edge-runtime-webpack.js", "server/src/middleware.js"], "name": "src/middleware", "page": "/", "matchers": [{ "regexp": "^\\/app(?:\\/(_next\\/data\\/[^/]{1,}))?\\/user(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json)?[\\/#\\?]?$", "originalSource": "/user/:path*" }], "wasm": [], "assets": [], "env": { "__NEXT_BUILD_ID": "WJjp2LTBHViu6hZrVywsE", "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "skEKo3Q0zl6uWvEdNw5814HaAC0tPXua/nqnK265pjg=", "__NEXT_PREVIEW_MODE_ID": "99c5037e24fd9e760446932768573bca", "__NEXT_PREVIEW_MODE_SIGNING_KEY": "1f3080dea302702a50b1881ed3d3770e2f864f51a1c299fa643943ded07fb8dc", "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "cd4d09ac1205bfdc91311d4f51dd4566a5c8097e5d46c5428424683d887ba9c7" } } }, "functions": {}, "sortedMiddleware": ["/"] };
+var AppPathRoutesManifest = { "/_not-found/page": "/_not-found", "/favicon.ico/route": "/favicon.ico", "/api/booking-settings/route": "/api/booking-settings", "/api/User/route": "/api/User", "/api/booking/route": "/api/booking", "/api/team/getActiveProvider/route": "/api/team/getActiveProvider", "/api/booking-settings/[id]/route": "/api/booking-settings/[id]", "/api/operating-hours/route": "/api/operating-hours", "/api/operating-hours/[id]/route": "/api/operating-hours/[id]", "/api/services/route": "/api/services", "/api/booking/[id]/route": "/api/booking/[id]", "/api/team/route": "/api/team", "/(public)/about/page": "/about", "/(public)/client/page": "/client", "/(public)/booking/page": "/booking", "/(public)/contact/page": "/contact", "/(public)/page": "/", "/(public)/user/page": "/user", "/admin/Services/page": "/admin/Services", "/admin/OperatingHours/page": "/admin/OperatingHours", "/admin/Reports/page": "/admin/Reports", "/admin/ContentManagement/page": "/admin/ContentManagement", "/admin/Team/page": "/admin/Team", "/admin/page": "/admin", "/admin/booking/[id]/page": "/admin/booking/[id]", "/(public)/user/[id]/page": "/user/[id]" };
+var FunctionsConfigManifest = { "version": 1, "functions": { "/user/[id]": {} } };
 var PagesManifest = { "/_app": "pages/_app.js", "/_error": "pages/_error.js", "/_document": "pages/_document.js", "/404": "pages/404.html" };
 process.env.NEXT_BUILD_ID = BuildId;
 
@@ -8035,6 +8024,9 @@ init_logger();
 var CACHE_ONE_YEAR = 60 * 60 * 24 * 365;
 var CACHE_ONE_MONTH = 60 * 60 * 24 * 30;
 var VARY_HEADER = "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Next-Url";
+var NEXT_SEGMENT_PREFETCH_HEADER = "next-router-segment-prefetch";
+var NEXT_PRERENDER_HEADER = "x-nextjs-prerender";
+var NEXT_POSTPONED_HEADER = "x-nextjs-postponed";
 async function computeCacheControl(path3, body, host, revalidate, lastModified) {
   let finalRevalidate = CACHE_ONE_YEAR;
   const existingRoute = Object.entries(PrerenderManifest.routes).find((p) => p[0] === path3)?.[1];
@@ -8090,22 +8082,45 @@ async function computeCacheControl(path3, body, host, revalidate, lastModified) 
     etag
   };
 }
+function getBodyForAppRouter(event, cachedValue) {
+  if (cachedValue.type !== "app") {
+    throw new Error("getBodyForAppRouter called with non-app cache value");
+  }
+  try {
+    const segmentHeader = `${event.headers[NEXT_SEGMENT_PREFETCH_HEADER]}`;
+    const isSegmentResponse = Boolean(segmentHeader) && segmentHeader in (cachedValue.segmentData || {});
+    const body = isSegmentResponse ? cachedValue.segmentData[segmentHeader] : cachedValue.rsc;
+    return {
+      body,
+      additionalHeaders: isSegmentResponse ? { [NEXT_PRERENDER_HEADER]: "1", [NEXT_POSTPONED_HEADER]: "2" } : {}
+    };
+  } catch (e) {
+    error("Error while getting body for app router from cache:", e);
+    return { body: cachedValue.rsc, additionalHeaders: {} };
+  }
+}
 async function generateResult(event, localizedPath, cachedValue, lastModified) {
   debug("Returning result from experimental cache");
   let body = "";
   let type = "application/octet-stream";
   let isDataRequest = false;
-  switch (cachedValue.type) {
-    case "app":
-      isDataRequest = Boolean(event.headers.rsc);
-      body = isDataRequest ? cachedValue.rsc : cachedValue.html;
-      type = isDataRequest ? "text/x-component" : "text/html; charset=utf-8";
-      break;
-    case "page":
-      isDataRequest = Boolean(event.query.__nextDataReq);
-      body = isDataRequest ? JSON.stringify(cachedValue.json) : cachedValue.html;
-      type = isDataRequest ? "application/json" : "text/html; charset=utf-8";
-      break;
+  let additionalHeaders = {};
+  if (cachedValue.type === "app") {
+    isDataRequest = Boolean(event.headers.rsc);
+    if (isDataRequest) {
+      const { body: appRouterBody, additionalHeaders: appHeaders } = getBodyForAppRouter(event, cachedValue);
+      body = appRouterBody;
+      additionalHeaders = appHeaders;
+    } else {
+      body = cachedValue.html;
+    }
+    type = isDataRequest ? "text/x-component" : "text/html; charset=utf-8";
+  } else if (cachedValue.type === "page") {
+    isDataRequest = Boolean(event.query.__nextDataReq);
+    body = isDataRequest ? JSON.stringify(cachedValue.json) : cachedValue.html;
+    type = isDataRequest ? "application/json" : "text/html; charset=utf-8";
+  } else {
+    throw new Error("generateResult called with unsupported cache value type, only 'app' and 'page' are supported");
   }
   const cacheControl = await computeCacheControl(localizedPath, body, event.headers.host, cachedValue.revalidate, lastModified);
   return {
@@ -8122,7 +8137,8 @@ async function generateResult(event, localizedPath, cachedValue, lastModified) {
       ...cacheControl,
       "content-type": type,
       ...cachedValue.meta?.headers,
-      vary: VARY_HEADER
+      vary: VARY_HEADER,
+      ...additionalHeaders
     }
   };
 }

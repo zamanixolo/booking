@@ -19,13 +19,17 @@ interface Booking {
     lastName: string
   }
 }
-
+interface Provider {
+  
+  firstName: string
+  lastName: string
+}
 function BookingHistory({ userId }: Props) {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [openmodule, setOpenModule] = useState(false)
   const [selectedBooking, setSelectedBooking] = useState<string | null>(null)
-  const [availableProviders,setAvailableProviders]=useState([])
+  const [availableProviders,setAvailableProviders]=useState<Provider[]>([])
   const [bookingData,setBookingData]=useState({date: null,
     id: null,
     providerId:null,
@@ -38,10 +42,11 @@ function BookingHistory({ userId }: Props) {
       
       setIsLoading(true)
       try {
-        const response = await fetch(`/api/booking?clientId=${userId}`)
-        const data = await response.json() as any
-        setBookings(data)
+        const response = await fetch(`/app/api/booking?clientId=${userId}`)
+        const data: Booking[] = await response.json()
         console.log(data)
+        setBookings(data)
+   
       } catch (error) {
         console.error('Error fetching bookings:', error)
       } finally {
@@ -54,8 +59,8 @@ function BookingHistory({ userId }: Props) {
 
   useEffect(()=>{
     const getProviders=async()=>{
-      const res=await fetch('/api/team/getActiveProvider')
-      const providerdata=await res.json() as any
+      const res=await fetch('/app/api/team/getActiveProvider')
+      const providerdata: Provider[] =await res.json()
       setAvailableProviders(providerdata)
     }
     getProviders()
@@ -79,7 +84,7 @@ function BookingHistory({ userId }: Props) {
   }
   const bookingupdate=async(id:string)=>{
     console.log(id)
-    const res=await fetch(`/api/booking/${id}`,{
+    const res=await fetch(`/app/api/booking/${id}`,{
       method:'PATCH',
       headers:{ 'Content-Type': 'application/json' },
       body:JSON.stringify({id:id,updateData:bookingData})
@@ -214,17 +219,17 @@ function BookingHistory({ userId }: Props) {
             >
               <div className="flex justify-between">
                 <div>
-                  <h3 className="font-medium">{booking.services.name}</h3>
+                  <h3 className="font-medium">{booking.services?.name}</h3>
                   <p className="text-sm text-gray-600">
-                    {new Date(booking.date).toLocaleDateString()} at {booking.time}
+                    {new Date(booking.date).toLocaleDateString()} at {booking?.time}
                   </p>
                   <p className="text-sm text-gray-600">
-                    with {booking.provider.firstName} {booking.provider.lastName}
+                    with {booking.provider?.firstName} {booking.provider?.lastName}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium">R{booking.price}</p>
-                  <p className="text-sm text-gray-600">{booking.status}</p>
+                  <p className="font-medium">R{booking?.price}</p>
+                  <p className="text-sm text-gray-600">{booking?.status}</p>
                 </div>
               </div>
             </div>

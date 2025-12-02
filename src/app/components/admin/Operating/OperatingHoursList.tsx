@@ -70,11 +70,14 @@ export default function OperatingHoursList({ providers }: OperatingHoursListProp
     setLoading(true)
     setError('')
     try {
-      const res = await fetch(`/api/operating-hours`)
+      const res = await fetch(`/app/api/operating-hours`)
       if (res.ok) {
-        const data = await res.json() as any
-        console.log(data)
-        setOperatingHours(data)
+        const data:OperatingHours[] = await res.json()
+          const normalized = data.map(h => ({
+        ...h,
+         isActive: (h.isActive as any) === true || (h.isActive as any) === 'true', // <- converts string 'true' to boolean
+      }));
+        setOperatingHours(normalized )
       } else {
         setError('Failed to fetch operating hours')
       }
@@ -90,7 +93,7 @@ export default function OperatingHoursList({ providers }: OperatingHoursListProp
   },[])
   const handleToggleActive = async (id: string, isActive: boolean) => {
     try {
-      const res = await fetch(`/api/operating-hours/${id}`, {
+      const res = await fetch(`/app/api/operating-hours/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, isActive: !isActive })
@@ -112,12 +115,12 @@ export default function OperatingHoursList({ providers }: OperatingHoursListProp
     if (!confirm('Are you sure you want to delete these operating hours?')) return
 
     try {
-      const res = await fetch(`/api/operating-hours?id=${id}`, {
+      const res = await fetch(`/app/api/operating-hours/${id}`,{
         method: 'DELETE'
       })
 
       if (res.ok) {
-        // fetchOperatingHours(selectedProvider)
+        fetchOperatingHours()
       } else {
         setError('Failed to delete operating hours')
       }
@@ -173,10 +176,11 @@ export default function OperatingHoursList({ providers }: OperatingHoursListProp
                     </p>
                   </div>
                   <div className="flex items-center space-x-2">
+                 
                     <button
                       onClick={() => handleToggleActive(hours.id, hours.isActive)}
                       className={`px-3 py-1 rounded text-sm ${
-                        hours.isActive 
+                        hours.isActive
                           ? 'bg-green-100 text-green-800' 
                           : 'bg-gray-100 text-gray-800'
                       }`}

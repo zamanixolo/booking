@@ -38,9 +38,9 @@ if (!isSignedIn) {
       <SignIn 
         withSignUp={true}
         routing="hash"
-        redirectUrl={userId ? `/user/${userId}` : '/user'}
-        afterSignInUrl={userId ? `/user/${userId}` : '/user'}
-        afterSignUpUrl={userId ? `/user/${userId}` : '/user'}
+        redirectUrl={userId ? `/app/user/${userId}` : '/app/user'}
+        afterSignInUrl={userId ? `/app/user/${userId}` : '/app/user'}
+        afterSignUpUrl={userId ? `/app/user/${userId}` : '/app/user'}
       />
     </div>
   )

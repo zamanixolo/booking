@@ -48,10 +48,10 @@ function UpdateService({ openUpdateModule, serviceToEdit, onServiceUpdated }: Up
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log(serviceToEdit)
+   
     const getProviders = async () => {
       const res = await fetch('/api/team/getActiveProvider')
-      const providers = await res.json() as any
+      const providers:any = await res.json()
       setAvailableProviders(providers)
     }
     // getProviders()
@@ -109,7 +109,7 @@ function UpdateService({ openUpdateModule, serviceToEdit, onServiceUpdated }: Up
     try {
       console.log('🟡 Updating service with providers:', service.providers);
       
-      const response = await fetch(`/api/services`, {
+      const response = await fetch(`/app/api/services`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -118,11 +118,11 @@ function UpdateService({ openUpdateModule, serviceToEdit, onServiceUpdated }: Up
           description: service.description,
           // duration: service.duration,
           // price: service.price,
-          providers: service.providers
+          // providers: service.providers
         })
       });
       
-      const result = await response.json() as any;
+      const result:any = await response.json();
       console.log('🟢 Update result:', result);
       
       if (response.ok) {

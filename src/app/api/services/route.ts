@@ -1,115 +1,111 @@
 // src/app/api/services/route.ts
 
+// ✅ Force the Edge runtime (required for D1)
+// export const runtime = 'edge';
+
 import { NextResponse } from "next/server"
-import { 
-  createService, 
-  getAllServices, 
-  getServiceById, 
-  updateService, 
-  deleteService 
-} from "@/app/libs/services/services" // Corrected import path/filename
-import { getPrismaClient } from '@/app/libs/prisma'; // 🎯 Import the D1 client getter
+import { createService, getAllServices, getServiceById, updateService, deleteService } from "@/app/libs/services/services"
+
+// Define the expected shapes for request bodies
+interface CreateServiceRequestBody {
+  name: string;
+  description?: string;
+  providers?: string[]; 
+}
+
+interface UpdateServiceRequestBody {
+  id: string;
+  name?: string;
+  description?: string;
+  duration?: number;
+  price?: number;
+  isActive?: boolean;
+  providers?: string[]; 
+}
 
 
-// ✅ GET (Read All/Single by ID via searchParams)
+// ✅ GET (Read All or by ID)
 export async function GET(req: Request) {
-  // ✅ Instantiate Prisma inside the handler
-  const prisma = getPrismaClient();
-
   const { searchParams } = new URL(req.url)
   const id = searchParams.get("id")
 
   try {
     if (id) {
-      // ✅ Pass 'prisma' as the first argument
-      const service = await getServiceById(prisma, id);
+      const service = await getServiceById(id)
       if (!service) {
-        return NextResponse.json({ msg: "Service not found" }, { status: 404 });
+        return NextResponse.json({ msg: "Service not found" }, { status: 404 })
       }
-      return NextResponse.json(service, { status: 200 });
+      
+      return NextResponse.json(service, { status: 200 })
     }
 
-    // ✅ Pass 'prisma' as the first argument
-    const services = await getAllServices(prisma);
-    
-    return NextResponse.json(services, { status: 200 });
+    const services = await getAllServices()
+ 
+    return NextResponse.json(services, { status: 200 })
   } catch (error) {
-    console.error("Error fetching services:", error);
-    return NextResponse.json({ msg: "Failed to fetch services" }, { status: 500 });
+    console.error("Error fetching services:", error)
+    return NextResponse.json({ msg: "Failed to fetch services" }, { status: 500 })
   }
 }
 
 // ✅ POST (Create)
 export async function POST(req: Request) {
-  // ✅ Instantiate Prisma inside the handler
-  const prisma = getPrismaClient();
-
   try {
-    const body = await req.json() as any;
-    const { name, description } = body; // Destructure fields used for creation
+    // Type cast the request body
+    const body: CreateServiceRequestBody = await req.json();
+    const { name, description } = body;
 
     if (!name ) {
-      return NextResponse.json({ msg: "Missing required fields" }, { status: 400 });
+      return NextResponse.json({ msg: "Missing required fields" }, { status: 400 })
     }
 
-    // ✅ Pass 'prisma' as the first argument
-    const newService = await createService(prisma, { 
+    const newService = await createService({ 
+      id:`${name}-${Math.floor(Math.random() * 1000000)}`,
       name, 
       description, 
-    });
+      updatedAt:new Date().toString()
+    })
     
-    return NextResponse.json(newService, { status: 201 });
+    return NextResponse.json(newService, { status: 201 })
   } catch (error) {
-    console.error("Error creating service:", error);
-    return NextResponse.json({ msg: "Failed to create service" }, { status: 500 });
+    console.error("Error creating service:", error)
+    return NextResponse.json({ msg: "Failed to create service" }, { status: 500 })
   }
 }
 
 // ✅ PUT (Update)
 export async function PUT(req: Request) {
-  // ✅ Instantiate Prisma inside the handler
-  const prisma = getPrismaClient();
-
   try {
-    const body = await req.json() as any;
-    // Assuming 'id' is in the body for a generic PUT/PATCH route
-    const { id, name, providers } = body; 
+    // Type cast the request body
+    const body: UpdateServiceRequestBody = await req.json();
+    const { name,id } = body;
 
-    if (!id) {
-       return NextResponse.json({ msg: "Service ID is required for update" }, { status: 400 });
-    }
-
-    // ✅ Pass 'prisma' as the first argument
-    const updatedService = await updateService(prisma, id, {
+    const updatedService = await updateService(id, {
       name,
-      providers // Make sure this is passed
-    });
+      // providers // Make sure this is passed
+    })
 
-    return NextResponse.json(updatedService);
+    return NextResponse.json(updatedService)
   } catch (error) {
-    console.error("Error updating service:", error);
-    return NextResponse.json({ msg: "Failed to update service" }, { status: 500 });
+    console.error("Error updating service:", error)
+    return NextResponse.json({ msg: "Failed to update service" }, { status: 500 })
   }
 }
 
 // ✅ DELETE (Soft delete)
 export async function DELETE(req: Request) {
-  // ✅ Instantiate Prisma inside the handler
-  const prisma = getPrismaClient();
-
   try {
-    const body = await req.json() as any;
-    const { id } = body;
+    // Type cast the request body
+    const body: { serviceId: string } = await req.json();
 
-    if (!id) {
-      return NextResponse.json({ msg: "Service ID is required" }, { status: 400 });
+    if (!body) {
+      return NextResponse.json({ msg: "Service ID is required" }, { status: 400 })
     }
 
-    // ✅ Pass 'prisma' as the first argument
-    const deletedService = await deleteService(prisma, id);
-    return NextResponse.json(deletedService, { status: 200 });
+    const deletedService = await deleteService(body.toString())
+    return NextResponse.json( { status: 200 })
   } catch (error) {
-    console.error("Error deleting service:", error);
-    return NextResponse.json({ msg: "Failed to delete service" }, { status: 500 });
+    console.error("Error deleting service:", error)
+    return NextResponse.json({ msg: "Failed to delete service" }, { status: 500 })
   }
 }

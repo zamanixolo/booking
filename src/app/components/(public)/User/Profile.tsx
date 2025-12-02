@@ -29,14 +29,15 @@ function Profile({ id }: Props) {
     try {
       setIsLoading(true)
       
-        const res= await fetch('/api/User',{
+        const res= await fetch('/app/api/getUser',{
             method:'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({clerkId:id,userData}),
+            body: JSON.stringify({clerkId:id}),
         }) 
      
       if (res.ok) {
-        const data = await res.json() as any
+        const data:UserData = await res.json()
+        console.log(data)
         setUserData({
           email: data.email || '',
           firstName: data.firstName || '',
@@ -57,7 +58,7 @@ function Profile({ id }: Props) {
     e.preventDefault()
     try {
       setIsLoading(true)
-      const res = await fetch('/api/User', {
+      const res = await fetch('/app/api/User', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

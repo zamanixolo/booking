@@ -43,11 +43,11 @@ function ViewBooking() {
   const getBookings = async () => {
     try {
       setLoading(true)
-      const res = await fetch('/api/booking')
+      const res = await fetch('/app/api/booking')
       if (!res.ok) {
         throw new Error('Failed to fetch bookings')
       }
-      const data = await res.json() as any;
+      const data:Booking[] = await res.json()
       setBookings(data)
      
     } catch (err) {
@@ -119,11 +119,11 @@ function ViewBooking() {
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">
-                      {booking.services.name}
+                      {booking.services?.name}
                     </h3>
                     
                   </div>
-                  <span className={`px-2 py-1 text-xs font-medium ${getStatusColor(booking.status)}`}>
+                  <span className={`px-2 py-1 text-xs font-medium ${getStatusColor(booking?.status)}`}>
                     {booking.status}
                   </span>
                 </div>
@@ -132,7 +132,7 @@ function ViewBooking() {
                 <div className="mb-4">
                   <p className="text-sm font-medium text-gray-700">Provider</p>
                   <p className="text-sm text-gray-900">
-                    {booking.provider.firstName} {booking.provider.lastName}
+                    {booking.provider?.firstName} {booking.provider?.lastName}
                   </p>
                 </div>
 
@@ -141,9 +141,9 @@ function ViewBooking() {
                   <div className="mb-4">
                     <p className="text-sm font-medium text-gray-700">Client</p>
                     <p className="text-sm text-gray-900">
-                      {booking.client.firstName} {booking.client.lastName}
+                      {booking.client.firstName} {booking.client?.lastName}
                     </p>
-                    <p className="text-xs text-gray-500">{booking.client.email}</p>
+                    <p className="text-xs text-gray-500">{booking.client?.email}</p>
                   </div>
                 )}
 
@@ -158,14 +158,14 @@ function ViewBooking() {
                 <div className="mb-4">
                   <p className="text-sm font-medium text-gray-700">Session Details</p>
                   <p className="text-sm text-gray-900">{booking.sessionDuration} minutes</p>
-                  <p className="text-sm text-gray-900">R{booking.price.toFixed(2)}</p>
+                  <p className="text-sm text-gray-900">R{booking?.price?.toFixed(2)}</p>
                 </div>
 
                 {/* Special Requests */}
                 {booking.specialRequests && (
                   <div className="mb-4">
                     <p className="text-sm font-medium text-gray-700">Special Requests</p>
-                    <p className="text-sm text-gray-600">{booking.specialRequests}</p>
+                    <p className="text-sm text-gray-600">{booking?.specialRequests}</p>
                   </div>
                 )}
 

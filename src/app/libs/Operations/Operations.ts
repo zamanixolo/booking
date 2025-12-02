@@ -1,112 +1,109 @@
-// src/app/libs/operating-hours/OperatingHours.ts
+export interface OperatingHourType {
+  id: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
 
-import { OperatingHours, Prisma } from "@prisma/client";
-// 🎯 Import the shared D1 type definition
-import { D1PrismaClient } from '../prisma'; // Adjust the import path as necessary
+// Helper to format operating hours
+function formatOperatingHour(row: any): OperatingHourType {
+  return {
+    id: row.id,
+    dayOfWeek: row.dayOfWeek,
+    startTime: row.startTime,
+    endTime: row.endTime,
+    isActive: row.isActive ?? true,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+  };
+}
 
+// D1 runQuery helper
+async function runQuery(sql: string) {
+  const res = await fetch(process.env.CLOUDFLAIRAPI!, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.CLOUDFLARE_D1_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ sql }),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`D1 query failed: ${res.status} ${res.statusText} - ${text}`);
+  }
+  const data: any = await res.json();
+  return data.result || [];
+}
 
-// 🛑 OLD: const prisma = new PrismaClient(); // This line must be removed
+// CREATE / UPSERT
+export const createOrUpdateOperatingHour = async (
+  data: Partial<OperatingHourType>
+): Promise<OperatingHourType> => {
 
+  const now = new Date().toISOString();
 
-// Define common data types for clarity
-export type OperatingHourInput = {
-  dayOfWeek: number
-  startTime: string
-  endTime: string
-  isActive?: boolean
+  // Ensure timestamps exist
+  const record = {
+    ...data,
+    createdAt: data.createdAt || now,
+    updatedAt: now,
+  };
+
+  const columns = Object.keys(record).join(",");
+  const values = Object.values(record)
+    .map((v) => `'${v?.toString().replace("'", "''")}'`)
+    .join(",");
+
+  const sql = `
+    INSERT INTO OperatingHours (${columns})
+    VALUES (${values})
+    ON CONFLICT(dayOfWeek) DO UPDATE SET 
+      startTime   = excluded.startTime, 
+      endTime     = excluded.endTime, 
+      isActive    = excluded.isActive,
+      updatedAt   = '${now}'
+    RETURNING *;
+  `;
+
+  const result = await runQuery(sql);
+  return formatOperatingHour(result[0]);
+};
+// READ all
+export const getAllOperatingHours = async (): Promise<OperatingHourType[]> => {
+  const rows = await runQuery("SELECT * FROM OperatingHours ORDER BY dayOfWeek ASC;");
+  return rows[0].results;
 };
 
-export type OperatingHourUpdateInput = Partial<OperatingHourInput>;
+// READ by ID
+export const getOperatingHourById = async (id: string): Promise<OperatingHourType | null> => {
+  const rows = await runQuery(`SELECT * FROM OperatingHours WHERE id='${id}' LIMIT 1;`);
+  if (!rows.length) return null;
+  return formatOperatingHour(rows[0]);
+};
 
+// UPDATE by ID
+export const updateOperatingHour = async (id: string, data: Partial<OperatingHourType>): Promise<OperatingHourType> => {
+  const updates = Object.entries(data)
+    .map(([k,v]) => `${k}='${v?.toString().replace("'", "''")}'`)
+    .join(",");
+  
+  const sql = `UPDATE OperatingHours SET ${updates}, updatedAt=CURRENT_TIMESTAMP WHERE id='${id}' RETURNING *;`;
+  const result = await runQuery(sql);
+  return formatOperatingHour(result[0]);
+};
 
-// --- Operating Hours Management Functions ---
-// All functions now accept a 'prisma' instance as the first argument
-
-
-// 🟢 CREATE / UPSERT
-/**
- * Creates a new operating hour or updates an existing one based on the day of the week.
- * @param prisma The D1-compatible Prisma client instance.
- * @param data Operating hour data.
- */
-export async function createOrUpdateOperatingHour(
-  prisma: D1PrismaClient,
-  data: OperatingHourInput
-): Promise<OperatingHours> {
-  return await prisma.operatingHours.upsert({
-    where: { dayOfWeek: data.dayOfWeek },
-    update: {
-      startTime: data.startTime,
-      endTime: data.endTime,
-      isActive: data.isActive ?? true,
-    },
-    create: {
-      dayOfWeek: data.dayOfWeek,
-      startTime: data.startTime,
-      endTime: data.endTime,
-      isActive: data.isActive ?? true,
-    },
-  })
-}
-
-// 🟡 READ - all
-/**
- * Reads all operating hours, sorted by day of the week.
- * @param prisma The D1-compatible Prisma client instance.
- */
-export async function getAllOperatingHours(prisma: D1PrismaClient): Promise<OperatingHours[]> {
-  return await prisma.operatingHours.findMany({
-    orderBy: { dayOfWeek: 'asc' },
-  })
-}
-
-// 🟢 READ - single
-/**
- * Reads a single operating hour by its ID.
- * @param prisma The D1-compatible Prisma client instance.
- * @param id The operating hour's internal database UUID.
- */
-export async function getOperatingHourById(
-  prisma: D1PrismaClient,
-  id: string
-): Promise<OperatingHours | null> {
-  return await prisma.operatingHours.findUnique({
-    where: { id },
-  })
-}
-
-// 🟠 UPDATE
-/**
- * Updates a single operating hour by its ID.
- * @param prisma The D1-compatible Prisma client instance.
- * @param id The operating hour's internal database UUID.
- * @param data Data to update.
- */
-export async function updateOperatingHour(
-  prisma: D1PrismaClient,
-  id: string,
-  data: OperatingHourUpdateInput
-): Promise<OperatingHours> {
-  return await prisma.operatingHours.update({
-    where: { id },
-    data,
-  })
-}
-
-// 🔴 DELETE
-/**
- * Deletes a single operating hour by its ID.
- * @param prisma The D1-compatible Prisma client instance.
- * @param id The operating hour's internal database UUID.
- */
-export async function deleteOperatingHour(
-  prisma: D1PrismaClient,
-  id: string
-): Promise<OperatingHours> {
-  return await prisma.operatingHours.delete({
-    where: { id },
-  })
-}
+// DELETE by ID (soft delete)
+export const deleteOperatingHour = async (id: string): Promise<void> => {
+  console.log(`hour to delete :${id}`)
+  const sql = `DELETE FROM OperatingHours WHERE id='${id}';`;
+  const result = await runQuery(sql);
+  console.log(result)
+  return result;
+};
 
 
 // // CREATE Operating Hours (with upsert to handle duplicates)

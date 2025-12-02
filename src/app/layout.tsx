@@ -15,7 +15,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  
   return (
     <ClerkProvider publishableKey={publishableKey}>
     <html lang="en">

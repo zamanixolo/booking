@@ -1,4 +1,4 @@
-globalThis.disableIncrementalCache = false;globalThis.disableDynamoDBCache = false;globalThis.isNextAfter15 = true;globalThis.openNextDebug = false;globalThis.openNextVersion = "3.8.5";
+globalThis.disableIncrementalCache = false;globalThis.disableDynamoDBCache = false;globalThis.isNextAfter15 = true;globalThis.openNextDebug = false;globalThis.openNextVersion = "3.9.0";
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -291,6 +291,12 @@ var Cache = class {
       }
       if (cacheData?.type === "page" || cacheData?.type === "app") {
         if (globalThis.isNextAfter15 && cacheData?.type === "app") {
+          const segmentData = /* @__PURE__ */ new Map();
+          if (cacheData.segmentData) {
+            for (const [segmentPath, segmentContent] of Object.entries(cacheData.segmentData ?? {})) {
+              segmentData.set(segmentPath, Buffer.from(segmentContent));
+            }
+          }
           return {
             lastModified: _lastModified,
             value: {
@@ -299,7 +305,8 @@ var Cache = class {
               rscData: Buffer.from(cacheData.rsc),
               status: meta?.status,
               headers: meta?.headers,
-              postponed: meta?.postponed
+              postponed: meta?.postponed,
+              segmentData
             }
           };
         }

@@ -15,7 +15,7 @@
     {
       "binding": "DB",
       "database_name": "testlocaldb",
-      "database_id": "fde33126-2075-4aa9-9cab-9e2a83a22b7b", // <--- You MUST replace this
+      "database_id": "9e9acf33-d96e-42a6-9e88-6a482b9d17ba",
       "migrations_dir": "./migrations"
     }
   ]

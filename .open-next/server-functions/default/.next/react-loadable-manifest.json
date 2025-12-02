@@ -1,14 +1,8 @@
 {
   "../node_modules/@clerk/nextjs/dist/esm/app-router/client/ClerkProvider.js -> ./keyless-creator-reader.js": {
-    "id": 8484,
+    "id": 2074,
     "files": [
-      "static/chunks/484.4b1c7e68eaff280f.js"
-    ]
-  },
-  "app/admin/booking/[id]/page.tsx -> @/app/components/admin/ManageBooking/BookingDetails/BookingDetails": {
-    "id": 3710,
-    "files": [
-      "static/chunks/710.dd9d37bcb659999f.js"
+      "static/chunks/74.9e3c3a5c2833b801.js"
     ]
   }
 }

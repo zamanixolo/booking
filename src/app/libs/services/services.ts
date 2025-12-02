@@ -1,108 +1,111 @@
-// src/app/libs/services/Service.ts
-
-import { Service, Prisma } from "@prisma/client";
-// 🎯 Import the shared D1 type definition
-import { D1PrismaClient } from '../prisma'; // Adjust the import path as necessary
-
-
-// 🛑 OLD: const prisma = new PrismaClient(); // This line must be removed
-
-
-// Define common data types for clarity
-export type ServiceCreateInput = {
-  name: string;
-  description?: string | null;
-  providers?: string[]; // Assuming provider IDs are passed as strings
-};
-
-export type ServiceUpdateInput = {
-  name?: string;
-  description?: string;
-  duration?: number;
-  price?: number;
-  isActive?: boolean;
-  providers?: string[];
-};
-
-
-// --- Service Management Functions ---
-// All functions now accept a 'prisma' instance as the first argument
-
-/**
- * Create a new service.
- * @param prisma The D1-compatible Prisma client instance.
- * @param serviceData Service creation data.
- */
-export const createService = async (
-  prisma: D1PrismaClient,
-  serviceData: ServiceCreateInput
-): Promise<Service> => {
-  return await prisma.service.create({
-    data: {
-      name: serviceData.name,
-      description: serviceData.description,
-      // If connecting providers during creation, logic goes here
-    }
-  });
-};
-
-/**
- * READ all active services.
- * @param prisma The D1-compatible Prisma client instance.
- */
-export const getAllServices = async (prisma: D1PrismaClient): Promise<Service[]> => {
-  return await prisma.service.findMany({
-    where: { isActive: true }
-  });
-};
-
-/**
- * READ service by ID.
- * @param prisma The D1-compatible Prisma client instance.
- * @param id The service's internal database UUID.
- */
-export const getServiceById = async (
-  prisma: D1PrismaClient,
+export interface ServiceType {
   id: string
-): Promise<Service | null> => {
-  return await prisma.service.findUnique({
-    where: { id }
-  });
+  name: string
+  description?: string
+  duration?: number
+  price?: number
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+// ---------------------------
+// Helper to format service
+// ---------------------------
+function formatService(s: any): ServiceType {
+  return {
+    id: s.id,
+    name: s.name,
+    description: s.description || undefined,
+    duration: s.duration ?? undefined,
+    price: s.price ?? undefined,
+    isActive: s.isActive ?? true,
+    createdAt: s.createdAt,
+    updatedAt: s.updatedAt,
+  }
+}
+
+// ---------------------------
+// D1 runQuery helper
+// ---------------------------
+async function runQuery(sql: string) {
+  const res = await fetch(process.env.CLOUDFLAIRAPI!, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.CLOUDFLARE_D1_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ sql }),
+  })
+
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`D1 query failed: ${res.status} ${res.statusText} - ${text}`)
+  }
+
+  const data: any = await res.json()
+  return data.result || []
+}
+
+// ---------------------------
+// CREATE service
+// ---------------------------
+export const createService = async (data: Partial<ServiceType>): Promise<ServiceType> => {
+  const columns = Object.keys(data).join(",")
+  const values = Object.values(data)
+    .map((v) => `'${v?.toString().replace("'", "''")}'`)
+    .join(",")
+  const sql = `INSERT INTO Service (${columns}) VALUES (${values}) RETURNING *;`
+  const result = await runQuery(sql)
+  return formatService(result[0])
+}
+
+// ---------------------------
+// READ all services
+// ---------------------------
+export const getAllServices = async (): Promise<ServiceType[]> => {
+  const rows = await runQuery("SELECT * FROM Service;")
+
+  return rows[0].results
+}
+
+// ---------------------------
+// READ service by ID
+// ---------------------------
+export const getServiceById = async (id: string): Promise<ServiceType | null> => {
+  const rows = await runQuery(`SELECT * FROM Service WHERE id='${id}' LIMIT 1;`)
+  if (!rows.length) return null
+  return formatService(rows[0])
+}
+
+// ---------------------------
+// UPDATE service by ID
+// ---------------------------
+export const updateService = async (id: string, data: Partial<ServiceType>): Promise<ServiceType> => {
+  const updates = Object.entries(data)
+    .map(([k, v]) => `${k}='${v?.toString().replace("'", "''")}'`)
+    .join(",");
+
+  const sql = `
+    UPDATE Service 
+    SET ${updates}, updatedAt=CURRENT_TIMESTAMP 
+    WHERE id='${id}' 
+    RETURNING *;
+  `;
+
+  const result = await runQuery(sql);
+
+  // Cloudflare format → result[0].results[0]
+  const updatedRow = result[0].results[0];
+
+  return formatService(updatedRow);
 };
 
-/**
- * UPDATE Service by ID.
- * @param prisma The D1-compatible Prisma client instance.
- * @param id The service's internal database UUID.
- * @param updateData Data to update.
- */
-export const updateService = async (
-  prisma: D1PrismaClient,
-  id: string,
-  updateData: ServiceUpdateInput
-): Promise<Service> => {
-  return await prisma.service.update({
-    where: { id },
-    data: {
-      name: updateData.name,
-      description: updateData.description,
-      isActive: updateData.isActive,
-      // Logic for updating provider links would also go here if necessary
-    }
-  });
-};
 
-/**
- * DELETE Service (soft delete).
- * @param prisma The D1-compatible Prisma client instance.
- * @param id The service's internal database UUID.
- */
-export const deleteService = async (
-  prisma: D1PrismaClient,
-  id: string
-): Promise<Service> => {
-  return await prisma.service.update({
-    where: { id },
-    data: { isActive: false }
-  });
-};
+// ---------------------------
+// DELETE service (soft delete)
+// ---------------------------
+export const deleteService = async (id: string): Promise<void> => {
+
+  await runQuery(`DELETE FROM Service WHERE id='${id}';`)
+}

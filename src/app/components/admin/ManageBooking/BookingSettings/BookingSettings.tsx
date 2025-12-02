@@ -1,4 +1,5 @@
 'use client'
+import normalizeProviderIds from '@/app/libs/normalizeProviderIds'
 import React, { useEffect, useState } from 'react'
 
 interface TeamMember {
@@ -26,6 +27,8 @@ interface Provider {
 interface BookingSetting {
   id: string
   service: Service
+  serviceId:string
+  providerIds:string
   providers: Provider[]
   defaultPrice: number
   defaultSessionDuration: number
@@ -54,8 +57,9 @@ function BookingSettings() {
 
   const fetchServices = async () => {
     try {
-      const res = await fetch('/api/services')
+      const res = await fetch('/app/api/services')
       if (res.ok) setServices(await res.json())
+
     } catch (error) {
       console.error('Error fetching services:', error)
     }
@@ -63,8 +67,15 @@ function BookingSettings() {
 
   const fetchProviders = async () => {
     try {
-      const res = await fetch('/api/team/getActiveProvider')
-      if (res.ok) setProviders(await res.json())
+      const res = await fetch('/app/api/team/getActiveProvider')
+  
+      if (res.ok) 
+      {
+         const data:any =await res.json()
+
+        setProviders(data.team||[])
+      }
+       
     } catch (error) {
       console.error('Error fetching providers:', error)
     }
@@ -72,9 +83,11 @@ function BookingSettings() {
 
   const fetchExistingSettings = async () => {
     try {
-      const res = await fetch('/api/booking-settings')
+      const res = await fetch('/app/api/booking-settings')
+      
       if (res.ok) {
         const data: BookingSetting[] = await res.json()
+       
         setExistingSettings(data)
       }
     } catch (error) {
@@ -85,13 +98,20 @@ function BookingSettings() {
   /* ---------------------- LOAD OR RESET BOOKING ON SERVICE CHANGE ---------------------- */
   useEffect(() => {
     if (!selectedServiceId) return
+   
+    const setting = existingSettings.find(s => s.serviceId=== selectedServiceId)
 
-    const setting = existingSettings.find(s => s.service.id === selectedServiceId)
     if (setting) {
       // Load existing booking setting
       setCurrentSettingId(setting.id)
+      let providerIds=normalizeProviderIds(setting.providerIds)
+    
+      const existingProviders = providers.filter(
+        p => providerIds.includes(p.id)
+        );
+      
       setBooking({
-        members: setting.providers.map(p => ({
+        members:existingProviders.map(p => ({
           id: p.id,
           memberName: `${p.firstName} ${p.lastName}`
         })),
@@ -139,8 +159,8 @@ function BookingSettings() {
       }
 
       const url = currentSettingId
-        ? `/api/booking-settings/${currentSettingId}`
-        : '/api/booking-settings'
+        ? `/app/api/booking-settings/${currentSettingId}`
+        : '/app/api/booking-settings'
 
       const method = currentSettingId ? 'PUT' : 'POST'
 

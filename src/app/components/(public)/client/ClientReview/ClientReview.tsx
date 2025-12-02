@@ -11,7 +11,7 @@ function ClientReview({name,project,review,src}:Props) {
   return (
     <div>
         <div className="relative h-[200px] w-[200px]">
-        <Image src={src} alt={name} fill className="object-fill"/>
+        <img src={src} alt={name}  className="object-fill"/>
         </div>
         <h2>{name}</h2>
         <div>

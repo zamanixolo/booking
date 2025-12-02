@@ -3,7 +3,6 @@ import BookingDash from "../components/admin/ManageBooking/BookingDash/BookingDa
 function page() {
   return (
     <main>
-      
       <BookingDash/>
     </main>
   )

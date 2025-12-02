@@ -1,5 +1,8 @@
 // app/api/booking/route.ts
 
+// ✅ Add this line to force the Edge runtime (required for D1)
+// export const runtime = 'edge';
+
 import { NextResponse } from 'next/server';
 import { 
   createBooking, 
@@ -7,17 +10,37 @@ import {
   getBookingsByClient, 
   getBookingsByProvider, 
   updateBooking, 
-  deleteBooking,
+  deleteBooking 
 } from '@/app/libs/booking/Booking';
-import { getUserByClerkId } from '@/app/libs/users/user'; // Corrected import path from 'users/user'
-import { getPrismaClient } from '@/app/libs/prisma';
+import { getUserByClerkId } from '@/app/libs/users/user';
+import { BookingStatus } from '@prisma/client'; // Import the enum
+
+
+// Define expected shapes for request bodies
+interface CreateBookingRequestBody {
+  clientId?: string;
+  providerId: string;
+  serviceId: string;
+  price: number;
+  sessionDuration: number;
+  date: string; // Date string from frontend
+  time: string;
+  specialRequests?: string;
+}
+
+interface UpdateBookingRequestBody {
+  id?: string; // ID is expected in the PATCH body for this route's logic
+  status?: BookingStatus | string;
+  price?: number;
+  sessionDuration?: number;
+  date?: string; 
+  time?: string;
+  specialRequests?: string;
+}
 
 
 /* ---------------------- GET (READ BOOKINGS) ---------------------- */
 export async function GET(req: Request) {
-  // ✅ Instantiate Prisma inside the handler
-  const prisma = getPrismaClient();
-
   try {
     const { searchParams } = new URL(req.url);
     const clientId = searchParams.get("clientId");
@@ -26,21 +49,19 @@ export async function GET(req: Request) {
     let bookings: any[] = [];
 
     if (clientId) {
-      // ✅ Pass 'prisma' as the first argument
-      const user = await getUserByClerkId(prisma, clientId);
+      // getUserByClerkId is now Edge-compatible via D1 adapter
+      const user = await getUserByClerkId(clientId);
       
       if (!user) {
         bookings = [];
       } else {
-        // ✅ Pass 'prisma' as the first argument
-        bookings = await getBookingsByClient(prisma, user.id);
+        bookings = await getBookingsByClient(user.id);
+       
       }
     } else if (providerId) {
-      // ✅ Pass 'prisma' as the first argument
-      bookings = await getBookingsByProvider(prisma, providerId);
+      bookings = await getBookingsByProvider(providerId);
     } else {
-      // ✅ Pass 'prisma' as the first argument
-      bookings = await getAllBookings(prisma);
+      bookings = await getAllBookings();
     }
 
     return NextResponse.json(bookings, { status: 200 });
@@ -55,45 +76,44 @@ export async function GET(req: Request) {
 
 /* ---------------------- POST (CREATE BOOKING) ---------------------- */
 export async function POST(req: Request) {
-  // ✅ Instantiate Prisma inside the handler
-  const prisma = getPrismaClient();
-
   try {
-    const data = await req.json() as any;
-    let finalClientId: string | undefined = data.clientId;
+    // Type cast the request body
+    const data: CreateBookingRequestBody = await req.json();
+    let clientId = data.clientId;
 
-    if (finalClientId) {
-      // ✅ Pass 'prisma' as the first argument
-      const user = await getUserByClerkId(prisma, finalClientId);
+    // If clientId is provided (Clerk userId), find the user in our database
+    if (clientId) {
+      const user = await getUserByClerkId(clientId);
       
       if (!user) {
-        console.warn(`User with clerkId ${finalClientId} not found in database`);
-        finalClientId = undefined;
+        console.warn(`User with clerkId ${clientId} not found in database`);
+        // If user not found, you might want to throw an error or handle accordingly
+        // For now, we set it to undefined so Prisma handles the relationship correctly
+        clientId = undefined; 
       } else {
-        finalClientId = user.id;
+        clientId = user.id; // Use the internal database ID
       }
     }
 
-    // Pass the correct data structure, using 'as any' to bypass the persistent TypeScript conflict
-    const newBooking = await createBooking(prisma, {
-      clientId: finalClientId || null, 
+    const newBooking = await createBooking({
+      clientId: clientId,
       providerId: data.providerId,
       serviceId: data.serviceId,
       price: data.price,
       sessionDuration: data.sessionDuration,
-      date: new Date(data.date), 
+      // Convert the string date to a Date object here
+      date: new Date(data.date),
       time: data.time,
       specialRequests: data.specialRequests ?? "",
-    } as any); // Type assertion applied here
+    });
 
-    return NextResponse.json(newBooking, { status: 201 });
+    return NextResponse.json({...newBooking,status:201});
   } catch (error: any) {
     console.error("Error creating booking:", error);
-
     if (error.code) {
+      // Prisma errors often have a 'code' property
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
-
     return NextResponse.json(
       { error: "Failed to create booking" },
       { status: 500 }
@@ -103,11 +123,9 @@ export async function POST(req: Request) {
 
 /* ---------------------- PATCH (UPDATE BOOKING) ---------------------- */
 export async function PATCH(req: Request) {
-  // ✅ Instantiate Prisma inside the handler
-  const prisma = getPrismaClient();
-
   try {
-    const data = await req.json() as any;
+    // Type cast the request body
+    const data: UpdateBookingRequestBody = await req.json();
     const { id, ...updateData } = data;
 
     if (!id) {
@@ -117,12 +135,11 @@ export async function PATCH(req: Request) {
       );
     }
 
-    // ✅ Pass 'prisma' as the first argument to updateBooking
-    const updatedBooking = await updateBooking(prisma, id, {
-      status: updateData.status,
+    const updatedBooking = await updateBooking(id, {
+      status: updateData.status ? (updateData.status as BookingStatus) : undefined, // Cast to enum/pass undefined
       price: updateData.price,
       sessionDuration: updateData.sessionDuration,
-      date: updateData.date,
+      date: updateData.date ? new Date(updateData.date) : undefined, // Convert string to Date
       time: updateData.time,
       specialRequests: updateData.specialRequests,
     });
@@ -139,9 +156,6 @@ export async function PATCH(req: Request) {
 
 /* ---------------------- DELETE (DELETE BOOKING) ---------------------- */
 export async function DELETE(req: Request) {
-  // ✅ Instantiate Prisma inside the handler
-  const prisma = getPrismaClient();
-
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
@@ -153,8 +167,7 @@ export async function DELETE(req: Request) {
       );
     }
 
-    // ✅ Pass 'prisma' as the first argument to deleteBooking
-    const deleted = await deleteBooking(prisma, id);
+    const deleted = await deleteBooking(id);
     return NextResponse.json(deleted, { status: 200 });
   } catch (error: any) {
     console.error("Error deleting booking:", error);

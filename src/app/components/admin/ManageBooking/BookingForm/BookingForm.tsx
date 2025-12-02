@@ -26,7 +26,7 @@ function BookingForm({ booking, onSave }: BookingFormProps) {
   const fetchProviders = async () => {
     try {
       const res = await fetch('/api/team/getActiveProvider')
-      const data = await res.json() as any;
+      const data:Provider[] = await res.json()
       setProviders(data)
     } catch (err) {
       console.error(err)

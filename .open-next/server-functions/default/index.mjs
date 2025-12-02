@@ -1,4 +1,4 @@
-globalThis.monorepoPackagePath = "";globalThis.openNextDebug = false;globalThis.openNextVersion = "3.8.5";
+globalThis.monorepoPackagePath = "";globalThis.openNextDebug = false;globalThis.openNextVersion = "3.9.0";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -128,544 +128,6 @@ var init_logger = __esm({
   }
 });
 
-// node_modules/chalk/source/vendor/ansi-styles/index.js
-function assembleStyles() {
-  const codes = /* @__PURE__ */ new Map();
-  for (const [groupName, group] of Object.entries(styles)) {
-    for (const [styleName, style] of Object.entries(group)) {
-      styles[styleName] = {
-        open: `\x1B[${style[0]}m`,
-        close: `\x1B[${style[1]}m`
-      };
-      group[styleName] = styles[styleName];
-      codes.set(style[0], style[1]);
-    }
-    Object.defineProperty(styles, groupName, {
-      value: group,
-      enumerable: false
-    });
-  }
-  Object.defineProperty(styles, "codes", {
-    value: codes,
-    enumerable: false
-  });
-  styles.color.close = "\x1B[39m";
-  styles.bgColor.close = "\x1B[49m";
-  styles.color.ansi = wrapAnsi16();
-  styles.color.ansi256 = wrapAnsi256();
-  styles.color.ansi16m = wrapAnsi16m();
-  styles.bgColor.ansi = wrapAnsi16(ANSI_BACKGROUND_OFFSET);
-  styles.bgColor.ansi256 = wrapAnsi256(ANSI_BACKGROUND_OFFSET);
-  styles.bgColor.ansi16m = wrapAnsi16m(ANSI_BACKGROUND_OFFSET);
-  Object.defineProperties(styles, {
-    rgbToAnsi256: {
-      value(red, green, blue) {
-        if (red === green && green === blue) {
-          if (red < 8) {
-            return 16;
-          }
-          if (red > 248) {
-            return 231;
-          }
-          return Math.round((red - 8) / 247 * 24) + 232;
-        }
-        return 16 + 36 * Math.round(red / 255 * 5) + 6 * Math.round(green / 255 * 5) + Math.round(blue / 255 * 5);
-      },
-      enumerable: false
-    },
-    hexToRgb: {
-      value(hex) {
-        const matches = /[a-f\d]{6}|[a-f\d]{3}/i.exec(hex.toString(16));
-        if (!matches) {
-          return [0, 0, 0];
-        }
-        let [colorString] = matches;
-        if (colorString.length === 3) {
-          colorString = [...colorString].map((character) => character + character).join("");
-        }
-        const integer = Number.parseInt(colorString, 16);
-        return [
-          /* eslint-disable no-bitwise */
-          integer >> 16 & 255,
-          integer >> 8 & 255,
-          integer & 255
-          /* eslint-enable no-bitwise */
-        ];
-      },
-      enumerable: false
-    },
-    hexToAnsi256: {
-      value: (hex) => styles.rgbToAnsi256(...styles.hexToRgb(hex)),
-      enumerable: false
-    },
-    ansi256ToAnsi: {
-      value(code) {
-        if (code < 8) {
-          return 30 + code;
-        }
-        if (code < 16) {
-          return 90 + (code - 8);
-        }
-        let red;
-        let green;
-        let blue;
-        if (code >= 232) {
-          red = ((code - 232) * 10 + 8) / 255;
-          green = red;
-          blue = red;
-        } else {
-          code -= 16;
-          const remainder = code % 36;
-          red = Math.floor(code / 36) / 5;
-          green = Math.floor(remainder / 6) / 5;
-          blue = remainder % 6 / 5;
-        }
-        const value = Math.max(red, green, blue) * 2;
-        if (value === 0) {
-          return 30;
-        }
-        let result = 30 + (Math.round(blue) << 2 | Math.round(green) << 1 | Math.round(red));
-        if (value === 2) {
-          result += 60;
-        }
-        return result;
-      },
-      enumerable: false
-    },
-    rgbToAnsi: {
-      value: (red, green, blue) => styles.ansi256ToAnsi(styles.rgbToAnsi256(red, green, blue)),
-      enumerable: false
-    },
-    hexToAnsi: {
-      value: (hex) => styles.ansi256ToAnsi(styles.hexToAnsi256(hex)),
-      enumerable: false
-    }
-  });
-  return styles;
-}
-var ANSI_BACKGROUND_OFFSET, wrapAnsi16, wrapAnsi256, wrapAnsi16m, styles, modifierNames, foregroundColorNames, backgroundColorNames, colorNames, ansiStyles, ansi_styles_default;
-var init_ansi_styles = __esm({
-  "node_modules/chalk/source/vendor/ansi-styles/index.js"() {
-    ANSI_BACKGROUND_OFFSET = 10;
-    wrapAnsi16 = (offset = 0) => (code) => `\x1B[${code + offset}m`;
-    wrapAnsi256 = (offset = 0) => (code) => `\x1B[${38 + offset};5;${code}m`;
-    wrapAnsi16m = (offset = 0) => (red, green, blue) => `\x1B[${38 + offset};2;${red};${green};${blue}m`;
-    styles = {
-      modifier: {
-        reset: [0, 0],
-        // 21 isn't widely supported and 22 does the same thing
-        bold: [1, 22],
-        dim: [2, 22],
-        italic: [3, 23],
-        underline: [4, 24],
-        overline: [53, 55],
-        inverse: [7, 27],
-        hidden: [8, 28],
-        strikethrough: [9, 29]
-      },
-      color: {
-        black: [30, 39],
-        red: [31, 39],
-        green: [32, 39],
-        yellow: [33, 39],
-        blue: [34, 39],
-        magenta: [35, 39],
-        cyan: [36, 39],
-        white: [37, 39],
-        // Bright color
-        blackBright: [90, 39],
-        gray: [90, 39],
-        // Alias of `blackBright`
-        grey: [90, 39],
-        // Alias of `blackBright`
-        redBright: [91, 39],
-        greenBright: [92, 39],
-        yellowBright: [93, 39],
-        blueBright: [94, 39],
-        magentaBright: [95, 39],
-        cyanBright: [96, 39],
-        whiteBright: [97, 39]
-      },
-      bgColor: {
-        bgBlack: [40, 49],
-        bgRed: [41, 49],
-        bgGreen: [42, 49],
-        bgYellow: [43, 49],
-        bgBlue: [44, 49],
-        bgMagenta: [45, 49],
-        bgCyan: [46, 49],
-        bgWhite: [47, 49],
-        // Bright color
-        bgBlackBright: [100, 49],
-        bgGray: [100, 49],
-        // Alias of `bgBlackBright`
-        bgGrey: [100, 49],
-        // Alias of `bgBlackBright`
-        bgRedBright: [101, 49],
-        bgGreenBright: [102, 49],
-        bgYellowBright: [103, 49],
-        bgBlueBright: [104, 49],
-        bgMagentaBright: [105, 49],
-        bgCyanBright: [106, 49],
-        bgWhiteBright: [107, 49]
-      }
-    };
-    modifierNames = Object.keys(styles.modifier);
-    foregroundColorNames = Object.keys(styles.color);
-    backgroundColorNames = Object.keys(styles.bgColor);
-    colorNames = [...foregroundColorNames, ...backgroundColorNames];
-    ansiStyles = assembleStyles();
-    ansi_styles_default = ansiStyles;
-  }
-});
-
-// node_modules/chalk/source/vendor/supports-color/index.js
-import process2 from "node:process";
-import os from "node:os";
-import tty from "node:tty";
-function hasFlag(flag, argv = globalThis.Deno ? globalThis.Deno.args : process2.argv) {
-  const prefix = flag.startsWith("-") ? "" : flag.length === 1 ? "-" : "--";
-  const position = argv.indexOf(prefix + flag);
-  const terminatorPosition = argv.indexOf("--");
-  return position !== -1 && (terminatorPosition === -1 || position < terminatorPosition);
-}
-function envForceColor() {
-  if ("FORCE_COLOR" in env) {
-    if (env.FORCE_COLOR === "true") {
-      return 1;
-    }
-    if (env.FORCE_COLOR === "false") {
-      return 0;
-    }
-    return env.FORCE_COLOR.length === 0 ? 1 : Math.min(Number.parseInt(env.FORCE_COLOR, 10), 3);
-  }
-}
-function translateLevel(level) {
-  if (level === 0) {
-    return false;
-  }
-  return {
-    level,
-    hasBasic: true,
-    has256: level >= 2,
-    has16m: level >= 3
-  };
-}
-function _supportsColor(haveStream, { streamIsTTY, sniffFlags = true } = {}) {
-  const noFlagForceColor = envForceColor();
-  if (noFlagForceColor !== void 0) {
-    flagForceColor = noFlagForceColor;
-  }
-  const forceColor = sniffFlags ? flagForceColor : noFlagForceColor;
-  if (forceColor === 0) {
-    return 0;
-  }
-  if (sniffFlags) {
-    if (hasFlag("color=16m") || hasFlag("color=full") || hasFlag("color=truecolor")) {
-      return 3;
-    }
-    if (hasFlag("color=256")) {
-      return 2;
-    }
-  }
-  if ("TF_BUILD" in env && "AGENT_NAME" in env) {
-    return 1;
-  }
-  if (haveStream && !streamIsTTY && forceColor === void 0) {
-    return 0;
-  }
-  const min = forceColor || 0;
-  if (env.TERM === "dumb") {
-    return min;
-  }
-  if (process2.platform === "win32") {
-    const osRelease = os.release().split(".");
-    if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
-      return Number(osRelease[2]) >= 14931 ? 3 : 2;
-    }
-    return 1;
-  }
-  if ("CI" in env) {
-    if (["GITHUB_ACTIONS", "GITEA_ACTIONS", "CIRCLECI"].some((key) => key in env)) {
-      return 3;
-    }
-    if (["TRAVIS", "APPVEYOR", "GITLAB_CI", "BUILDKITE", "DRONE"].some((sign) => sign in env) || env.CI_NAME === "codeship") {
-      return 1;
-    }
-    return min;
-  }
-  if ("TEAMCITY_VERSION" in env) {
-    return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env.TEAMCITY_VERSION) ? 1 : 0;
-  }
-  if (env.COLORTERM === "truecolor") {
-    return 3;
-  }
-  if (env.TERM === "xterm-kitty") {
-    return 3;
-  }
-  if (env.TERM === "xterm-ghostty") {
-    return 3;
-  }
-  if (env.TERM === "wezterm") {
-    return 3;
-  }
-  if ("TERM_PROGRAM" in env) {
-    const version = Number.parseInt((env.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
-    switch (env.TERM_PROGRAM) {
-      case "iTerm.app": {
-        return version >= 3 ? 3 : 2;
-      }
-      case "Apple_Terminal": {
-        return 2;
-      }
-    }
-  }
-  if (/-256(color)?$/i.test(env.TERM)) {
-    return 2;
-  }
-  if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env.TERM)) {
-    return 1;
-  }
-  if ("COLORTERM" in env) {
-    return 1;
-  }
-  return min;
-}
-function createSupportsColor(stream, options = {}) {
-  const level = _supportsColor(stream, {
-    streamIsTTY: stream && stream.isTTY,
-    ...options
-  });
-  return translateLevel(level);
-}
-var env, flagForceColor, supportsColor, supports_color_default;
-var init_supports_color = __esm({
-  "node_modules/chalk/source/vendor/supports-color/index.js"() {
-    ({ env } = process2);
-    if (hasFlag("no-color") || hasFlag("no-colors") || hasFlag("color=false") || hasFlag("color=never")) {
-      flagForceColor = 0;
-    } else if (hasFlag("color") || hasFlag("colors") || hasFlag("color=true") || hasFlag("color=always")) {
-      flagForceColor = 1;
-    }
-    supportsColor = {
-      stdout: createSupportsColor({ isTTY: tty.isatty(1) }),
-      stderr: createSupportsColor({ isTTY: tty.isatty(2) })
-    };
-    supports_color_default = supportsColor;
-  }
-});
-
-// node_modules/chalk/source/utilities.js
-function stringReplaceAll(string, substring, replacer) {
-  let index = string.indexOf(substring);
-  if (index === -1) {
-    return string;
-  }
-  const substringLength = substring.length;
-  let endIndex = 0;
-  let returnValue = "";
-  do {
-    returnValue += string.slice(endIndex, index) + substring + replacer;
-    endIndex = index + substringLength;
-    index = string.indexOf(substring, endIndex);
-  } while (index !== -1);
-  returnValue += string.slice(endIndex);
-  return returnValue;
-}
-function stringEncaseCRLFWithFirstIndex(string, prefix, postfix, index) {
-  let endIndex = 0;
-  let returnValue = "";
-  do {
-    const gotCR = string[index - 1] === "\r";
-    returnValue += string.slice(endIndex, gotCR ? index - 1 : index) + prefix + (gotCR ? "\r\n" : "\n") + postfix;
-    endIndex = index + 1;
-    index = string.indexOf("\n", endIndex);
-  } while (index !== -1);
-  returnValue += string.slice(endIndex);
-  return returnValue;
-}
-var init_utilities = __esm({
-  "node_modules/chalk/source/utilities.js"() {
-  }
-});
-
-// node_modules/chalk/source/index.js
-function createChalk(options) {
-  return chalkFactory(options);
-}
-var stdoutColor, stderrColor, GENERATOR, STYLER, IS_EMPTY, levelMapping, styles2, applyOptions, chalkFactory, getModelAnsi, usedModels, proto, createStyler, createBuilder, applyStyle, chalk, chalkStderr, source_default;
-var init_source = __esm({
-  "node_modules/chalk/source/index.js"() {
-    init_ansi_styles();
-    init_supports_color();
-    init_utilities();
-    ({ stdout: stdoutColor, stderr: stderrColor } = supports_color_default);
-    GENERATOR = Symbol("GENERATOR");
-    STYLER = Symbol("STYLER");
-    IS_EMPTY = Symbol("IS_EMPTY");
-    levelMapping = [
-      "ansi",
-      "ansi",
-      "ansi256",
-      "ansi16m"
-    ];
-    styles2 = /* @__PURE__ */ Object.create(null);
-    applyOptions = (object, options = {}) => {
-      if (options.level && !(Number.isInteger(options.level) && options.level >= 0 && options.level <= 3)) {
-        throw new Error("The `level` option should be an integer from 0 to 3");
-      }
-      const colorLevel = stdoutColor ? stdoutColor.level : 0;
-      object.level = options.level === void 0 ? colorLevel : options.level;
-    };
-    chalkFactory = (options) => {
-      const chalk2 = (...strings) => strings.join(" ");
-      applyOptions(chalk2, options);
-      Object.setPrototypeOf(chalk2, createChalk.prototype);
-      return chalk2;
-    };
-    Object.setPrototypeOf(createChalk.prototype, Function.prototype);
-    for (const [styleName, style] of Object.entries(ansi_styles_default)) {
-      styles2[styleName] = {
-        get() {
-          const builder = createBuilder(this, createStyler(style.open, style.close, this[STYLER]), this[IS_EMPTY]);
-          Object.defineProperty(this, styleName, { value: builder });
-          return builder;
-        }
-      };
-    }
-    styles2.visible = {
-      get() {
-        const builder = createBuilder(this, this[STYLER], true);
-        Object.defineProperty(this, "visible", { value: builder });
-        return builder;
-      }
-    };
-    getModelAnsi = (model, level, type, ...arguments_) => {
-      if (model === "rgb") {
-        if (level === "ansi16m") {
-          return ansi_styles_default[type].ansi16m(...arguments_);
-        }
-        if (level === "ansi256") {
-          return ansi_styles_default[type].ansi256(ansi_styles_default.rgbToAnsi256(...arguments_));
-        }
-        return ansi_styles_default[type].ansi(ansi_styles_default.rgbToAnsi(...arguments_));
-      }
-      if (model === "hex") {
-        return getModelAnsi("rgb", level, type, ...ansi_styles_default.hexToRgb(...arguments_));
-      }
-      return ansi_styles_default[type][model](...arguments_);
-    };
-    usedModels = ["rgb", "hex", "ansi256"];
-    for (const model of usedModels) {
-      styles2[model] = {
-        get() {
-          const { level } = this;
-          return function(...arguments_) {
-            const styler = createStyler(getModelAnsi(model, levelMapping[level], "color", ...arguments_), ansi_styles_default.color.close, this[STYLER]);
-            return createBuilder(this, styler, this[IS_EMPTY]);
-          };
-        }
-      };
-      const bgModel = "bg" + model[0].toUpperCase() + model.slice(1);
-      styles2[bgModel] = {
-        get() {
-          const { level } = this;
-          return function(...arguments_) {
-            const styler = createStyler(getModelAnsi(model, levelMapping[level], "bgColor", ...arguments_), ansi_styles_default.bgColor.close, this[STYLER]);
-            return createBuilder(this, styler, this[IS_EMPTY]);
-          };
-        }
-      };
-    }
-    proto = Object.defineProperties(() => {
-    }, {
-      ...styles2,
-      level: {
-        enumerable: true,
-        get() {
-          return this[GENERATOR].level;
-        },
-        set(level) {
-          this[GENERATOR].level = level;
-        }
-      }
-    });
-    createStyler = (open, close, parent) => {
-      let openAll;
-      let closeAll;
-      if (parent === void 0) {
-        openAll = open;
-        closeAll = close;
-      } else {
-        openAll = parent.openAll + open;
-        closeAll = close + parent.closeAll;
-      }
-      return {
-        open,
-        close,
-        openAll,
-        closeAll,
-        parent
-      };
-    };
-    createBuilder = (self, _styler, _isEmpty) => {
-      const builder = (...arguments_) => applyStyle(builder, arguments_.length === 1 ? "" + arguments_[0] : arguments_.join(" "));
-      Object.setPrototypeOf(builder, proto);
-      builder[GENERATOR] = self;
-      builder[STYLER] = _styler;
-      builder[IS_EMPTY] = _isEmpty;
-      return builder;
-    };
-    applyStyle = (self, string) => {
-      if (self.level <= 0 || !string) {
-        return self[IS_EMPTY] ? "" : string;
-      }
-      let styler = self[STYLER];
-      if (styler === void 0) {
-        return string;
-      }
-      const { openAll, closeAll } = styler;
-      if (string.includes("\x1B")) {
-        while (styler !== void 0) {
-          string = stringReplaceAll(string, styler.close, styler.open);
-          styler = styler.parent;
-        }
-      }
-      const lfIndex = string.indexOf("\n");
-      if (lfIndex !== -1) {
-        string = stringEncaseCRLFWithFirstIndex(string, closeAll, openAll, lfIndex);
-      }
-      return openAll + string + closeAll;
-    };
-    Object.defineProperties(createChalk.prototype, styles2);
-    chalk = createChalk();
-    chalkStderr = createChalk({ level: stderrColor ? stderrColor.level : 0 });
-    source_default = chalk;
-  }
-});
-
-// node_modules/@opennextjs/aws/dist/logger.js
-var logLevel, logger_default;
-var init_logger2 = __esm({
-  "node_modules/@opennextjs/aws/dist/logger.js"() {
-    init_source();
-    logLevel = "info";
-    logger_default = {
-      setLevel: (level) => logLevel = level,
-      debug: (...args) => {
-        if (logLevel !== "debug")
-          return;
-        console.log(source_default.magenta("DEBUG"), ...args);
-      },
-      info: console.log,
-      warn: (...args) => console.warn(source_default.yellow("WARN"), ...args),
-      error: (...args) => console.error(source_default.red("ERROR"), ...args),
-      time: console.time,
-      timeEnd: console.timeEnd
-    };
-  }
-});
-
 // node_modules/@opennextjs/aws/dist/http/util.js
 function parseSetCookieHeader(cookies) {
   if (!cookies) {
@@ -694,7 +156,7 @@ function getQueryFromIterator(it) {
 var parseHeaders, convertHeader;
 var init_util = __esm({
   "node_modules/@opennextjs/aws/dist/http/util.js"() {
-    init_logger2();
+    init_logger();
     parseHeaders = (headers) => {
       const result = {};
       if (!headers) {
@@ -706,10 +168,10 @@ var init_util = __esm({
         }
         const keyLower = key.toLowerCase();
         if (keyLower === "location" && Array.isArray(value)) {
-          if (value[0] === value[1]) {
+          if (value.length === 1 || value[0] === value[1]) {
             result[keyLower] = value[0];
           } else {
-            logger_default.warn("Multiple different values for Location header found. Using the last one");
+            warn("Multiple different values for Location header found. Using the last one");
             result[keyLower] = value[value.length - 1];
           }
           continue;
@@ -1032,9 +494,9 @@ var NULL_BODY_STATUSES2, handler, cloudflare_node_default;
 var init_cloudflare_node = __esm({
   "node_modules/@opennextjs/aws/dist/overrides/wrappers/cloudflare-node.js"() {
     NULL_BODY_STATUSES2 = /* @__PURE__ */ new Set([101, 204, 205, 304]);
-    handler = async (handler3, converter2) => async (request, env2, ctx, abortSignal) => {
+    handler = async (handler3, converter2) => async (request, env, ctx, abortSignal) => {
       globalThis.process = process;
-      for (const [key, value] of Object.entries(env2)) {
+      for (const [key, value] of Object.entries(env)) {
         if (typeof value === "string") {
           process.env[key] = value;
         }
@@ -1077,7 +539,11 @@ var init_cloudflare_node = __esm({
           resolveResponse(response);
           return new Writable({
             write(chunk, encoding, callback) {
-              controller.enqueue(chunk);
+              try {
+                controller.enqueue(chunk);
+              } catch (e) {
+                return callback(e);
+              }
               callback();
             },
             final(callback) {
@@ -1266,13 +732,13 @@ globalThis.__dirname ??= "";
 var NEXT_DIR = path.join(__dirname, ".next");
 var OPEN_NEXT_DIR = path.join(__dirname, ".open-next");
 debug({ NEXT_DIR, OPEN_NEXT_DIR });
-var NextConfig = { "env": {}, "webpack": null, "eslint": { "ignoreDuringBuilds": false }, "typescript": { "ignoreBuildErrors": false, "tsconfigPath": "tsconfig.json" }, "typedRoutes": false, "distDir": ".next", "cleanDistDir": true, "assetPrefix": "/app", "cacheMaxMemorySize": 52428800, "configOrigin": "next.config.js", "useFileSystemPublicRoutes": true, "generateEtags": true, "pageExtensions": ["tsx", "ts", "jsx", "js"], "poweredByHeader": true, "compress": true, "images": { "deviceSizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840], "imageSizes": [16, 32, 48, 64, 96, 128, 256, 384], "path": "/app/_next/image", "loader": "default", "loaderFile": "", "domains": [], "disableStaticImages": false, "minimumCacheTTL": 60, "formats": ["image/webp"], "dangerouslyAllowSVG": false, "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;", "contentDispositionType": "attachment", "remotePatterns": [], "unoptimized": false }, "devIndicators": { "position": "bottom-left" }, "onDemandEntries": { "maxInactiveAge": 6e4, "pagesBufferLength": 5 }, "amp": { "canonicalBase": "/app" }, "basePath": "/app", "sassOptions": {}, "trailingSlash": false, "i18n": null, "productionBrowserSourceMaps": false, "excludeDefaultMomentLocales": true, "serverRuntimeConfig": {}, "publicRuntimeConfig": {}, "reactProductionProfiling": false, "reactStrictMode": null, "reactMaxHeadersLength": 6e3, "httpAgentOptions": { "keepAlive": true }, "logging": {}, "compiler": {}, "expireTime": 31536e3, "staticPageGenerationTimeout": 60, "output": "standalone", "modularizeImports": { "@mui/icons-material": { "transform": "@mui/icons-material/{{member}}" }, "lodash": { "transform": "lodash/{{member}}" } }, "outputFileTracingRoot": "/Users/zamani/Desktop/booking-main", "experimental": { "useSkewCookie": false, "cacheLife": { "default": { "stale": 300, "revalidate": 900, "expire": 4294967294 }, "seconds": { "stale": 30, "revalidate": 1, "expire": 60 }, "minutes": { "stale": 300, "revalidate": 60, "expire": 3600 }, "hours": { "stale": 300, "revalidate": 3600, "expire": 86400 }, "days": { "stale": 300, "revalidate": 86400, "expire": 604800 }, "weeks": { "stale": 300, "revalidate": 604800, "expire": 2592e3 }, "max": { "stale": 300, "revalidate": 2592e3, "expire": 4294967294 } }, "cacheHandlers": {}, "cssChunking": true, "multiZoneDraftMode": false, "appNavFailHandling": false, "prerenderEarlyExit": true, "serverMinification": true, "serverSourceMaps": false, "linkNoTouchStart": false, "caseSensitiveRoutes": false, "clientSegmentCache": false, "clientParamParsing": false, "dynamicOnHover": false, "preloadEntriesOnStart": true, "clientRouterFilter": true, "clientRouterFilterRedirects": false, "fetchCacheKeyPrefix": "", "middlewarePrefetch": "flexible", "optimisticClientCache": true, "manualClientBasePath": false, "cpus": 7, "memoryBasedWorkersCount": false, "imgOptConcurrency": null, "imgOptTimeoutInSeconds": 7, "imgOptMaxInputPixels": 268402689, "imgOptSequentialRead": null, "imgOptSkipMetadata": null, "isrFlushToDisk": true, "workerThreads": false, "optimizeCss": false, "nextScriptWorkers": false, "scrollRestoration": false, "externalDir": false, "disableOptimizedLoading": false, "gzipSize": true, "craCompat": false, "esmExternals": true, "fullySpecified": false, "swcTraceProfiling": false, "forceSwcTransforms": false, "largePageDataBytes": 128e3, "typedEnv": false, "parallelServerCompiles": false, "parallelServerBuildTraces": false, "ppr": false, "authInterrupts": false, "webpackMemoryOptimizations": false, "optimizeServerReact": true, "viewTransition": false, "routerBFCache": false, "removeUncaughtErrorAndRejectionListeners": false, "validateRSCRequestHeaders": false, "staleTimes": { "dynamic": 0, "static": 300 }, "serverComponentsHmrCache": true, "staticGenerationMaxConcurrency": 8, "staticGenerationMinPagesPerWorker": 25, "cacheComponents": false, "inlineCss": false, "useCache": false, "globalNotFound": false, "devtoolSegmentExplorer": true, "browserDebugInfoInTerminal": false, "optimizeRouterScrolling": false, "middlewareClientMaxBodySize": 10485760, "optimizePackageImports": ["lucide-react", "date-fns", "lodash-es", "ramda", "antd", "react-bootstrap", "ahooks", "@ant-design/icons", "@headlessui/react", "@headlessui-float/react", "@heroicons/react/20/solid", "@heroicons/react/24/solid", "@heroicons/react/24/outline", "@visx/visx", "@tremor/react", "rxjs", "@mui/material", "@mui/icons-material", "recharts", "react-use", "effect", "@effect/schema", "@effect/platform", "@effect/platform-node", "@effect/platform-browser", "@effect/platform-bun", "@effect/sql", "@effect/sql-mssql", "@effect/sql-mysql2", "@effect/sql-pg", "@effect/sql-sqlite-node", "@effect/sql-sqlite-bun", "@effect/sql-sqlite-wasm", "@effect/sql-sqlite-react-native", "@effect/rpc", "@effect/rpc-http", "@effect/typeclass", "@effect/experimental", "@effect/opentelemetry", "@material-ui/core", "@material-ui/icons", "@tabler/icons-react", "mui-core", "react-icons/ai", "react-icons/bi", "react-icons/bs", "react-icons/cg", "react-icons/ci", "react-icons/di", "react-icons/fa", "react-icons/fa6", "react-icons/fc", "react-icons/fi", "react-icons/gi", "react-icons/go", "react-icons/gr", "react-icons/hi", "react-icons/hi2", "react-icons/im", "react-icons/io", "react-icons/io5", "react-icons/lia", "react-icons/lib", "react-icons/lu", "react-icons/md", "react-icons/pi", "react-icons/ri", "react-icons/rx", "react-icons/si", "react-icons/sl", "react-icons/tb", "react-icons/tfi", "react-icons/ti", "react-icons/vsc", "react-icons/wi"], "trustHostHeader": false, "isExperimentalCompile": false }, "htmlLimitedBots": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight", "bundlePagesRouterDependencies": false, "configFileName": "next.config.js", "turbopack": { "root": "/Users/zamani/Desktop/booking-main" } };
-var BuildId = "O3FPcNtajrIevrdtuQQzb";
+var NextConfig = { "env": {}, "webpack": null, "eslint": { "ignoreDuringBuilds": false }, "typescript": { "ignoreBuildErrors": false, "tsconfigPath": "tsconfig.json" }, "typedRoutes": false, "distDir": ".next", "cleanDistDir": true, "assetPrefix": "/app", "cacheMaxMemorySize": 52428800, "configOrigin": "next.config.js", "useFileSystemPublicRoutes": true, "generateEtags": true, "pageExtensions": ["tsx", "ts", "jsx", "js"], "poweredByHeader": true, "compress": true, "images": { "deviceSizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840], "imageSizes": [16, 32, 48, 64, 96, 128, 256, 384], "path": "/app/_next/image", "loader": "default", "loaderFile": "", "domains": [], "disableStaticImages": false, "minimumCacheTTL": 60, "formats": ["image/webp"], "dangerouslyAllowSVG": false, "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;", "contentDispositionType": "attachment", "remotePatterns": [], "unoptimized": true }, "devIndicators": { "position": "bottom-left" }, "onDemandEntries": { "maxInactiveAge": 6e4, "pagesBufferLength": 5 }, "amp": { "canonicalBase": "/app" }, "basePath": "/app", "sassOptions": {}, "trailingSlash": false, "i18n": null, "productionBrowserSourceMaps": false, "excludeDefaultMomentLocales": true, "serverRuntimeConfig": {}, "publicRuntimeConfig": {}, "reactProductionProfiling": false, "reactStrictMode": null, "reactMaxHeadersLength": 6e3, "httpAgentOptions": { "keepAlive": true }, "logging": {}, "compiler": {}, "expireTime": 31536e3, "staticPageGenerationTimeout": 60, "output": "standalone", "modularizeImports": { "@mui/icons-material": { "transform": "@mui/icons-material/{{member}}" }, "lodash": { "transform": "lodash/{{member}}" } }, "outputFileTracingRoot": "/Users/zamani/Desktop/booking-main", "experimental": { "useSkewCookie": false, "cacheLife": { "default": { "stale": 300, "revalidate": 900, "expire": 4294967294 }, "seconds": { "stale": 30, "revalidate": 1, "expire": 60 }, "minutes": { "stale": 300, "revalidate": 60, "expire": 3600 }, "hours": { "stale": 300, "revalidate": 3600, "expire": 86400 }, "days": { "stale": 300, "revalidate": 86400, "expire": 604800 }, "weeks": { "stale": 300, "revalidate": 604800, "expire": 2592e3 }, "max": { "stale": 300, "revalidate": 2592e3, "expire": 4294967294 } }, "cacheHandlers": {}, "cssChunking": true, "multiZoneDraftMode": false, "appNavFailHandling": false, "prerenderEarlyExit": true, "serverMinification": true, "serverSourceMaps": false, "linkNoTouchStart": false, "caseSensitiveRoutes": false, "clientSegmentCache": false, "clientParamParsing": false, "dynamicOnHover": false, "preloadEntriesOnStart": true, "clientRouterFilter": true, "clientRouterFilterRedirects": false, "fetchCacheKeyPrefix": "", "middlewarePrefetch": "flexible", "optimisticClientCache": true, "manualClientBasePath": false, "cpus": 7, "memoryBasedWorkersCount": false, "imgOptConcurrency": null, "imgOptTimeoutInSeconds": 7, "imgOptMaxInputPixels": 268402689, "imgOptSequentialRead": null, "imgOptSkipMetadata": null, "isrFlushToDisk": true, "workerThreads": false, "optimizeCss": false, "nextScriptWorkers": false, "scrollRestoration": false, "externalDir": false, "disableOptimizedLoading": false, "gzipSize": true, "craCompat": false, "esmExternals": true, "fullySpecified": false, "swcTraceProfiling": false, "forceSwcTransforms": false, "largePageDataBytes": 128e3, "typedEnv": false, "parallelServerCompiles": false, "parallelServerBuildTraces": false, "ppr": false, "authInterrupts": false, "webpackMemoryOptimizations": false, "optimizeServerReact": true, "viewTransition": false, "routerBFCache": false, "removeUncaughtErrorAndRejectionListeners": false, "validateRSCRequestHeaders": false, "staleTimes": { "dynamic": 0, "static": 300 }, "serverComponentsHmrCache": true, "staticGenerationMaxConcurrency": 8, "staticGenerationMinPagesPerWorker": 25, "cacheComponents": false, "inlineCss": false, "useCache": false, "globalNotFound": false, "devtoolSegmentExplorer": true, "browserDebugInfoInTerminal": false, "optimizeRouterScrolling": false, "middlewareClientMaxBodySize": 10485760, "optimizePackageImports": ["lucide-react", "date-fns", "lodash-es", "ramda", "antd", "react-bootstrap", "ahooks", "@ant-design/icons", "@headlessui/react", "@headlessui-float/react", "@heroicons/react/20/solid", "@heroicons/react/24/solid", "@heroicons/react/24/outline", "@visx/visx", "@tremor/react", "rxjs", "@mui/material", "@mui/icons-material", "recharts", "react-use", "effect", "@effect/schema", "@effect/platform", "@effect/platform-node", "@effect/platform-browser", "@effect/platform-bun", "@effect/sql", "@effect/sql-mssql", "@effect/sql-mysql2", "@effect/sql-pg", "@effect/sql-sqlite-node", "@effect/sql-sqlite-bun", "@effect/sql-sqlite-wasm", "@effect/sql-sqlite-react-native", "@effect/rpc", "@effect/rpc-http", "@effect/typeclass", "@effect/experimental", "@effect/opentelemetry", "@material-ui/core", "@material-ui/icons", "@tabler/icons-react", "mui-core", "react-icons/ai", "react-icons/bi", "react-icons/bs", "react-icons/cg", "react-icons/ci", "react-icons/di", "react-icons/fa", "react-icons/fa6", "react-icons/fc", "react-icons/fi", "react-icons/gi", "react-icons/go", "react-icons/gr", "react-icons/hi", "react-icons/hi2", "react-icons/im", "react-icons/io", "react-icons/io5", "react-icons/lia", "react-icons/lib", "react-icons/lu", "react-icons/md", "react-icons/pi", "react-icons/ri", "react-icons/rx", "react-icons/si", "react-icons/sl", "react-icons/tb", "react-icons/tfi", "react-icons/ti", "react-icons/vsc", "react-icons/wi"], "trustHostHeader": false, "isExperimentalCompile": false }, "htmlLimitedBots": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight", "bundlePagesRouterDependencies": false, "configFileName": "next.config.js", "turbopack": { "root": "/Users/zamani/Desktop/booking-main" } };
+var BuildId = "WJjp2LTBHViu6hZrVywsE";
 var HtmlPages = ["/404"];
 var RoutesManifest = { "basePath": "/app", "rewrites": { "beforeFiles": [], "afterFiles": [], "fallback": [] }, "redirects": [{ "source": "/app/", "destination": "/app", "basePath": false, "internal": true, "statusCode": 308, "regex": "^/app/$" }, { "source": "/:path+/", "destination": "/:path+", "internal": true, "statusCode": 308, "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$" }], "routes": { "static": [{ "page": "/", "regex": "^/(?:/)?$", "routeKeys": {}, "namedRegex": "^/(?:/)?$" }, { "page": "/_not-found", "regex": "^/_not\\-found(?:/)?$", "routeKeys": {}, "namedRegex": "^/_not\\-found(?:/)?$" }, { "page": "/about", "regex": "^/about(?:/)?$", "routeKeys": {}, "namedRegex": "^/about(?:/)?$" }, { "page": "/admin", "regex": "^/admin(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin(?:/)?$" }, { "page": "/admin/ContentManagement", "regex": "^/admin/ContentManagement(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/ContentManagement(?:/)?$" }, { "page": "/admin/OperatingHours", "regex": "^/admin/OperatingHours(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/OperatingHours(?:/)?$" }, { "page": "/admin/Reports", "regex": "^/admin/Reports(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/Reports(?:/)?$" }, { "page": "/admin/Services", "regex": "^/admin/Services(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/Services(?:/)?$" }, { "page": "/admin/Team", "regex": "^/admin/Team(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/Team(?:/)?$" }, { "page": "/booking", "regex": "^/booking(?:/)?$", "routeKeys": {}, "namedRegex": "^/booking(?:/)?$" }, { "page": "/client", "regex": "^/client(?:/)?$", "routeKeys": {}, "namedRegex": "^/client(?:/)?$" }, { "page": "/contact", "regex": "^/contact(?:/)?$", "routeKeys": {}, "namedRegex": "^/contact(?:/)?$" }, { "page": "/favicon.ico", "regex": "^/favicon\\.ico(?:/)?$", "routeKeys": {}, "namedRegex": "^/favicon\\.ico(?:/)?$" }, { "page": "/user", "regex": "^/user(?:/)?$", "routeKeys": {}, "namedRegex": "^/user(?:/)?$" }], "dynamic": [{ "page": "/admin/booking/[id]", "regex": "^/admin/booking/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/admin/booking/(?<nxtPid>[^/]+?)(?:/)?$" }, { "page": "/api/booking/[id]", "regex": "^/api/booking/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/api/booking/(?<nxtPid>[^/]+?)(?:/)?$" }, { "page": "/api/booking-settings/[id]", "regex": "^/api/booking\\-settings/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/api/booking\\-settings/(?<nxtPid>[^/]+?)(?:/)?$" }, { "page": "/api/operating-hours/[id]", "regex": "^/api/operating\\-hours/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/api/operating\\-hours/(?<nxtPid>[^/]+?)(?:/)?$" }, { "page": "/user/[id]", "regex": "^/user/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/user/(?<nxtPid>[^/]+?)(?:/)?$" }], "data": { "static": [], "dynamic": [] } }, "locales": [] };
-var MiddlewareManifest = { "version": 3, "middleware": { "/": { "files": ["server/edge-runtime-webpack.js", "server/src/middleware.js"], "name": "src/middleware", "page": "/", "matchers": [{ "regexp": "^\\/app(?:\\/(_next\\/data\\/[^/]{1,}))?\\/user(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json)?[\\/#\\?]?$", "originalSource": "/user/:path*" }, { "regexp": "^\\/app(?:\\/(_next\\/data\\/[^/]{1,}))?\\/admin(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json)?[\\/#\\?]?$", "originalSource": "/admin/:path*" }], "wasm": [], "assets": [], "env": { "__NEXT_BUILD_ID": "O3FPcNtajrIevrdtuQQzb", "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "OyCrckLJylT0Q+Ip2T9wU5iG50yY7oppBwhFacrEWuU=", "__NEXT_PREVIEW_MODE_ID": "b8f70953b48aca022e519f5b58b730f7", "__NEXT_PREVIEW_MODE_SIGNING_KEY": "31e633223abb0763a93e2a25d1f45937093b72e9ccea7b0e2539dd66448810c3", "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "bf3e414b183e63d2158635cbad4dc2d81125c198bb5205329eef158a29f75219" } } }, "functions": {}, "sortedMiddleware": ["/"] };
-var AppPathRoutesManifest = { "/_not-found/page": "/_not-found", "/api/User/route": "/api/User", "/api/booking-settings/route": "/api/booking-settings", "/api/booking-settings/[id]/route": "/api/booking-settings/[id]", "/api/booking/[id]/route": "/api/booking/[id]", "/api/booking/route": "/api/booking", "/api/operating-hours/[id]/route": "/api/operating-hours/[id]", "/api/services/route": "/api/services", "/favicon.ico/route": "/favicon.ico", "/api/operating-hours/route": "/api/operating-hours", "/api/team/getActiveProvider/route": "/api/team/getActiveProvider", "/api/team/route": "/api/team", "/(public)/about/page": "/about", "/(public)/booking/page": "/booking", "/(public)/contact/page": "/contact", "/(public)/client/page": "/client", "/(public)/user/page": "/user", "/(public)/page": "/", "/admin/OperatingHours/page": "/admin/OperatingHours", "/admin/Reports/page": "/admin/Reports", "/admin/Team/page": "/admin/Team", "/admin/Services/page": "/admin/Services", "/admin/booking/[id]/page": "/admin/booking/[id]", "/admin/page": "/admin", "/(public)/user/[id]/page": "/user/[id]", "/admin/ContentManagement/page": "/admin/ContentManagement" };
-var FunctionsConfigManifest = { "version": 1, "functions": {} };
+var MiddlewareManifest = { "version": 3, "middleware": { "/": { "files": ["server/edge-runtime-webpack.js", "server/src/middleware.js"], "name": "src/middleware", "page": "/", "matchers": [{ "regexp": "^\\/app(?:\\/(_next\\/data\\/[^/]{1,}))?\\/user(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json)?[\\/#\\?]?$", "originalSource": "/user/:path*" }], "wasm": [], "assets": [], "env": { "__NEXT_BUILD_ID": "WJjp2LTBHViu6hZrVywsE", "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "skEKo3Q0zl6uWvEdNw5814HaAC0tPXua/nqnK265pjg=", "__NEXT_PREVIEW_MODE_ID": "99c5037e24fd9e760446932768573bca", "__NEXT_PREVIEW_MODE_SIGNING_KEY": "1f3080dea302702a50b1881ed3d3770e2f864f51a1c299fa643943ded07fb8dc", "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "cd4d09ac1205bfdc91311d4f51dd4566a5c8097e5d46c5428424683d887ba9c7" } } }, "functions": {}, "sortedMiddleware": ["/"] };
+var AppPathRoutesManifest = { "/_not-found/page": "/_not-found", "/favicon.ico/route": "/favicon.ico", "/api/booking-settings/route": "/api/booking-settings", "/api/User/route": "/api/User", "/api/booking/route": "/api/booking", "/api/team/getActiveProvider/route": "/api/team/getActiveProvider", "/api/booking-settings/[id]/route": "/api/booking-settings/[id]", "/api/operating-hours/route": "/api/operating-hours", "/api/operating-hours/[id]/route": "/api/operating-hours/[id]", "/api/services/route": "/api/services", "/api/booking/[id]/route": "/api/booking/[id]", "/api/team/route": "/api/team", "/(public)/about/page": "/about", "/(public)/client/page": "/client", "/(public)/booking/page": "/booking", "/(public)/contact/page": "/contact", "/(public)/page": "/", "/(public)/user/page": "/user", "/admin/Services/page": "/admin/Services", "/admin/OperatingHours/page": "/admin/OperatingHours", "/admin/Reports/page": "/admin/Reports", "/admin/ContentManagement/page": "/admin/ContentManagement", "/admin/Team/page": "/admin/Team", "/admin/page": "/admin", "/admin/booking/[id]/page": "/admin/booking/[id]", "/(public)/user/[id]/page": "/user/[id]" };
+var FunctionsConfigManifest = { "version": 1, "functions": { "/user/[id]": {} } };
 var PagesManifest = { "/_app": "pages/_app.js", "/_error": "pages/_error.js", "/_document": "pages/_document.js", "/404": "pages/404.html" };
 process.env.NEXT_BUILD_ID = BuildId;
 
@@ -1298,7 +764,7 @@ import { Transform } from "node:stream";
 var SET_COOKIE_HEADER = "set-cookie";
 var CANNOT_BE_USED = "This cannot be used in OpenNext";
 var OpenNextNodeResponse = class extends Transform {
-  fixHeaders;
+  fixHeadersFn;
   onEnd;
   streamCreator;
   initialHeaders;
@@ -1307,6 +773,7 @@ var OpenNextNodeResponse = class extends Transform {
   headers = {};
   headersSent = false;
   _chunks = [];
+  headersAlreadyFixed = false;
   _cookies = [];
   responseStream;
   bodyLength = 0;
@@ -1345,9 +812,9 @@ var OpenNextNodeResponse = class extends Transform {
   addTrailers(_headers) {
     throw new Error(CANNOT_BE_USED);
   }
-  constructor(fixHeaders, onEnd, streamCreator, initialHeaders, statusCode) {
+  constructor(fixHeadersFn, onEnd, streamCreator, initialHeaders, statusCode) {
     super();
-    this.fixHeaders = fixHeaders;
+    this.fixHeadersFn = fixHeadersFn;
     this.onEnd = onEnd;
     this.streamCreator = streamCreator;
     this.initialHeaders = initialHeaders;
@@ -1472,6 +939,13 @@ var OpenNextNodeResponse = class extends Transform {
   /**
    * OpenNext specific method
    */
+  fixHeaders(headers) {
+    if (this.headersAlreadyFixed) {
+      return;
+    }
+    this.fixHeadersFn(headers);
+    this.headersAlreadyFixed = true;
+  }
   getFixedHeaders() {
     this.fixHeaders(this.headers);
     this.fixHeadersForError();
@@ -2070,21 +1544,21 @@ async function revalidateIfRequired(host, rawPath, headers, req) {
   }
 }
 function fixISRHeaders(headers) {
+  const sMaxAgeRegex = /s-maxage=(\d+)/;
+  const match = headers[CommonHeaders.CACHE_CONTROL]?.match(sMaxAgeRegex);
+  const sMaxAge = match ? Number.parseInt(match[1]) : void 0;
+  if (!sMaxAge) {
+    return;
+  }
   if (headers[CommonHeaders.NEXT_CACHE] === "REVALIDATED") {
     headers[CommonHeaders.CACHE_CONTROL] = "private, no-cache, no-store, max-age=0, must-revalidate";
     return;
   }
   const _lastModified = globalThis.__openNextAls.getStore()?.lastModified ?? 0;
   if (headers[CommonHeaders.NEXT_CACHE] === "HIT" && _lastModified > 0) {
-    const age = Math.round((Date.now() - _lastModified) / 1e3);
-    const regex = /s-maxage=(\d+)/;
-    const cacheControl = headers[CommonHeaders.CACHE_CONTROL];
-    debug("cache-control", cacheControl, _lastModified, Date.now());
-    if (typeof cacheControl !== "string")
-      return;
-    const match = cacheControl.match(regex);
-    const sMaxAge = match ? Number.parseInt(match[1]) : void 0;
+    debug("cache-control", headers[CommonHeaders.CACHE_CONTROL], _lastModified, Date.now());
     if (sMaxAge && sMaxAge !== 31536e3) {
+      const age = Math.round((Date.now() - _lastModified) / 1e3);
       const remainingTtl = Math.max(sMaxAge - age, 1);
       headers[CommonHeaders.CACHE_CONTROL] = `s-maxage=${remainingTtl}, stale-while-revalidate=2592000`;
     }

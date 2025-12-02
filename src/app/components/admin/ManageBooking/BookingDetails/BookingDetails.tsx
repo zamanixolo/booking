@@ -43,7 +43,7 @@ function BookingDetails() {
     try {
       const res = await fetch(`/api/booking/${id}`)
       if (!res.ok) throw new Error('Failed to fetch booking')
-      const data = await res.json() as any
+      const data:BookingDetail = await res.json()
       console.log(data)
       setBooking(data)
     } catch (err) {

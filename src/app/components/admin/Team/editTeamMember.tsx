@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState } from 'react'
 import { ProviderRole } from '@prisma/client'
 
@@ -22,18 +21,17 @@ interface UpdateMemberProps {
 }
 
 export default function UpdateMember({ member, closeModal }: UpdateMemberProps) {
-  // Hooks must always be called at the top
   const [updatedProvider, setUpdatedProvider] = useState<Provider | null>(member)
   const [isLoading, setIsLoading] = useState(false)
 
-  // If no member provided, render nothing
   if (!updatedProvider) return null
 
   const handleUpdateSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+
     try {
-      const response = await fetch(`/api/team/`, {
+      const response = await fetch(`/app/api/team/`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -44,7 +42,7 @@ export default function UpdateMember({ member, closeModal }: UpdateMemberProps) 
           imageurl: updatedProvider.imageurl,
           bio: updatedProvider.bio,
           role: updatedProvider.role,
-          isAvailable: updatedProvider.isAvailable,
+          isAvailable: updatedProvider.isAvailable ?? false,
         }),
       })
 
@@ -53,9 +51,9 @@ export default function UpdateMember({ member, closeModal }: UpdateMemberProps) 
         console.log('Updated provider:', result)
         closeModal()
       } else {
-        const error = await response.json() as any;
+        const error = await response.json()
         console.error('Failed to update provider:', error)
-        alert(error.msg || 'Failed to update provider')
+        alert('Failed to update provider')
       }
     } catch (error) {
       console.error('Error updating provider:', error)
@@ -66,8 +64,8 @@ export default function UpdateMember({ member, closeModal }: UpdateMemberProps) 
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 shadow-lg w-96 max-h-[90vh] overflow-y-auto rounded">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <div className="bg-white p-6 shadow-lg w-96 max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Update Provider</h2>
           <button
@@ -79,10 +77,9 @@ export default function UpdateMember({ member, closeModal }: UpdateMemberProps) 
           </button>
         </div>
 
-        <form onSubmit={handleUpdateSubmit} className="space-y-3">
-          {/* First Name */}
-          <div>
-            <label className="block mb-1 font-medium">First Name *</label>
+        <form onSubmit={handleUpdateSubmit} className="space-y-4">
+          <div className="mb-3">
+            <label className="block mb-1">First Name *</label>
             <input
               type="text"
               value={updatedProvider.firstName}
@@ -90,14 +87,13 @@ export default function UpdateMember({ member, closeModal }: UpdateMemberProps) 
               onChange={(e) =>
                 setUpdatedProvider({ ...updatedProvider, firstName: e.target.value })
               }
-              required
               disabled={isLoading}
+              required
             />
           </div>
 
-          {/* Last Name */}
-          <div>
-            <label className="block mb-1 font-medium">Last Name *</label>
+          <div className="mb-3">
+            <label className="block mb-1">Last Name *</label>
             <input
               type="text"
               value={updatedProvider.lastName}
@@ -105,17 +101,16 @@ export default function UpdateMember({ member, closeModal }: UpdateMemberProps) 
               onChange={(e) =>
                 setUpdatedProvider({ ...updatedProvider, lastName: e.target.value })
               }
-              required
               disabled={isLoading}
+              required
             />
           </div>
 
-          {/* Email */}
-          <div>
-            <label className="block mb-1 font-medium">Email</label>
+          <div className="mb-3">
+            <label className="block mb-1">Email</label>
             <input
               type="email"
-              value={updatedProvider.email || ''}
+              value={updatedProvider.email}
               className="w-full border px-3 py-2 rounded"
               onChange={(e) =>
                 setUpdatedProvider({ ...updatedProvider, email: e.target.value })
@@ -124,45 +119,38 @@ export default function UpdateMember({ member, closeModal }: UpdateMemberProps) 
             />
           </div>
 
-          {/* Bio */}
-          <div>
-            <label className="block mb-1 font-medium">Bio</label>
+          <div className="mb-3">
+            <label className="block mb-1">Bio</label>
             <textarea
-              value={updatedProvider.bio || ''}
+              value={updatedProvider.bio}
               className="w-full border px-3 py-2 rounded"
               onChange={(e) =>
                 setUpdatedProvider({ ...updatedProvider, bio: e.target.value })
               }
-              rows={3}
               disabled={isLoading}
+              rows={3}
             />
           </div>
 
-          {/* Image URL */}
-          <div>
-            <label className="block mb-1 font-medium">Image URL</label>
+          <div className="mb-3">
+            <label className="block mb-1">Image URL</label>
             <input
               type="text"
-              value={updatedProvider.imageurl || ''}
+              value={updatedProvider.imageurl}
               className="w-full border px-3 py-2 rounded"
               onChange={(e) =>
                 setUpdatedProvider({ ...updatedProvider, imageurl: e.target.value })
               }
-              placeholder="https://example.com/image.jpg"
               disabled={isLoading}
             />
           </div>
 
-          {/* Role */}
-          <div>
-            <label className="block mb-1 font-medium">Role</label>
+          <div className="mb-3">
+            <label className="block mb-1">Role</label>
             <select
               value={updatedProvider.role}
               onChange={(e) =>
-                setUpdatedProvider({
-                  ...updatedProvider,
-                  role: e.target.value as ProviderRole,
-                })
+                setUpdatedProvider({ ...updatedProvider, role: e.target.value as ProviderRole })
               }
               className="w-full border px-3 py-2 rounded"
               disabled={isLoading}
@@ -175,27 +163,31 @@ export default function UpdateMember({ member, closeModal }: UpdateMemberProps) 
             </select>
           </div>
 
-          {/* Availability */}
-          <div>
-            <label className="flex items-center font-medium">
-              <input
-                type="checkbox"
-                checked={updatedProvider.isAvailable || false}
-                onChange={(e) =>
-                  setUpdatedProvider({ ...updatedProvider, isAvailable: e.target.checked })
-                }
-                disabled={isLoading}
-                className="mr-2"
+          <div className="flex items-center space-x-2">
+            <label className="text-sm font-medium">Available:</label>
+            <button
+              type="button"
+              onClick={() =>
+                setUpdatedProvider((prev) =>
+                  prev ? { ...prev, isAvailable: !prev.isAvailable } : prev
+                )
+              }
+              className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
+                updatedProvider.isAvailable ? 'bg-green-500' : 'bg-gray-300'
+              }`}
+            >
+              <span
+                className={`bg-white w-4 h-4 rounded-full shadow transform transition-transform duration-300 ${
+                  updatedProvider.isAvailable ? 'translate-x-6' : 'translate-x-0'
+                }`}
               />
-              Available for bookings
-            </label>
+            </button>
           </div>
 
-          {/* Buttons */}
           <div className="flex justify-end mt-4 space-x-2">
             <button
               type="button"
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-50"
               onClick={closeModal}
               disabled={isLoading}
             >
@@ -203,7 +195,7 @@ export default function UpdateMember({ member, closeModal }: UpdateMemberProps) 
             </button>
             <button
               type="submit"
-              className={`px-4 py-2 text-sm font-medium text-white rounded transition-colors disabled:opacity-50 ${
+              className={`px-4 py-2 text-sm font-medium text-white transition-colors disabled:opacity-50 ${
                 isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
               }`}
               disabled={isLoading}
