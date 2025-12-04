@@ -41,7 +41,8 @@ function BookingDetails() {
 
   const fetchBooking = async () => {
     try {
-      const res = await fetch(`/api/booking/${id}`)
+      const res = await fetch(`/app/api/booking/${id}`)
+      
       if (!res.ok) throw new Error('Failed to fetch booking')
       const data:BookingDetail = await res.json()
       console.log(data)
@@ -80,7 +81,7 @@ function BookingDetails() {
 
   return (
     <div className="p-8 max-w-2xl mx-auto bg-white rounded-lg shadow">
-      <h1 className="text-2xl font-bold mb-6">{booking.services.name}</h1>
+      <h1 className="text-2xl font-bold mb-6">{booking.services?.name}</h1>
       <h2>client: {booking.client?.firstName} {booking.client?.lastName}</h2>
       <h2>contact: {booking.client?.email} </h2>
       <h2> {booking.client?.phone} </h2>

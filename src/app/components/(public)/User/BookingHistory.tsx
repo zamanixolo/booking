@@ -24,6 +24,11 @@ interface Provider {
   firstName: string
   lastName: string
 }
+
+interface ProviderResponse {
+  team: Provider[]
+}
+
 function BookingHistory({ userId }: Props) {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -60,8 +65,10 @@ function BookingHistory({ userId }: Props) {
   useEffect(()=>{
     const getProviders=async()=>{
       const res=await fetch('/app/api/team/getActiveProvider')
-      const providerdata: Provider[] =await res.json()
-      setAvailableProviders(providerdata)
+      const providerdata: ProviderResponse =await res.json()
+  
+  
+      setAvailableProviders(providerdata.team)
     }
     getProviders()
   },[])
@@ -127,6 +134,9 @@ function BookingHistory({ userId }: Props) {
             <fieldset>
                 <legend>Provider </legend>
               <select>
+
+              {/* defalut option will be the provider in the bookingData.providers needs a get */}
+
               {availableProviders.map((e:any)=>{return <option key={e.id}>{e.firstName} {e.lastName}</option>})}
              
               </select>

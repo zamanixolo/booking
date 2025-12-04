@@ -120,9 +120,10 @@ export const getBookingsByClient = async (clientId: string): Promise<BookingType
 // ---------------------------
 export const getBookingById = async (id: string): Promise<BookingType | null> => {
   const rows = await runQuery(`SELECT * FROM Booking WHERE id='${id}' LIMIT 1;`);
-  
+ 
   if (!rows.length) return null;
-  return formatBooking(rows[0]);
+
+  return rows[0].results;
 };
 
 // ---------------------------

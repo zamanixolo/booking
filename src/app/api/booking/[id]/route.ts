@@ -1,7 +1,7 @@
 // src/app/api/booking/[id]/route.ts
 
 // Force the Edge runtime (required for D1 and Cloudflare context)
-// export const runtime = 'edge';
+export const runtime = 'edge';
 
 import { NextResponse } from 'next/server';
 import { 
@@ -29,9 +29,10 @@ interface BookingRequestBody {
 // =======================
 export async function GET(req: Request, context: any) {
   try {
-    const id = context.params.id;
+    const { id } = await context.params;
 
     const booking = await getBookingById(id);
+ 
     if (!booking) {
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
     }
@@ -55,7 +56,7 @@ export async function PUT(req: Request, context: any) {
       status: body.status as BookingStatus,
       price: body.price,
       sessionDuration: body.sessionDuration,
-      date: body.date ? new Date(body.date) : undefined,
+      date: body.date ? new Date(body.date).toString() : undefined,
       time: body.time,
       specialRequests: body.specialRequests,
     });
@@ -165,7 +166,7 @@ export async function PATCH(req: Request) {
       status: updateData.status ? (updateData.status as BookingStatus) : undefined,
       price: updateData.price,
       sessionDuration: updateData.sessionDuration,
-      date: updateData.date ? new Date(updateData.date) : undefined,
+      date: updateData.date ? new Date(updateData.date).toString() : undefined,
       time: updateData.time,
     });
 
@@ -178,6 +179,8 @@ export async function PATCH(req: Request) {
     );
   }
 }
+
+
 
 // Booking Update Validation Rules
 // 1. Status-Based Restrictions

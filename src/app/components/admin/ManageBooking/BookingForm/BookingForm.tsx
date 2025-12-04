@@ -9,7 +9,9 @@ interface Provider {
   lastName: string
   email: string
 }
-
+interface ProviderResponse {
+  team: Provider[]
+}
 interface BookingFormProps {
   booking: any
   onSave: (data: any) => void
@@ -20,14 +22,16 @@ function BookingForm({ booking, onSave }: BookingFormProps) {
   const [providers, setProviders] = useState<Provider[]>([])
 
   useEffect(() => {
-    setFormData(booking)
+// console.log(booking[0].providerId)
+    setFormData(booking[0])
   }, [booking])
 
   const fetchProviders = async () => {
     try {
-      const res = await fetch('/api/team/getActiveProvider')
-      const data:Provider[] = await res.json()
-      setProviders(data)
+      const res = await fetch('/app/api/team/getActiveProvider')
+      const data:ProviderResponse = await res.json()
+      
+      setProviders(data.team)
     } catch (err) {
       console.error(err)
     }
@@ -44,9 +48,10 @@ function BookingForm({ booking, onSave }: BookingFormProps) {
   return (
     <div className="space-y-4">
       {/* Provider */}
+      {/* need logic to set defalut provider to the provider that user selected */}
       <ProviderSelect
         providers={providers}
-        value={formData.provider.id}
+        value={formData?.provider?.id}
         onChange={(providerId) => {
           const selected = providers.find((p) => p.id === providerId)
           if (selected) handleChange('provider', selected)
@@ -58,13 +63,13 @@ function BookingForm({ booking, onSave }: BookingFormProps) {
         <BookingField
           label="Date"
           type="date"
-          value={formData.date.split('T')[0]}
+          value={formData?.date?.split('T')[0]}
           onChange={(v) => handleChange('date', v)}
         />
         <BookingField
           label="Time"
           type="time"
-          value={formData.time}
+          value={formData?.time}
           onChange={(v) => handleChange('time', v)}
         />
       </div>
@@ -74,13 +79,13 @@ function BookingForm({ booking, onSave }: BookingFormProps) {
         <BookingField
           label="Price (R)"
           type="number"
-          value={formData.price}
+          value={formData?.price}
           onChange={(v) => handleChange('price', parseFloat(v))}
         />
         <BookingField
           label="Duration (minutes)"
           type="number"
-          value={formData.sessionDuration}
+          value={formData?.sessionDuration}
           onChange={(v) => handleChange('sessionDuration', parseInt(v))}
         />
       </div>
@@ -90,7 +95,7 @@ function BookingForm({ booking, onSave }: BookingFormProps) {
         label="Status"
         type="select"
         options={['PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED']}
-        value={formData.status}
+        value={formData?.status}
         onChange={(v) => handleChange('status', v)}
       />
 
@@ -98,7 +103,7 @@ function BookingForm({ booking, onSave }: BookingFormProps) {
       <BookingField
         label="Special Requests"
         type="textarea"
-        value={formData.specialRequests || ''}
+        value={formData?.specialRequests || ''}
         onChange={(v) => handleChange('specialRequests', v)}
       />
 

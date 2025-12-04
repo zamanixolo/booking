@@ -1,5 +1,6 @@
 import React from 'react'
 import dynamic from 'next/dynamic'
+import BookingDetails from '@/app/components/admin/ManageBooking/BookingDetails/BookingDetails'
 
 // Dynamically import so it only runs on the client (has hooks)
 // const BookingDetails = dynamic(
@@ -12,7 +13,7 @@ export default function BookingPage() {
     <main className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-4xl mx-auto">
         booking details
-        {/* <BookingDetails /> */}
+        <BookingDetails/>
       </div>
     </main>
   )

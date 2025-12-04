@@ -15,6 +15,7 @@ interface Props {
 }
 
 function ProviderSelect({ providers, value, onChange }: Props) {
+  console.log(value)
   return (
     <div>
       <label className="font-medium block mb-1">Provider:</label>
