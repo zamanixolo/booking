@@ -139,23 +139,36 @@ export const getBookingsByProvider = async (providerId: string): Promise<Booking
 // ---------------------------
 export const updateBooking = async (
   id: string,
-  data: Partial<Omit<BookingType, 'id' | 'createdAt' | 'updatedAt'>>
+  data: Partial<Omit<BookingType, "id" | "createdAt" | "updatedAt">>
 ): Promise<BookingType> => {
-  const updates = Object.entries(data)
+  
+  // Remove undefined and keep only real keys
+  const cleanedEntries = Object.entries(data).filter(([_, v]) => v !== undefined);
+console.log(`data to serve:${data}`)
+  // If nothing to update, just return existing booking or throw
+  if (cleanedEntries.length === 0) {
+    throw new Error("No valid fields provided for update");
+  }
+
+  const updates = cleanedEntries
     .map(([k, v]) => {
       if (v === null) return `${k}=NULL`;
-      if (k === 'date') {
-       const dateStr =
-       typeof v === "object" && v !== null && "toISOString" in v
-        ? (v as Date).toISOString()
-        : v;
 
+      if (k === 'date') {
+        const dateStr =
+          typeof v === 'object' && v !== null && 'toISOString' in v
+            ? (v as Date).toISOString()
+            : v;
         return `date='${dateStr}'`;
       }
-      if (typeof v === 'string') return `${k}='${v.replace("'", "''")}'`;
+
+      if (typeof v === 'string') {
+        return `${k}='${v.replace(/'/g, "''")}'`;
+      }
+
       return `${k}=${v}`;
     })
-    .join(',');
+    .join(", ");
 
   const sql = `
     UPDATE Booking
@@ -165,7 +178,8 @@ export const updateBooking = async (
   `;
 
   const result = await runQuery(sql);
-  return formatBooking(result[0]);
+ 
+  return result[0].results[0];
 };
 
 // ---------------------------

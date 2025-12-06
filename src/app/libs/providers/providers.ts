@@ -74,7 +74,8 @@ export const createProvider = async (data: Partial<ProviderType>): Promise<Provi
     .join(",");
   const sql = `INSERT INTO Provider (${columns}) VALUES (${values}) RETURNING *;`;
   const result = await runQuery(sql);
-  return formatProvider(result[0]);
+
+  return result[0].results[0];
 };
 
 // ---------------------------

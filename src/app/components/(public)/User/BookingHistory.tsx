@@ -28,14 +28,23 @@ interface Provider {
 interface ProviderResponse {
   team: Provider[]
 }
-
+interface BookingData {
+  id: string|null;
+  date?: string|null;
+  time?: string|null;
+  status?: string;
+  price?: number;
+  sessionDuration?: number;
+  providerId?: string|null;
+  serviceId?: string;
+}
 function BookingHistory({ userId }: Props) {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [openmodule, setOpenModule] = useState(false)
   const [selectedBooking, setSelectedBooking] = useState<string | null>(null)
   const [availableProviders,setAvailableProviders]=useState<Provider[]>([])
-  const [bookingData,setBookingData]=useState({date: null,
+  const [bookingData,setBookingData]=useState<BookingData>({date: null,
     id: null,
     providerId:null,
     time: null
@@ -49,7 +58,7 @@ function BookingHistory({ userId }: Props) {
       try {
         const response = await fetch(`/app/api/booking?clientId=${userId}`)
         const data: Booking[] = await response.json()
-        console.log(data)
+      
         setBookings(data)
    
       } catch (error) {
@@ -75,14 +84,15 @@ function BookingHistory({ userId }: Props) {
   
   const editmodule = (booking:any) => {
     setSelectedBooking(booking.id)
-    setBookingData({...bookingData,
+  //  console.log(bookingData)
+    setBookingData({...booking,
       date:booking.date.split('T')[0],
       id: booking.id,
       time: booking.time,
       providerId:booking.providerId})
     setOpenModule(true)
-    console.log(booking)
-    console.log(bookingData)
+   
+    // console.log(bookingData)
   }
 
   const closeModule = () => {
@@ -90,7 +100,7 @@ function BookingHistory({ userId }: Props) {
     setSelectedBooking(null)
   }
   const bookingupdate=async(id:string)=>{
-    console.log(id)
+  
     const res=await fetch(`/app/api/booking/${id}`,{
       method:'PATCH',
       headers:{ 'Content-Type': 'application/json' },
@@ -133,7 +143,13 @@ function BookingHistory({ userId }: Props) {
             {/* Provider Information */}
             <fieldset>
                 <legend>Provider </legend>
-              <select>
+              <select
+    value={bookingData.providerId || ''}  
+    onChange={(e) => setBookingData(prev => ({
+      ...prev,
+      providerId: e.target.value
+    }))}
+  >
 
               {/* defalut option will be the provider in the bookingData.providers needs a get */}
 

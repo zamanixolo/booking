@@ -31,50 +31,65 @@ export async function GET() {
   return NextResponse.json(team)
 }
 
-// POST request: Automatically dynamic, uncached by default.
 export async function POST(req: Request) {
-  const body: ProviderRequestBody = await req.json() // Use the interface
+  try {
+    const body: ProviderRequestBody = await req.json();
 
-  const team = await getAllProviders() // This must be Node.js compatible
-  if (team.find((member) => member.email === body.email)) {
-    // Status 409 (Conflict) is better than 250
-    return NextResponse.json({ msg: 'Member with this email already exists' }, { status: 409 })
+    // 1️⃣ Check if email already exists in Providers table
+    const team = await getAllProviders();
+    if (team.find((member) => member.email === body.email)) {
+      return NextResponse.json(
+        { msg: 'Provider with this email already exists' },
+        { status: 409 }
+      );
+    }
+
+    // 2️⃣ Convert role to enum if provided
+    let role: ProviderRole | undefined;
+    if (body.role && Object.values(ProviderRole).includes(body.role as ProviderRole)) {
+      role = body.role as ProviderRole;
+    }
+
+    // 3️⃣ Create Clerk user
+    const client = await clerkClient();
+    const clerkUser = await client.users.createUser({
+      emailAddress: [body.email],
+      password: body.password,
+      firstName: body.firstName,
+      lastName: body.lastName,
+    });
+
+    // 4️⃣ Build provider object
+    const providerData = {
+      id: clerkUser.id.replace(/user/gi, ''), // your internal ID
+      clerkId: clerkUser.id,
+      firstName: body.firstName,
+      lastName: body.lastName,
+      email: body.email,
+      imageurl: body.imageurl,
+      bio: body.bio,
+      role,
+      isAvailable: body.isAvailable ?? true,
+      updatedAt: new Date().toISOString(),
+    };
+
+    // 5️⃣ Create provider in your database
+    const data = await createProvider(providerData);
+
+    return NextResponse.json(data, { status: 201 });
+  } catch (error: any) {
+    console.error('Error creating provider:', error);
+
+    // Handle unique constraint errors more gracefully
+    if (error.message.includes('UNIQUE constraint failed')) {
+      return NextResponse.json(
+        { msg: 'Email already exists in the database' },
+        { status: 409 }
+      );
+    }
+
+    return NextResponse.json({ msg: 'Internal server error' }, { status: 500 });
   }
-
-  // Convert role to enum if provided
-  let role: ProviderRole | undefined
-  if (body.role && Object.values(ProviderRole).includes(body.role as ProviderRole)) {
-    role = body.role as ProviderRole
-  }
-
- // Create Clerk user using Backend API
-  const client = await clerkClient() 
-
-  // Now 'client' is a resolved ClerkClient object, and you can safely access 'users'
-  const clerkUser = await client.users.createUser({
-    emailAddress: [body.email],
-    password: body.password,
-    firstName: body.firstName,
-    lastName: body.lastName,
-  })
-
-  // Build provider object safely
-  const providerData = {
-    id:clerkUser.id.replace(/user/gi, ''),
-    firstName: body.firstName,
-    lastName: body.lastName,
-    email: body.email,
-    imageurl: body.imageurl,
-    bio: body.bio,
-    role,         // ✅ enum-safe
-    userId: body.userId, // optional
-    clerkId: clerkUser.id, 
-    updatedAt :new  Date().toString()
-  }
-
-  const data = await createProvider(providerData) // This must be Node.js compatible
-  
-  return NextResponse.json(data, { status: 201 })
 }
 
 // PUT (update member): Automatically dynamic, uncached by default.

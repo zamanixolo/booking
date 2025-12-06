@@ -97,7 +97,7 @@ function CreateService({ openCreateModule }: CreateServiceProps) {
     headers:{'Content-Type': 'application/json' },
     body:JSON.stringify({...service})})
     const res:any=await sub.json()
-    console.log(res)
+    // console.log(res)
     if(res.status== 201){
       openCreateModule()
     }

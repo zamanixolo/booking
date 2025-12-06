@@ -45,7 +45,7 @@ function BookingDetails() {
       
       if (!res.ok) throw new Error('Failed to fetch booking')
       const data:BookingDetail = await res.json()
-      console.log(data)
+      // console.log(data)
       setBooking(data)
     } catch (err) {
       setError('Error fetching booking details')
@@ -57,7 +57,7 @@ function BookingDetails() {
   const handleUpdate = async (updatedData: Partial<BookingDetail>) => {
     if (!booking) return
     try {
-      const res = await fetch(`/api/booking/${id}`, {
+      const res = await fetch(`/app/api/booking/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData),

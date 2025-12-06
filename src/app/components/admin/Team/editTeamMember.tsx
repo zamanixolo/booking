@@ -48,7 +48,7 @@ export default function UpdateMember({ member, closeModal }: UpdateMemberProps) 
 
       if (response.ok) {
         const result = await response.json()
-        console.log('Updated provider:', result)
+        // console.log('Updated provider:', result)
         closeModal()
       } else {
         const error = await response.json()

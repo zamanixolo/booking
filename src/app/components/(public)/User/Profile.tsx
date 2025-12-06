@@ -37,7 +37,7 @@ function Profile({ id }: Props) {
      
       if (res.ok) {
         const data:UserData = await res.json()
-        console.log(data)
+        // console.log(data)
         setUserData({
           email: data.email || '',
           firstName: data.firstName || '',
@@ -69,7 +69,7 @@ function Profile({ id }: Props) {
       
       if (res.ok) {
         const data = await res.json()
-        console.log('Profile updated:', data)
+        // console.log('Profile updated:', data)
         setIsEditing(false)
       } else {
         console.error('Failed to update profile')

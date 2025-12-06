@@ -107,7 +107,7 @@ function UpdateService({ openUpdateModule, serviceToEdit, onServiceUpdated }: Up
     setIsLoading(true);
     
     try {
-      console.log('🟡 Updating service with providers:', service.providers);
+      // console.log('🟡 Updating service with providers:', service.providers);
       
       const response = await fetch(`/app/api/services`, {
         method: 'PUT',
@@ -123,7 +123,7 @@ function UpdateService({ openUpdateModule, serviceToEdit, onServiceUpdated }: Up
       });
       
       const result:any = await response.json();
-      console.log('🟢 Update result:', result);
+      // console.log('🟢 Update result:', result);
       
       if (response.ok) {
         onServiceUpdated();

@@ -49,7 +49,8 @@ export async function GET(req: Request, context: any) {
 // =======================
 export async function PUT(req: Request, context: any) {
   try {
-    const id = context.params.id;
+    const params = await context.params; 
+    const id = params.id;
     const body: BookingRequestBody = await req.json();
 
     const updated = await updateBooking(id, {
