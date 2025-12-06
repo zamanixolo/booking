@@ -22,7 +22,7 @@ function BookingForm({ booking, onSave }: BookingFormProps) {
   const [providers, setProviders] = useState<Provider[]>([])
 
   useEffect(() => {
-console.log(booking[0])
+
     setFormData(booking[0])
   }, [booking])
 
@@ -51,7 +51,7 @@ console.log(booking[0])
       {/* need logic to set defalut provider to the provider that user selected */}
       <ProviderSelect
         providers={providers}
-        value={formData.providerId}
+        value={formData?.providerId}
         onChange={(providerId) => {
           const selected = providers.find((p) => p.id === providerId)
           if (selected) handleChange('provider', selected)

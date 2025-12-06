@@ -123,7 +123,7 @@ export const getBookingById = async (id: string): Promise<BookingType | null> =>
  
   if (!rows.length) return null;
 
-  return rows[0].results;
+  return rows[0].results[0];
 };
 
 // ---------------------------
@@ -144,7 +144,7 @@ export const updateBooking = async (
   
   // Remove undefined and keep only real keys
   const cleanedEntries = Object.entries(data).filter(([_, v]) => v !== undefined);
-console.log(`data to serve:${data}`)
+console.log(`data to serve:`,data)
   // If nothing to update, just return existing booking or throw
   if (cleanedEntries.length === 0) {
     throw new Error("No valid fields provided for update");
@@ -178,7 +178,7 @@ console.log(`data to serve:${data}`)
   `;
 
   const result = await runQuery(sql);
- 
+
   return result[0].results[0];
 };
 

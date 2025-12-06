@@ -42,7 +42,7 @@ export default function UpdateMember({ member, closeModal }: UpdateMemberProps) 
           imageurl: updatedProvider.imageurl,
           bio: updatedProvider.bio,
           role: updatedProvider.role,
-          isAvailable: updatedProvider.isAvailable ?? false,
+          isAvailable: updatedProvider.isAvailable ? 1 :  0,
         }),
       })
 

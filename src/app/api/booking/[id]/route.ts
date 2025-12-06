@@ -91,7 +91,7 @@ export async function PATCH(req: Request) {
   try {
     const data: BookingRequestBody & { id: string } = await req.json();
     const { id, ...updateData } = data;
-
+ 
     if (!id) {
       return NextResponse.json(
         { error: "Booking ID is required" },
@@ -110,59 +110,60 @@ export async function PATCH(req: Request) {
 
     const validationErrors: string[] = [];
 
-    const immutableStatuses = ['COMPLETED', 'CANCELLED', 'NO_SHOW'];
-    if (immutableStatuses.includes(currentBooking.status)) {
-      validationErrors.push(`Cannot modify ${currentBooking.status.toLowerCase()} bookings`);
-    }
+    // const immutableStatuses = ['COMPLETED', 'CANCELLED', 'NO_SHOW'];
+    // if (immutableStatuses.includes(currentBooking.status)) {
+    //   validationErrors.push(`Cannot modify ${currentBooking.status.toLowerCase()} bookings`);
+    // }
 
-    const bookingDate = new Date(currentBooking.date);
-    const now = new Date();
-    if (bookingDate < now) {
-      validationErrors.push("Cannot modify past bookings");
-    }
+    // const bookingDate = new Date(currentBooking.date);
+    // const now = new Date();
+    // if (bookingDate < now) {
+    //   validationErrors.push("Cannot modify past bookings");
+    // }
 
-    if (updateData.status) {
-      const validTransitions: Record<string, string[]> = {
-        'PENDING': ['CONFIRMED', 'CANCELLED'],
-        'CONFIRMED': ['IN_PROGRESS', 'CANCELLED'],
-        'IN_PROGRESS': ['COMPLETED', 'CANCELLED']
-      };
-      const allowedTransitions = validTransitions[currentBooking.status] || [];
-      if (!allowedTransitions.includes(updateData.status)) {
-        validationErrors.push(
-          `Cannot change status from ${currentBooking.status} to ${updateData.status}`
-        );
-      }
-    }
+    // if (updateData.status) {
+    //   const validTransitions: Record<string, string[]> = {
+    //     'PENDING': ['CONFIRMED', 'CANCELLED'],
+    //     'CONFIRMED': ['IN_PROGRESS', 'CANCELLED'],
+    //     'IN_PROGRESS': ['COMPLETED', 'CANCELLED']
+    //   };
+    //   const allowedTransitions = validTransitions[currentBooking.status] || [];
+    //   if (!allowedTransitions.includes(updateData.status)) {
+    //     validationErrors.push(
+    //       `Cannot change status from ${currentBooking.status} to ${updateData.status}`
+    //     );
+    //   }
+    // }
 
-    if (updateData.date) {
-      const newDate = new Date(updateData.date);
-      if (newDate < now) {
-        validationErrors.push("Cannot change booking to a past date");
-      }
-    }
+    // if (updateData.date) {
+    //   const newDate = new Date(updateData.date);
+    //   if (newDate < now) {
+    //     validationErrors.push("Cannot change booking to a past date");
+    //   }
+    // }
 
-    if (updateData.providerId && updateData.providerId !== currentBooking.providerId) {
-      validationErrors.push("Cannot change provider for existing booking");
-    }
+    // if (updateData.providerId && updateData.providerId !== currentBooking.providerId) {
+    //   validationErrors.push("Cannot change provider for existing booking");
+    // }
 
-    if (updateData.serviceId && updateData.serviceId !== currentBooking.serviceId) {
-      validationErrors.push("Cannot change service for existing booking");
-    }
+    // if (updateData.serviceId && updateData.serviceId !== currentBooking.serviceId) {
+    //   validationErrors.push("Cannot change service for existing booking");
+    // }
 
-    if (updateData.price !== undefined && currentBooking.status === 'COMPLETED') {
-      if (updateData.price < currentBooking.price) {
-        validationErrors.push("Cannot reduce price for completed bookings");
-      }
-    }
+    // if (updateData.price !== undefined && currentBooking.status === 'COMPLETED') {
+    //   if (updateData.price < currentBooking.price) {
+    //     validationErrors.push("Cannot reduce price for completed bookings");
+    //   }
+    // }
 
+console.log(validationErrors)
     if (validationErrors.length > 0) {
       return NextResponse.json(
         { errors: validationErrors },
         { status: 400 }
       );
     }
-
+// console.log(id)
     const updatedBooking = await updateBooking(id, {
       status: updateData.status ? (updateData.status as BookingStatus) : undefined,
       price: updateData.price,

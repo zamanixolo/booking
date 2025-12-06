@@ -49,9 +49,7 @@ function BookingHistory({ userId }: Props) {
     providerId:null,
     time: null
     })
-  
-  useEffect(() => {
-    const fetchBookings = async () => {
+     const fetchBookings = async () => {
       if (!userId) return
       
       setIsLoading(true)
@@ -67,6 +65,9 @@ function BookingHistory({ userId }: Props) {
         setIsLoading(false)
       }
     }
+  
+  useEffect(() => {
+   
 
     fetchBookings()
   }, [userId])
@@ -100,14 +101,17 @@ function BookingHistory({ userId }: Props) {
     setSelectedBooking(null)
   }
   const bookingupdate=async(id:string)=>{
-  
+    const updateData=({...bookingData,id:id})
     const res=await fetch(`/app/api/booking/${id}`,{
       method:'PATCH',
       headers:{ 'Content-Type': 'application/json' },
-      body:JSON.stringify({id:id,updateData:bookingData})
+      body:JSON.stringify(updateData)
     })
     const data=await res.json()
-
+    if(res.ok){
+    fetchBookings()
+    closeModule()
+    }
   }
 
  // Handle changes for top-level fields
@@ -153,7 +157,7 @@ function BookingHistory({ userId }: Props) {
 
               {/* defalut option will be the provider in the bookingData.providers needs a get */}
 
-              {availableProviders.map((e:any)=>{return <option key={e.id}>{e.firstName} {e.lastName}</option>})}
+              {availableProviders.map((e:any)=>{return <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>})}
              
               </select>
 
