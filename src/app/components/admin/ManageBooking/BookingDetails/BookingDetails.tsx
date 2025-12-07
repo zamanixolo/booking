@@ -45,7 +45,7 @@ function BookingDetails() {
       
       if (!res.ok) throw new Error('Failed to fetch booking')
       const data:BookingDetail = await res.json()
-      // console.log(data)
+    
       setBooking(data)
     } catch (err) {
       setError('Error fetching booking details')

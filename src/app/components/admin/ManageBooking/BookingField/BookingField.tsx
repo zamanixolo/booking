@@ -10,20 +10,23 @@ interface Props {
 }
 
 function BookingField({ label, type = 'text', value, onChange, options }: Props) {
+  const safeValue = value ?? ''   // <<< KEY FIX
+
   return (
     <div>
       <label className="font-medium block mb-1">{label}</label>
+
       {type === 'textarea' ? (
         <textarea
           className="border rounded p-2 w-full"
           rows={3}
-          value={value}
+          value={safeValue}
           onChange={(e) => onChange(e.target.value)}
         />
       ) : type === 'select' && options ? (
         <select
           className="border rounded p-2 w-full"
-          value={value}
+          value={safeValue}
           onChange={(e) => onChange(e.target.value)}
         >
           {options.map((opt) => (
@@ -36,7 +39,7 @@ function BookingField({ label, type = 'text', value, onChange, options }: Props)
         <input
           type={type}
           className="border rounded p-2 w-full"
-          value={value}
+          value={safeValue}
           onChange={(e) => onChange(e.target.value)}
         />
       )}

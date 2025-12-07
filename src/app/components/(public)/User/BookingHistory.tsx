@@ -76,7 +76,7 @@ function BookingHistory({ userId }: Props) {
     const getProviders=async()=>{
       const res=await fetch('/app/api/team/getActiveProvider')
       const providerdata: ProviderResponse =await res.json()
-  
+  // still need to fitlet for the service providers
   
       setAvailableProviders(providerdata.team)
     }
@@ -85,9 +85,10 @@ function BookingHistory({ userId }: Props) {
   
   const editmodule = (booking:any) => {
     setSelectedBooking(booking.id)
-  //  console.log(bookingData)
+   let date =new Date(booking.date).toISOString().split("T")[0]
+   console.log(booking)
     setBookingData({...booking,
-      date:booking.date.split('T')[0],
+      date:date,
       id: booking.id,
       time: booking.time,
       providerId:booking.providerId})
@@ -146,22 +147,25 @@ function BookingHistory({ userId }: Props) {
           
             {/* Provider Information */}
             <fieldset>
-                <legend>Provider </legend>
-              <select
-    value={bookingData.providerId || ''}  
-    onChange={(e) => setBookingData(prev => ({
-      ...prev,
-      providerId: e.target.value
-    }))}
+  <legend>Provider</legend>
+
+  <select
+    value={bookingData.providerId ?? ''}   // <- This sets the default selected provider
+    onChange={(e) =>
+      setBookingData(prev => ({
+        ...prev,
+        providerId: e.target.value
+      }))
+    }
   >
+    {availableProviders.map((p: any) => (
+      <option key={p.id} value={p.id}>
+        {p.firstName} {p.lastName}
+      </option>
+    ))}
+  </select>
+</fieldset>
 
-              {/* defalut option will be the provider in the bookingData.providers needs a get */}
-
-              {availableProviders.map((e:any)=>{return <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>})}
-             
-              </select>
-
-            </fieldset>
 
             {/* Booking Details */}
             <fieldset>

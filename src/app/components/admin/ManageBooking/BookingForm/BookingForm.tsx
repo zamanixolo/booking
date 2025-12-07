@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import ProviderSelect from '../ProviderSelect/ProviderSelect'
 import BookingField from '../BookingField/BookingField'
+import Loading from '@/app/Loading'
 
 interface Provider {
   id: string
@@ -20,10 +21,12 @@ interface BookingFormProps {
 function BookingForm({ booking, onSave }: BookingFormProps) {
   const [formData, setFormData] = useState(booking)
   const [providers, setProviders] = useState<Provider[]>([])
-
+  const [isLoading,setIsloading]= useState(true)
   useEffect(() => {
-
-    setFormData(booking[0])
+if(booking){
+    setFormData(booking)
+    setIsloading(false)
+  }
   }, [booking])
 
   const fetchProviders = async () => {
@@ -44,7 +47,7 @@ function BookingForm({ booking, onSave }: BookingFormProps) {
   const handleChange = (key: string, value: any) => {
     setFormData((prev: any) => ({ ...prev, [key]: value }))
   }
-
+if(isLoading==true)return<Loading/>
   return (
     <div className="space-y-4">
       {/* Provider */}
@@ -63,7 +66,7 @@ function BookingForm({ booking, onSave }: BookingFormProps) {
         <BookingField
           label="Date"
           type="date"
-          value={formData?.date?.split('T')[0]}
+          value={new Date(formData?.date).toISOString().split("T")[0]}
           onChange={(v) => handleChange('date', v)}
         />
         <BookingField
