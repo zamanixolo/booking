@@ -75,7 +75,8 @@ export const getAllServices = async (): Promise<ServiceType[]> => {
 export const getServiceById = async (id: string): Promise<ServiceType | null> => {
   const rows = await runQuery(`SELECT * FROM Service WHERE id='${id}' LIMIT 1;`)
   if (!rows.length) return null
-  return formatService(rows[0])
+ 
+  return rows[0].results
 }
 
 // ---------------------------

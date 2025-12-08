@@ -20,7 +20,7 @@ interface Booking {
   }
 }
 interface Provider {
-  
+  id: string
   firstName: string
   lastName: string
 }
@@ -44,6 +44,7 @@ function BookingHistory({ userId }: Props) {
   const [openmodule, setOpenModule] = useState(false)
   const [selectedBooking, setSelectedBooking] = useState<string | null>(null)
   const [availableProviders,setAvailableProviders]=useState<Provider[]>([])
+  const [serviceProviders,setServiceProviders]=useState<string[]>([])
   const [bookingData,setBookingData]=useState<BookingData>({date: null,
     id: null,
     providerId:null,
@@ -83,11 +84,18 @@ function BookingHistory({ userId }: Props) {
     getProviders()
   },[])
   
-  const editmodule = (booking:any) => {
+  const editmodule = async (booking:any) => {
     setSelectedBooking(booking.id)
-  //  console.log(bookingData)
+    const serviceData=await fetch(`/app/api/booking-settings/${booking.serviceId}`)
+    const service:any=await serviceData.json()
+    const providers=service.data[0].providerIds.split(',');
+    setServiceProviders(providers)
+  // get service
+  // get providers for service
+    const dateObj = new Date(booking.date); // actual Date object
+    const dateString = dateObj.toISOString().split('T')[0]; 
     setBookingData({...booking,
-      date:booking.date.split('T')[0],
+      date:dateString,
       id: booking.id,
       time: booking.time,
       providerId:booking.providerId})
@@ -101,17 +109,22 @@ function BookingHistory({ userId }: Props) {
     setSelectedBooking(null)
   }
   const bookingupdate=async(id:string)=>{
-    const updateData=({...bookingData,id:id})
+    const { status, ...rest } = bookingData;
+    const updateData = { ...rest, id };
+   
     const res=await fetch(`/app/api/booking/${id}`,{
       method:'PATCH',
       headers:{ 'Content-Type': 'application/json' },
       body:JSON.stringify(updateData)
     })
-    const data=await res.json()
+    const data:any=await res.json()
     if(res.ok){
     fetchBookings()
     closeModule()
+    }else{
+      alert(data.errors.join("\n\n"));
     }
+    
   }
 
  // Handle changes for top-level fields
@@ -157,8 +170,13 @@ function BookingHistory({ userId }: Props) {
 
               {/* defalut option will be the provider in the bookingData.providers needs a get */}
 
-              {availableProviders.map((e:any)=>{return <option key={e.id} value={e.id}>{e.firstName} {e.lastName}</option>})}
-             
+              {availableProviders.filter(provider => serviceProviders.includes(provider.id))
+    .map(provider => (
+      <option key={provider.id} value={provider.id}>
+        {provider.firstName} {provider.lastName}
+      </option>
+    ))
+  }
               </select>
 
             </fieldset>

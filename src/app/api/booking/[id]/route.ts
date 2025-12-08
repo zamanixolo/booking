@@ -1,6 +1,4 @@
-// src/app/api/booking/[id]/route.ts
-
-// Force the Edge runtime (required for D1 and Cloudflare context)
+//date and time issue
 export const runtime = 'edge';
 
 import { NextResponse } from 'next/server';
@@ -10,6 +8,7 @@ import {
   deleteBooking 
 } from '@/app/libs/booking/Booking';
 import { BookingStatus } from '@prisma/client';
+import { getAllOperatingHours } from '@/app/libs/Operations/Operations';
 
 // Define the expected shape of the request body for an update (PUT/PATCH)
 interface BookingRequestBody {
@@ -87,6 +86,11 @@ export async function DELETE(req: Request, context: any) {
 // =======================
 // ✅ PATCH (Partial Update)
 // =======================
+
+    function timeToMinutes(t: string) {
+    const [h, m] = t.split(":").map(Number);
+    return h * 60 + m;
+    }
 export async function PATCH(req: Request) {
   try {
     const data: BookingRequestBody & { id: string } = await req.json();
@@ -100,7 +104,7 @@ export async function PATCH(req: Request) {
     }
 
     const currentBooking = await getBookingById(id);
-
+    const operations= await getAllOperatingHours()
     if (!currentBooking) {
       return NextResponse.json(
         { error: "Booking not found" },
@@ -110,53 +114,82 @@ export async function PATCH(req: Request) {
 
     const validationErrors: string[] = [];
 
-    // const immutableStatuses = ['COMPLETED', 'CANCELLED', 'NO_SHOW'];
-    // if (immutableStatuses.includes(currentBooking.status)) {
-    //   validationErrors.push(`Cannot modify ${currentBooking.status.toLowerCase()} bookings`);
-    // }
+    const immutableStatuses = ['COMPLETED', 'CANCELLED', 'NO_SHOW'];
+    if (immutableStatuses.includes(currentBooking.status)) {
+      validationErrors.push(`Cannot modify ${currentBooking.status.toLowerCase()} bookings`);
+    }
 
-    // const bookingDate = new Date(currentBooking.date);
-    // const now = new Date();
-    // if (bookingDate < now) {
-    //   validationErrors.push("Cannot modify past bookings");
-    // }
+    const bookingDate = new Date(currentBooking.date);
+    const now = new Date();
 
-    // if (updateData.status) {
-    //   const validTransitions: Record<string, string[]> = {
-    //     'PENDING': ['CONFIRMED', 'CANCELLED'],
-    //     'CONFIRMED': ['IN_PROGRESS', 'CANCELLED'],
-    //     'IN_PROGRESS': ['COMPLETED', 'CANCELLED']
-    //   };
-    //   const allowedTransitions = validTransitions[currentBooking.status] || [];
-    //   if (!allowedTransitions.includes(updateData.status)) {
-    //     validationErrors.push(
-    //       `Cannot change status from ${currentBooking.status} to ${updateData.status}`
-    //     );
-    //   }
-    // }
+      const today = new Date();
+      bookingDate.setHours(0, 0, 0, 0);
+      now.setHours(0, 0, 0, 0);
+    if (bookingDate < now) {
+      validationErrors.push("Cannot modify past bookings");
+    }
 
-    // if (updateData.date) {
-    //   const newDate = new Date(updateData.date);
-    //   if (newDate < now) {
-    //     validationErrors.push("Cannot change booking to a past date");
-    //   }
-    // }
+    if (updateData.status) {
+      const validTransitions: Record<string, string[]> = {
+        'PENDING': ['CONFIRMED', 'CANCELLED'],
+        'CONFIRMED': ['IN_PROGRESS', 'CANCELLED'],
+        'IN_PROGRESS': ['COMPLETED', 'CANCELLED']
+      };
+      const allowedTransitions = validTransitions[currentBooking.status] || [];
+
+      if (!allowedTransitions.includes(updateData.status)) {
+        validationErrors.push(
+          `Cannot change status from ${currentBooking.status} to ${updateData.status}`
+        );
+      }
+    }
+
+    if (updateData.date) {
+      const newDate = new Date(updateData.date);
+  
+      const today = new Date();
+      newDate.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+
+      if (newDate < today) {
+      validationErrors.push("Cannot change booking to a past date");
+        }
+      }
 
     // if (updateData.providerId && updateData.providerId !== currentBooking.providerId) {
     //   validationErrors.push("Cannot change provider for existing booking");
     // }
 
-    // if (updateData.serviceId && updateData.serviceId !== currentBooking.serviceId) {
-    //   validationErrors.push("Cannot change service for existing booking");
-    // }
+    if (updateData.serviceId && updateData.serviceId !== currentBooking.serviceId) {
+      validationErrors.push("Cannot change service for existing booking");
+    }
 
-    // if (updateData.price !== undefined && currentBooking.status === 'COMPLETED') {
-    //   if (updateData.price < currentBooking.price) {
-    //     validationErrors.push("Cannot reduce price for completed bookings");
-    //   }
-    // }
+    if (updateData.price !== undefined && currentBooking.status === 'COMPLETED') {
+      if (updateData.price < currentBooking.price) {
+        validationErrors.push("Cannot reduce price for completed bookings");
+      }
+    }
 
-console.log(validationErrors)
+// Validate required fields
+if (!updateData.time) {
+  validationErrors.push("Time is required");
+} else if (!operations[0].startTime || !operations[0].endTime) {
+  validationErrors.push("Operation hours missing");
+} else {
+  const updateTime = timeToMinutes(updateData.time);
+  const startTime = timeToMinutes(operations[0].startTime);
+  const endTime = timeToMinutes(operations[0].endTime);
+
+  if (updateTime < startTime) {
+    validationErrors.push("Cannot change booking earlier than operating hours");
+  }
+
+  if (updateTime > endTime) {
+    validationErrors.push("Cannot change booking later than operating hours");
+  }
+}
+
+
     if (validationErrors.length > 0) {
       return NextResponse.json(
         { errors: validationErrors },

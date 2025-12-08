@@ -6,7 +6,8 @@
 import { NextResponse } from 'next/server';
 import {
   updateBookingSettings,
-  deleteBookingSettings
+  deleteBookingSettings,
+  getBookingSettingsById
 } from '@/app/libs/bookingSettings/BookingSettings';
 
 // Shape for your data (this part is fine)
@@ -16,7 +17,29 @@ interface UpdateBookingSettingsRequestBody {
   defaultSessionDuration?: number;
   defaultPrice?: number;
 }
+export async function GET(req: Request, context: any) {
+  try {
+    // await context.params first
+    const params = await context.params;
+    
+    // ensure id is a string
+    const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
+    if (!id) {
+      return NextResponse.json({ error: 'Booking ID is required' }, { status: 400 });
+    }
+
+    const data = await getBookingSettingsById(id);
+
+    return NextResponse.json({ data });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json(
+      { error: 'Failed to fetch booking settings' },
+      { status: 500 }
+    );
+  }
+}
 // =======================
 // ✅ PUT — Update by ID
 // =======================
