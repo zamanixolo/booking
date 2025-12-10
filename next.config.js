@@ -6,9 +6,6 @@ const nextConfig = {
   basePath: "/app",
   assetPrefix: "/app",
   // output: "standalone",
-  images: {
-    unoptimized: true,
-  },
 };
 
 module.exports = nextConfig;

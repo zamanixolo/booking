@@ -2,7 +2,7 @@
 
 // export const runtime = 'edge';
 
-import { NextResponse } from 'next/server';
+import { NextResponse,NextRequest } from 'next/server';
 import {
   getOperatingHourById,
   updateOperatingHour,
@@ -36,7 +36,7 @@ export async function GET(_req: Request, context: any) {
 }
 
 // ✅ PUT
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const id = params.id;
     

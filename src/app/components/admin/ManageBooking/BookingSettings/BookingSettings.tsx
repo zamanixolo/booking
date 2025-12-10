@@ -27,8 +27,8 @@ interface Provider {
 interface BookingSetting {
   id: string
   service: Service
-  serviceId:string
-  providerIds:string
+  serviceId: string
+  providerIds: string
   providers: Provider[]
   defaultPrice: number
   defaultSessionDuration: number
@@ -38,12 +38,11 @@ function BookingSettings() {
   const [services, setServices] = useState<Service[]>([])
   const [providers, setProviders] = useState<Provider[]>([])
   const [existingSettings, setExistingSettings] = useState<BookingSetting[]>([])
-
   const [selectedServiceId, setSelectedServiceId] = useState<string>('')
   const [booking, setBooking] = useState<Booking>({
     members: [],
     price: 650,
-    session: 60
+    session: 60,
   })
   const [currentSettingId, setCurrentSettingId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -59,7 +58,6 @@ function BookingSettings() {
     try {
       const res = await fetch('/app/api/services')
       if (res.ok) setServices(await res.json())
-
     } catch (error) {
       console.error('Error fetching services:', error)
     }
@@ -68,14 +66,10 @@ function BookingSettings() {
   const fetchProviders = async () => {
     try {
       const res = await fetch('/app/api/team/getActiveProvider')
-  
-      if (res.ok) 
-      {
-         const data:any =await res.json()
-
-        setProviders(data.team||[])
+      if (res.ok) {
+        const data: any = await res.json()
+        setProviders(data.team || [])
       }
-       
     } catch (error) {
       console.error('Error fetching providers:', error)
     }
@@ -84,10 +78,8 @@ function BookingSettings() {
   const fetchExistingSettings = async () => {
     try {
       const res = await fetch('/app/api/booking-settings')
-      
       if (res.ok) {
         const data: BookingSetting[] = await res.json()
-       
         setExistingSettings(data)
       }
     } catch (error) {
@@ -97,33 +89,34 @@ function BookingSettings() {
 
   /* ---------------------- LOAD OR RESET BOOKING ON SERVICE CHANGE ---------------------- */
   useEffect(() => {
-    if (!selectedServiceId) return
-   
-    const setting = existingSettings.find(s => s.serviceId=== selectedServiceId)
+    if (!selectedServiceId) {
+      setBooking({ members: [], price: 650, session: 60 })
+      setCurrentSettingId(null)
+      return
+    }
+
+    const setting = existingSettings.find((s) => s.serviceId === selectedServiceId)
 
     if (setting) {
-      // Load existing booking setting
       setCurrentSettingId(setting.id)
-      let providerIds=normalizeProviderIds(setting.providerIds)
-    
-      const existingProviders = providers.filter(
-        p => providerIds.includes(p.id)
-        );
-      
+      const providerIds = normalizeProviderIds(setting.providerIds)
+
+      const existingProviders = providers.filter((p) => providerIds.includes(p.id))
+
       setBooking({
-        members:existingProviders.map(p => ({
+        members: existingProviders.map((p) => ({
           id: p.id,
-          memberName: `${p.firstName} ${p.lastName}`
+          memberName: `${p.firstName} ${p.lastName}`,
         })),
         price: setting.defaultPrice,
-        session: setting.defaultSessionDuration
+        session: setting.defaultSessionDuration,
       })
     } else {
-      // Reset for new instance
+      // Reset for new service
       setCurrentSettingId(null)
       setBooking({ members: [], price: 650, session: 60 })
     }
-  }, [selectedServiceId, existingSettings])
+  }, [selectedServiceId, existingSettings, providers])
 
   /* ---------------------- HANDLERS ---------------------- */
   const handleServiceSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -131,18 +124,18 @@ function BookingSettings() {
   }
 
   const handleAddMember = (memberName: string, id: string) => {
-    if (!booking.members.some(m => m.id === id)) {
-      setBooking(prev => ({
+    if (!booking.members.some((m) => m.id === id)) {
+      setBooking((prev) => ({
         ...prev,
-        members: [...prev.members, { id, memberName }]
+        members: [...prev.members, { id, memberName }],
       }))
     }
   }
 
   const handleRemoveMember = (memberId: string) => {
-    setBooking(prev => ({
+    setBooking((prev) => ({
       ...prev,
-      members: prev.members.filter(m => m.id !== memberId)
+      members: prev.members.filter((m) => m.id !== memberId),
     }))
   }
 
@@ -152,22 +145,21 @@ function BookingSettings() {
 
     try {
       const data = {
-        providerIds: booking.members.map(m => m.id),
+        providerIds: booking.members.map((m) => m.id),
         serviceId: selectedServiceId,
         defaultSessionDuration: booking.session,
-        defaultPrice: booking.price
+        defaultPrice: booking.price,
       }
 
       const url = currentSettingId
         ? `/app/api/booking-settings/${currentSettingId}`
         : '/app/api/booking-settings'
-
       const method = currentSettingId ? 'PUT' : 'POST'
 
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       })
 
       if (res.ok) {
@@ -184,13 +176,39 @@ function BookingSettings() {
     }
   }
 
+  const handleDelete = async () => {
+    if (!currentSettingId) return
+    if (!confirm('Are you sure you want to delete this booking setting?')) return
+
+    setIsLoading(true)
+    try {
+      const res = await fetch(`/app/api/booking-settings/${currentSettingId}`, {
+        method: 'DELETE',
+      })
+
+      if (res.ok) {
+        alert('Booking setting deleted')
+        setBooking({ members: [], price: 650, session: 60 })
+        setSelectedServiceId('')
+        setCurrentSettingId(null)
+        fetchExistingSettings()
+      } else {
+        alert('Failed to delete booking setting')
+      }
+    } catch (err) {
+      console.error('Error deleting booking setting:', err)
+      alert('Error deleting booking setting')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   /* ---------------------- RENDER ---------------------- */
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Booking Settings</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
         {/* SERVICE DROPDOWN */}
         <div className="bg-white p-4 shadow rounded md:col-span-2">
           <h2 className="text-lg font-semibold mb-4">Select Service</h2>
@@ -200,8 +218,10 @@ function BookingSettings() {
             className="border px-3 py-2 rounded w-full"
           >
             <option value="">Select a service</option>
-            {services.map(s => (
-              <option key={s.id} value={s.id}>{s.name}</option>
+            {services.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
             ))}
           </select>
         </div>
@@ -212,15 +232,15 @@ function BookingSettings() {
           <input
             type="number"
             value={booking.session}
-            onChange={e =>
-              setBooking(prev => ({
+            onChange={(e) =>
+              setBooking((prev) => ({
                 ...prev,
-                session: parseInt(e.target.value) || 60
+                session: parseInt(e.target.value) || 60,
               }))
             }
             className="border px-3 py-2 w-full rounded"
-            min="15"
-            step="15"
+            min={15}
+            step={15}
           />
         </div>
 
@@ -230,15 +250,15 @@ function BookingSettings() {
           <input
             type="number"
             value={booking.price}
-            onChange={e =>
-              setBooking(prev => ({
+            onChange={(e) =>
+              setBooking((prev) => ({
                 ...prev,
-                price: parseFloat(e.target.value) || 650
+                price: parseFloat(e.target.value) || 650,
               }))
             }
             className="border px-3 py-2 w-full rounded"
-            min="0"
-            step="0.01"
+            min={0}
+            step={0.01}
           />
         </div>
 
@@ -247,19 +267,19 @@ function BookingSettings() {
           <h2 className="text-lg font-semibold mb-4">Team Members</h2>
 
           <div className="flex gap-2 flex-wrap mb-4">
-            {providers.map(member => (
+            {providers.map((member) => (
               <button
                 key={member.id}
                 type="button"
                 className={`border px-3 py-2 rounded transition ${
-                  booking.members.some(m => m.id === member.id)
+                  booking.members.some((m) => m.id === member.id)
                     ? 'bg-blue-100 border-blue-300'
                     : 'hover:bg-gray-50'
                 }`}
                 onClick={() =>
                   handleAddMember(`${member.firstName} ${member.lastName}`, member.id)
                 }
-                disabled={booking.members.some(m => m.id === member.id)}
+                disabled={booking.members.some((m) => m.id === member.id)}
               >
                 {member.firstName} {member.lastName}
               </button>
@@ -270,7 +290,7 @@ function BookingSettings() {
             <div className="mt-2">
               <h3 className="text-sm font-medium mb-2">Selected Members</h3>
               <div className="flex gap-2 flex-wrap">
-                {booking.members.map(member => (
+                {booking.members.map((member) => (
                   <button
                     key={member.id}
                     type="button"
@@ -285,14 +305,30 @@ function BookingSettings() {
           )}
         </div>
 
-        {/* SAVE BUTTON */}
-        <div className="md:col-span-2 flex justify-end">
+        {/* SAVE + DELETE BUTTONS */}
+        <div className="md:col-span-2 flex justify-between items-center">
+          {/* DELETE BUTTON */}
+          {currentSettingId && (
+            <button
+              onClick={handleDelete}
+              disabled={isLoading}
+              className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition disabled:bg-red-400"
+            >
+              Delete Setting
+            </button>
+          )}
+
+          {/* SAVE / UPDATE BUTTON */}
           <button
             onClick={handleSave}
             disabled={isLoading}
             className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition disabled:bg-blue-400"
           >
-            {isLoading ? 'Saving...' : currentSettingId ? 'Update Setting' : 'Create Setting'}
+            {isLoading
+              ? 'Saving...'
+              : currentSettingId
+              ? 'Update Setting'
+              : 'Create Setting'}
           </button>
         </div>
       </div>

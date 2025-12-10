@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ChangeEvent } from 'react'
 
 interface OperatingHours {
   id: string
@@ -7,7 +7,7 @@ interface OperatingHours {
   dayOfWeek: number
   startTime: string
   endTime: string
-  isActive: boolean
+  isActive: boolean|number|string
 }
 
 interface Provider {
@@ -31,53 +31,25 @@ const DAYS_OF_WEEK = [
 ]
 
 export default function OperatingHoursList({ providers }: OperatingHoursListProps) {
-  const [selectedProvider, setSelectedProvider] = useState<string>('')
   const [operatingHours, setOperatingHours] = useState<OperatingHours[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [editModalOpen, setEditModalOpen] = useState(false)
+  const [editingHour, setEditingHour] = useState<OperatingHours | null>(null)
 
-  // const fetchOperatingHours = async (providerId: string) => {
-  //   if (!providerId) return
-    
-  //   setLoading(true)
-  //   setError('')
-  //   try {
-  //     const res = await fetch(`/api/operating-hours?providerId=${providerId}`)
-  //     if (res.ok) {
-  //       const data = await res.json()
-  //       setOperatingHours(data)
-  //     } else {
-  //       setError('Failed to fetch operating hours')
-  //     }
-  //   } catch (err) {
-  //     setError('Error fetching operating hours')
-  //     console.error(err)
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   if (selectedProvider) {
-  //     fetchOperatingHours(selectedProvider)
-  //   } else {
-  //     setOperatingHours([])
-  //   }
-  // }, [selectedProvider])
- const fetchOperatingHours = async () => {
-    
-    
+  const fetchOperatingHours = async () => {
     setLoading(true)
     setError('')
     try {
       const res = await fetch(`/app/api/operating-hours`)
       if (res.ok) {
-        const data:OperatingHours[] = await res.json()
-          const normalized = data.map(h => ({
-        ...h,
-         isActive: (h.isActive as any) === true || (h.isActive as any) === 'true', // <- converts string 'true' to boolean
-      }));
-        setOperatingHours(normalized )
+        const data: OperatingHours[] = await res.json()
+        const normalized = data.map(h => ({
+          ...h,
+         isActive: h.isActive === true || h.isActive === 'true' || h.isActive === 1,
+        }))
+        console.log(data)
+        setOperatingHours(normalized)
       } else {
         setError('Failed to fetch operating hours')
       }
@@ -88,9 +60,11 @@ export default function OperatingHoursList({ providers }: OperatingHoursListProp
       setLoading(false)
     }
   }
-  useEffect(()=>{
+
+  useEffect(() => {
     fetchOperatingHours()
-  },[])
+  }, [])
+
   const handleToggleActive = async (id: string, isActive: boolean) => {
     try {
       const res = await fetch(`/app/api/operating-hours/${id}`, {
@@ -101,7 +75,6 @@ export default function OperatingHoursList({ providers }: OperatingHoursListProp
 
       if (res.ok) {
         fetchOperatingHours()
-        // fetchOperatingHours(selectedProvider)
       } else {
         setError('Failed to update operating hours')
       }
@@ -115,7 +88,7 @@ export default function OperatingHoursList({ providers }: OperatingHoursListProp
     if (!confirm('Are you sure you want to delete these operating hours?')) return
 
     try {
-      const res = await fetch(`/app/api/operating-hours/${id}`,{
+      const res = await fetch(`/app/api/operating-hours/${id}`, {
         method: 'DELETE'
       })
 
@@ -130,26 +103,46 @@ export default function OperatingHoursList({ providers }: OperatingHoursListProp
     }
   }
 
+  /* ---------------------- EDIT MODAL ---------------------- */
+  const openEditModal = (hour: OperatingHours) => {
+    setEditingHour(hour)
+    setEditModalOpen(true)
+  }
+
+  const closeEditModal = () => {
+    setEditingHour(null)
+    setEditModalOpen(false)
+  }
+
+  const handleEditChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    if (!editingHour) return
+    const { name, value } = e.target
+    setEditingHour(prev => prev ? { ...prev, [name]: name === 'dayOfWeek' ? parseInt(value) : value } : null)
+  }
+
+  const saveEdit = async () => {
+    if (!editingHour) return
+    try {
+      const res = await fetch(`/app/api/operating-hours/${editingHour.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editingHour)
+      })
+      if (res.ok) {
+        fetchOperatingHours()
+        closeEditModal()
+      } else {
+        setError('Failed to save changes')
+      }
+    } catch (err) {
+      console.error(err)
+      setError('Error saving changes')
+    }
+  }
+
   return (
     <div className="bg-white p-6 rounded-lg shadow">
       <h2 className="text-xl font-semibold mb-4">Operating Hours</h2>
-      
-      {/* Provider Selector */}
-      {/* <div className="mb-6">
-        <label className="block text-sm font-medium mb-2">Select Provider</label>
-        <select
-          value={selectedProvider}
-          onChange={(e) => setSelectedProvider(e.target.value)}
-          className="border rounded px-3 py-2 w-full md:w-64"
-        >
-          <option value="">Choose a provider</option>
-          {providers.map(provider => (
-            <option key={provider.id} value={provider.id}>
-              {provider.firstName} {provider.lastName}
-            </option>
-          ))}
-        </select>
-      </div> */}
 
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -157,47 +150,110 @@ export default function OperatingHoursList({ providers }: OperatingHoursListProp
         </div>
       )}
 
-      {loading && (
-        <div className="text-center py-4">Loading...</div>
-      )}
+      {loading && <div className="text-center py-4">Loading...</div>}
 
       {!loading && (
         <div className="space-y-4">
           {operatingHours.length === 0 ? (
             <p className="text-gray-500">No operating hours set.</p>
           ) : (
-            operatingHours.map(hours => (
-              <div key={hours.id} className="border rounded-lg p-4">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold">{DAYS_OF_WEEK[hours.dayOfWeek]}</h3>
-                    <p className="text-gray-600">
-                      {hours.startTime} - {hours.endTime}
-                    </p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                 
-                    <button
-                      onClick={() => handleToggleActive(hours.id, hours.isActive)}
-                      className={`px-3 py-1 rounded text-sm ${
-                        hours.isActive
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-gray-100 text-gray-800'
-                      }`}
-                    >
-                      {hours.isActive ? 'Active' : 'Inactive'}
-                    </button>
-                    <button
-                      onClick={() => handleDelete(hours.id)}
-                      className="px-3 py-1 bg-red-100 text-red-800 rounded text-sm hover:bg-red-200"
-                    >
-                      Delete
-                    </button>
-                  </div>
+            operatingHours.map(hour => (
+              <div key={hour.id} className="border rounded-lg p-4 flex justify-between items-center">
+                <div>
+                  <h3 className="font-semibold">{DAYS_OF_WEEK[hour.dayOfWeek]}</h3>
+                  <p className="text-gray-600">{hour.startTime} - {hour.endTime}</p>
+                </div>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => handleToggleActive(hour.id, Boolean(hour.isActive))}
+                    className={`px-3 py-1 rounded text-sm ${
+                      hour?.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                    }`}
+                  >
+                    {hour?.isActive ? 'Active' : 'Inactive'}
+                    
+                  </button>
+                  <button
+                    onClick={() => openEditModal(hour)}
+                    className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded text-sm hover:bg-yellow-200"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(hour.id)}
+                    className="px-3 py-1 bg-red-100 text-red-800 rounded text-sm hover:bg-red-200"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             ))
           )}
+        </div>
+      )}
+
+      {/* ---------------------- EDIT MODAL ---------------------- */}
+      {editModalOpen && editingHour && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Edit Operating Hours</h2>
+              <button onClick={closeEditModal} className="text-gray-500 hover:text-gray-700 text-2xl">×</button>
+            </div>
+
+            <div className="space-y-4">
+              <label className="block">
+                Day of Week
+                <select
+                  name="dayOfWeek"
+                  value={editingHour.dayOfWeek}
+                  onChange={handleEditChange}
+                  className="border rounded px-3 py-2 w-full"
+                >
+                  {DAYS_OF_WEEK.map((day, idx) => (
+                    <option key={idx} value={idx}>{day}</option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="block">
+                Start Time
+                <input
+                  type="time"
+                  name="startTime"
+                  value={editingHour.startTime}
+                  onChange={handleEditChange}
+                  className="border rounded px-3 py-2 w-full"
+                />
+              </label>
+
+              <label className="block">
+                End Time
+                <input
+                  type="time"
+                  name="endTime"
+                  value={editingHour.endTime}
+                  onChange={handleEditChange}
+                  className="border rounded px-3 py-2 w-full"
+                />
+              </label>
+
+              <div className="flex justify-end space-x-2 mt-4">
+                <button
+                  onClick={closeEditModal}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={saveEdit}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

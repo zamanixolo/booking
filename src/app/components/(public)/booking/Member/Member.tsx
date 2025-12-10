@@ -52,7 +52,7 @@ function Member({ select, viewNum, viewselected, data ,bookingsetting}: Props) {
                 ${isSelected ? "bg-gray-400 border-gray-400" : "bg-white"}`}
             >
               <img
-                src={'next.svg'}
+                src={'/app/next.svg'}
                 alt={member.firstName}
                 height={200}
                 width={200}

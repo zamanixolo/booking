@@ -1,4 +1,3 @@
-'use client'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
@@ -18,7 +17,7 @@ export default async function RootLayout({
   return (
     <ClerkProvider publishableKey={publishableKey}>
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className} suppressHydrationWarning>{children}</body>
     </html>
     </ClerkProvider>
   )

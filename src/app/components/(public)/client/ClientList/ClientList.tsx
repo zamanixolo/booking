@@ -8,9 +8,9 @@ function ClientList() {
   const [viewreview,setviewReview]=useState<number | undefined>(undefined) 
   
   const clientInfoArr=[
-  { name: 'Alice', project: 'Website', review: 'Great work!', image: '/next.svg' },
-  { name: 'Bob', project: 'App', review: 'Amazing!', image: '/next.svg' },
-  { name: 'Charlie', project: 'Dashboard', review: 'Loved it!', image: '/next.svg' }]
+  { name: 'Alice', project: 'Website', review: 'Great work!', image: '/app/next.svg' },
+  { name: 'Bob', project: 'App', review: 'Amazing!', image: '/app/next.svg' },
+  { name: 'Charlie', project: 'Dashboard', review: 'Loved it!', image: '/app/next.svg' }]
 
   return (
     <div className="flex w-[100%] justify-around">

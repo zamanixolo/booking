@@ -10,19 +10,19 @@ export default async function Home() {
   return (
     <div>
    <Hero
-   src='/next.svg'
+   src='/app/next.svg'
    name='test hero component'
    text='some text'
    />
    <Reviwes/>
    <Hero
-   src='/next.svg'
+   src='/app/next.svg'
    name='test hero component'
    text='some more hero text'
    />
    <DescriptionLeft/>
    <Hero
-      src='/next.svg'
+      src='/app/next.svg'
       name='test hero component'
       text='some more hero text'
    />

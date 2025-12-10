@@ -23,7 +23,7 @@ function BookingForm({ booking, onSave }: BookingFormProps) {
 
   useEffect(() => {
 
-    setFormData(booking[0])
+    setFormData(booking)
   }, [booking])
 
   const fetchProviders = async () => {
@@ -63,7 +63,7 @@ function BookingForm({ booking, onSave }: BookingFormProps) {
         <BookingField
           label="Date"
           type="date"
-          value={formData?.date?.split('T')[0]}
+          value={new Date(formData.date).toISOString().split("T")[0]}
           onChange={(v) => handleChange('date', v)}
         />
         <BookingField

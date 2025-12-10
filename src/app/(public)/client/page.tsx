@@ -5,7 +5,7 @@ function page() {
   return (
     <div>
         <Hero
-        src='/next.svg'
+        src='/app/next.svg'
         name='test hero component'
         text='some text'
         />

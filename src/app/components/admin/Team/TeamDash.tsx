@@ -120,7 +120,7 @@ if (isloading) {
           <td className="border px-2 h-16 flex justify-center">
           <div className='h-full w-full  relative mx-auto '>
           <img
-            src={member.imageurl || '/next.svg'} // Use the correct property name
+            src={member.imageurl || '/app/next.svg'} // Use the correct property name
             alt={member.firstName}
             
             className="rounded-full"
