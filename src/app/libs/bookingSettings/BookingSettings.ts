@@ -79,6 +79,7 @@ export const getBookingSettings = async (): Promise<BookingSettingsType[]> => {
 export const getBookingSettingsById = async (id: string): Promise<BookingSettingsType | null> => {
   const rows = await runQuery(`SELECT * FROM BookingSettings WHERE id='${id}' LIMIT 1;`);
   if (!rows.length) return null;
+ 
   return rows[0].results;
 };
 

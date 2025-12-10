@@ -1,5 +1,5 @@
 //date and time issue
-export const runtime = 'edge';
+// export const runtime = 'edge';
 
 import { NextResponse } from 'next/server';
 import { 

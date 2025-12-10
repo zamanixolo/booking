@@ -92,7 +92,7 @@ export const getAllProviders = async (): Promise<ProviderType[]> => {
 export const getProviderById = async (id: string): Promise<ProviderType | null> => {
   const rows = await runQuery(`SELECT * FROM Provider WHERE id='${id}' LIMIT 1;`);
   if (!rows.length) return null;
-  return formatProvider(rows[0]);
+  return rows[0].results[0];
 };
 
 // ---------------------------
@@ -102,7 +102,7 @@ export const getProviderByClerkId = async (clerkId: string): Promise<ProviderTyp
   const rows = await runQuery(`SELECT * FROM Provider WHERE clerkId='${clerkId}' LIMIT 1;`);
  
   if (!rows.length) return null;
-  return formatProvider(rows[0].results[0]);
+  return rows[0].results[0];
 };
 
 // ---------------------------
@@ -125,7 +125,7 @@ export const updateProvider = async (
     .join(",");
   const sql = `UPDATE Provider SET ${updates}, updatedAt=CURRENT_TIMESTAMP WHERE id='${id}' RETURNING *;`;
   const result = await runQuery(sql);
-  return formatProvider(result[0]);
+  return result[0];
 };
 
 // ---------------------------

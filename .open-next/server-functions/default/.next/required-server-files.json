@@ -60,7 +60,7 @@
       "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;",
       "contentDispositionType": "attachment",
       "remotePatterns": [],
-      "unoptimized": true
+      "unoptimized": false
     },
     "devIndicators": {
       "position": "bottom-left"

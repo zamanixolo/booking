@@ -88,7 +88,8 @@ function BookingHistory({ userId }: Props) {
     setSelectedBooking(booking.id)
     const serviceData=await fetch(`/app/api/booking-settings/${booking.serviceId}`)
     const service:any=await serviceData.json()
-    const providers=service.data[0].providerIds.split(',');
+  
+    const providers=service.data[0]?.providerIds.split(',');
     setServiceProviders(providers)
   // get service
   // get providers for service
@@ -182,7 +183,7 @@ function BookingHistory({ userId }: Props) {
             </fieldset>
 
             {/* Booking Details */}
-            <fieldset>
+            <div>
                 <legend>Booking Details</legend>
 
 
@@ -205,7 +206,7 @@ function BookingHistory({ userId }: Props) {
                         onChange={handleInputChange}
                     />
                 </div>
-            </fieldset>
+            </div>
 
 
             </p>

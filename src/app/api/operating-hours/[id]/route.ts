@@ -36,12 +36,17 @@ export async function GET(_req: Request, context: any) {
 }
 
 // ✅ PUT
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
-  try {
-    const id = params.id;
-    
-    const body: UpdateOperatingHourRequestBody = await req.json();
 
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }  // ← params is Promise
+): Promise<NextResponse> {
+  try {
+    const { id } = await params;  // ← Await the params
+    
+    const body: UpdateOperatingHourRequestBody = await request.json();
+    
     const updated = await updateOperatingHour(id, body);
     return NextResponse.json(updated);
   } catch (error) {
@@ -52,16 +57,15 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
 // ✅ DELETE
 export async function DELETE(
-  _req: Request,
-  { params }: { params: DeleteParams }
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }  // ← Add Promise
 ) {
   try {
-    const { id } = params;
-
+    const { id } = await params;  // ← Add await
+    
     console.log("Deleting operating hour:", id);
-
     await deleteOperatingHour(id);
-
+    
     return NextResponse.json({ message: "Deleted successfully" });
   } catch (error) {
     console.error(error);

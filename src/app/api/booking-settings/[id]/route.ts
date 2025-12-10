@@ -1,8 +1,3 @@
-// src/app/api/booking-settings/[id]/route.ts
-
-// Force the Edge runtime (required for D1)
-// export const runtime = 'edge';
-
 import { NextResponse } from 'next/server';
 import {
   updateBookingSettings,

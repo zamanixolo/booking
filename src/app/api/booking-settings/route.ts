@@ -25,7 +25,7 @@ export async function GET() {
 
   try {
     const settings = await getBookingSettings();
-   console.log(settings)
+  
     return NextResponse.json(settings);
   } catch (error) {
     console.error(error);

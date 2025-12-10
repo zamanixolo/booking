@@ -139,7 +139,7 @@ export async function PATCH(req: Request) {
       status: updateData.status ? (updateData.status as BookingStatus) : undefined, // Cast to enum/pass undefined
       price: updateData.price,
       sessionDuration: updateData.sessionDuration,
-      date: updateData.date ? new Date(updateData.date) : undefined, // Convert string to Date
+      date: updateData.date ? new Date(updateData.date).toISOString() : undefined, // Convert string to Date
       time: updateData.time,
       specialRequests: updateData.specialRequests,
     });
