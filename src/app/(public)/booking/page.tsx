@@ -82,11 +82,15 @@ const Page: React.FC = () => {
   const [bookingsetting, setBookingsetting] = useState<BookingSetting[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [view, setview] = useState(0);
+  const [timetaken,settimeTaken]=useState([])
 
   const getdateopening = async () => {
     // We can explicitly type the response using our interfaces
     const res = await fetch('/app/api/operating-hours');
     const data: OperatingHour[] = await res.json();
+    const res2=await fetch('/app/api/bookingdates')
+    const bookedData=await res2.json() as any
+    settimeTaken(bookedData.data)
     setDaysActive(data);
   };
 
@@ -111,7 +115,7 @@ const Page: React.FC = () => {
       provider: matchedProviders
     };
   });
-  console.log(enriched)
+
   setBookingsetting(enriched);
     setIsLoading(false);
   };
@@ -157,6 +161,7 @@ const Page: React.FC = () => {
           bookingsetting={bookingsetting}
           viewNum={setview as SetView}
           viewselected={view}
+          timetaken={timetaken}
         />;
 
       case 4:

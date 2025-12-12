@@ -106,6 +106,55 @@ export const getAllBookings = async (): Promise<BookingType[]> => {
   return rows[0].results;
 };
 
+// --------------------------
+// Read -get all booking where status == comfirmed
+//  -------------------------
+export const getUpcomingConfirmedBookings = async (): Promise<BookingType[]> => {
+  const rows = await runQuery(`
+    SELECT *
+    FROM Booking
+    WHERE status = 'CONFIRMED'
+  `);
+
+  const now = new Date();
+
+  const normalizeDate = (raw: any): string | null => {
+    if (!raw) return null;
+
+    // CASE 1 — Already ISO format
+    if (/^\d{4}-\d{2}-\d{2}T/.test(raw)) return raw;
+
+    // CASE 2 — SQLite timestamp "2025-12-06 13:37:19"
+    if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(raw)) {
+      return raw.replace(" ", "T") + "Z";
+    }
+
+    // CASE 3 — JS date string like "Thu Dec 11 2025 02:00:00 GMT+0200..."
+    const temp = new Date(raw);
+    if (!isNaN(temp.getTime())) {
+      return temp.toISOString();
+    }
+
+    return null;
+  };
+
+  const filtered = rows[0].results
+    .map((b: any) => {
+      const iso = normalizeDate(b.date);
+      return {
+        ...b,
+        normalized: iso ? new Date(iso) : null
+      };
+    })
+    .filter((b:any) => b.normalized && !isNaN(b.normalized.getTime()))
+    .filter((b:any)=> b.normalized! > now)
+    .sort((a:any, b:any) => a.normalized!.getTime() - b.normalized!.getTime())
+    .map((b:any)=> formatBooking(b));
+
+  return filtered;
+};
+
+
 // ---------------------------
 // READ - Get bookings by client
 // ---------------------------
