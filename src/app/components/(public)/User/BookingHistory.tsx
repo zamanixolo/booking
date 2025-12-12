@@ -171,7 +171,7 @@ function BookingHistory({ userId }: Props) {
 
               {/* defalut option will be the provider in the bookingData.providers needs a get */}
 
-              {availableProviders.filter(provider => serviceProviders.includes(provider.id))
+              {availableProviders.filter(provider => serviceProviders?.includes(provider.id))
     .map(provider => (
       <option key={provider.id} value={provider.id}>
         {provider.firstName} {provider.lastName}

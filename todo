@@ -1,5 +1,5 @@
 -------------public---------------
-user rules
+
 paygate
 
 ------------admin-----------------
@@ -8,3 +8,6 @@ calendar admin
 
 ---------------booking-------------
 booking rules
+
+-------------edge case ------------
+delete service that has bookings

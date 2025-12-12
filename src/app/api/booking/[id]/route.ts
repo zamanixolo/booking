@@ -156,10 +156,6 @@ export async function PATCH(req: Request) {
         }
       }
 
-    // if (updateData.providerId && updateData.providerId !== currentBooking.providerId) {
-    //   validationErrors.push("Cannot change provider for existing booking");
-    // }
-
     if (updateData.serviceId && updateData.serviceId !== currentBooking.serviceId) {
       validationErrors.push("Cannot change service for existing booking");
     }
