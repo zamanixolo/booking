@@ -52,9 +52,30 @@ function Summery({ viewNum, viewselected, data ,bookingsetting}: Props) {
       });
   
       const res = await (createbooking.json())as any;
-     
+
       if(res.status==201){
-       alert('booking success');
+      const payfast=await fetch('/app/api/payGates',{
+      method:'POST',
+      headers:{'constent-type':'aplication-json'},
+      body:JSON.stringify({res})
+     })
+     if (payfast.status === 200) {
+        const { payfastUrl, payload } = await payfast.json()as any;
+
+        // Redirect user to PayFast sandbox
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = payfastUrl;
+        Object.entries(payload).forEach(([key, value]) => {
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = key;
+          input.value = String(value);;
+          form.appendChild(input);
+        });
+        document.body.appendChild(form);
+        form.submit();
+      }
       }
     } catch (error) {
       console.error('Error creating booking:', error);
