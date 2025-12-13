@@ -56,12 +56,13 @@ function Summery({ viewNum, viewselected, data ,bookingsetting}: Props) {
       if(res.status==201){
       const payfast=await fetch('/app/api/payGates',{
       method:'POST',
-      headers:{'constent-type':'aplication-json'},
+      headers:{'Content-Type': 'application/json'},
       body:JSON.stringify({res})
      })
-     if (payfast.status === 200) {
+     if (payfast.ok) { 
         const { payfastUrl, payload } = await payfast.json()as any;
-
+ console.log('PayFast payload:', payload);
+        console.log('PayFast URL:', payfastUrl);
         // Redirect user to PayFast sandbox
         const form = document.createElement("form");
         form.method = "POST";
@@ -74,6 +75,7 @@ function Summery({ viewNum, viewselected, data ,bookingsetting}: Props) {
           form.appendChild(input);
         });
         document.body.appendChild(form);
+        console.log(form)
         form.submit();
       }
       }
