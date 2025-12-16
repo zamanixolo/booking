@@ -52,6 +52,14 @@
       "namedRegex": "^/api/booking\\-settings/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/api/notify/[id]",
+      "regex": "^/api/notify/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/notify/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/api/operating-hours/[id]",
       "regex": "^/api/operating\\-hours/([^/]+?)(?:/)?$",
       "routeKeys": {
