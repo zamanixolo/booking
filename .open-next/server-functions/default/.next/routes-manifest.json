@@ -148,6 +148,18 @@
       "namedRegex": "^/favicon\\.ico(?:/)?$"
     },
     {
+      "page": "/payment/cancel",
+      "regex": "^/payment/cancel(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/payment/cancel(?:/)?$"
+    },
+    {
+      "page": "/payment/success",
+      "regex": "^/payment/success(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/payment/success(?:/)?$"
+    },
+    {
       "page": "/user",
       "regex": "^/user(?:/)?$",
       "routeKeys": {},

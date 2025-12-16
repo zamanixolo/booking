@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       merchant_key: `${process.env.PAYFAST_MERCHANT_KEY}`,
       return_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/payment/success`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/payment/cancel`,
-      notify_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/api/payGates/notify`,
+      notify_url: `${process.env.NEXT_PUBLIC_APP_URL}/app/api/notify/${id}`,
       email_address: client.email,
       name_first: client.firstName,
       name_last: client.lastName,
