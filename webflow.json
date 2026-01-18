@@ -1,0 +1,27 @@
+{
+  "cloud": {
+    "framework": "nextjs"
+  },
+  "library": {
+    "name": "Law Firm library",
+    "components": [
+      "./src/**/*.webflow.@(js|jsx|mjs|ts|tsx)"
+    ],
+    "description": "",
+    "id": "law-firm-library"
+  },
+  "devlink": {
+    "rootDir": "./src/devlink",
+    "cssModules": true,
+    "fileExtensions": {
+      "js": "jsx"
+    }
+  },
+  "telemetry": {
+    "global": {
+      "allowTelemetry": true,
+      "lastPrompted": 1762844541441,
+      "version": "1.8.49"
+    }
+  }
+}

@@ -1,0 +1,142 @@
+# 📅 Scheduling Platform
+
+A modern, fully customizable scheduling platform designed for teams, professionals, and organizations.  
+Easily manage bookings, automate workflows, and integrate with your favorite tools.
+
+---
+
+## 🚀 Features Overview
+
+### 🕒 Core Scheduling
+
+- Multiple event types  
+- Custom durations (15, 30, 60, 90 min, custom)  
+- Collective and group events  
+- Round-robin scheduling  
+- One-off meetings  
+- Buffer times (before/after events)  
+- Daily event limits  
+- Timezone detection & conversion  
+- Custom office hours and per-day availability  
+- Seasonal schedules & holiday blocking  
+
+---
+
+### 🎟️ Booking Experience
+
+- Real-time availability display  
+- Smart time slot suggestions  
+- Custom booking forms  
+- Pre-filled invitee details  
+- Multiple language support  
+- Custom questions (required/optional)  
+- Location options: in-person, phone, video  
+- Automatic video conferencing links  
+- Payment collection (Stripe integration)  
+- Multi-currency and tax calculation support  
+
+---
+
+### 📆 Calendar Integration
+
+- Google Calendar sync  
+- Outlook / Office 365 sync  
+- iCloud calendar sync  
+- Real-time conflict detection  
+- Automatic updates and two-way sync  
+- Multi-calendar management  
+- Permission-based access control  
+
+---
+
+### 🔔 Notifications & Reminders
+
+- Email confirmations  
+- SMS reminders  
+- Custom reminder intervals  
+- Host and invitee notifications  
+- Follow-up emails  
+- No-show alerts  
+- Cancellation and rescheduling notices  
+
+---
+
+### 👥 Team Features
+
+- Multi-member team support  
+- Team availability overlay  
+- Per-member event types  
+- Round-robin and routing logic  
+- Collective availability  
+- Team performance analytics  
+- Admin-level team management  
+
+---
+
+### 🎨 Customization & Branding
+
+- Custom domains and subdomains  
+- Brand colors, logos, and favicon  
+- Custom email templates  
+- White-label options  
+- Remove platform branding  
+- Custom confirmation and cancellation pages  
+- Full CSS customization  
+
+---
+
+### 🔗 Embed Options
+
+- Inline embeds  
+- Pop-up widgets  
+- Dedicated landing pages  
+- Direct booking links  
+- Pre-populated forms  
+- Mobile-optimized embeds  
+- WordPress and Squarespace integration  
+
+---
+
+### ⚙️ Workflow Automation
+
+- Zapier integration  
+- Webhooks and API access  
+- Custom workflow triggers  
+- Conditional logic  
+- Geographic, language, and answer-based routing  
+
+---
+
+### 📊 Analytics & Reporting
+
+- Meeting volume and time slot analytics  
+- Busiest day insights  
+- No-show tracking  
+- Revenue tracking  
+- Team performance metrics  
+- Invitee analytics  
+- Exportable reports and custom date ranges  
+
+---
+
+### 🔌 Integrations
+
+- Zoom, Google Meet, Microsoft Teams  
+- GoToMeeting, Webex  
+- Salesforce, HubSpot, Slack, Intercom  
+- Stripe, PayPal  
+- Google Analytics  
+
+---
+
+### 🔐 Security & Admin
+
+- Password & CAPTCHA protection  
+- GDPR compliance  
+- End-to-end data encryption  
+- Single Sign-On (SSO) integration  
+- User management and permission levels  
+- Audit logs and data export  
+- Account recovery  
+
+---
